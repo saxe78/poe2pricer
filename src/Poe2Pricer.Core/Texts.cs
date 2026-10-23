@@ -20,7 +20,7 @@ public static class Texts
     public static string DecimalSeparator => culture.NumberFormat.NumberDecimalSeparator;
 
     // The languages there is a file for; the first is the main language.
-    public static IReadOnlyList<string> Languages { get; } = [Default, "de"];
+    public static IReadOnlyList<string> Languages { get; } = [Default, "de", "ru"];
 
     // The window shows its texts anew; a status line already written stays as it is.
     public static event Action? Changed;
@@ -47,7 +47,7 @@ public static class Texts
 
     // A counted text: "1 price", "2 prices". The count is the first value put in, more follow.
     public static string Count(string key, int count, params object?[] args) =>
-        Get(key + (count == 1 ? "_one" : "_other"), [count, .. args]);
+        Get(key + CountForm(culture, count), [count, .. args]);
 
     // A text in a given language, whatever language is chosen for the window: the overlay
     // follows the language of the game (GameLanguage). A language without the text: English.
@@ -59,7 +59,19 @@ public static class Texts
 
     // A counted text in a given language (Count).
     public static string CountIn(string language, string key, int count, params object?[] args) =>
-        In(language, key + (count == 1 ? "_one" : "_other"), [count, .. args]);
+        In(language, key + CountForm(Culture(language), count), [count, .. args]);
+
+    // Russian: 1/21 предмет, 2–4/22–24 предмета, 0/5–20 предметов.
+    // Keep _other for the many form so the existing English/German keys stay unchanged.
+    private static string CountForm(CultureInfo language, int count)
+    {
+        if (language.TwoLetterISOLanguageName != "ru")
+            return count == 1 ? "_one" : "_other";
+        long n = Math.Abs((long)count);
+        if (n % 10 == 1 && n % 100 != 11)
+            return "_one";
+        return n % 10 is >= 2 and <= 4 && n % 100 is not (>= 12 and <= 14) ? "_few" : "_other";
+    }
 
     private static CultureInfo Culture(string language)
     {

@@ -57,9 +57,19 @@
   .lightbox img { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; box-shadow: 0 24px 80px rgba(0, 0, 0, .6); transform: scale(.94); transition: transform .22s ease; }
   .lightbox.open img { transform: scale(1); }
   .lightbox figcaption { position: absolute; bottom: 18px; left: 0; right: 0; text-align: center; color: #C9D6DC; font-size: 14px; }
-  /* One file, two languages: everything marked .de or .en shows in the chosen language only. */
-  html[data-lang="de"] .en { display: none !important; }
+  /* One file, three languages: show only the selected language; English is the default. */
+  html[data-lang="de"] .en, html[data-lang="ru"] .en { display: none !important; }
   html:not([data-lang="de"]) .de { display: none !important; }
+  html:not([data-lang="ru"]) .ru { display: none !important; }
+  .ru { overflow-wrap: normal; word-break: normal; hyphens: none; }
+  .ru code { overflow-wrap: anywhere; }
+  table.ru th:first-child, table.ru td:first-child { white-space: normal; }
+  table.ru.settings-table th:first-child, table.ru.settings-table td:first-child { width: 28%; min-width: 160px; }
+  table.ru.hotkeys-table th:first-child, table.ru.hotkeys-table td:first-child { width: 1%; white-space: nowrap; }
+  @media (max-width: 480px) {
+    table.ru.settings-table th:first-child, table.ru.settings-table td:first-child,
+    table.ru.hotkeys-table th:first-child, table.ru.hotkeys-table td:first-child { width: auto; min-width: 0; }
+  }
 </style>
 </head>
 <body>
@@ -69,18 +79,21 @@
   <div>
     <h1><img class="icon" src="icon.png" width="96" height="96" alt="">poe2pricer</h1>
     <p class="tagline en">Market prices from poe.ninja · Favours · Remnants · Island Rumours · Stash tabs · Waystones · Tablets</p>
+<p class="tagline ru">Рыночные цены с poe.ninja · Ритуал · Останки · Слухи об островах · Сундук · Путевые камни · Плитки</p>
     <p class="tagline de">Marktpreise von poe.ninja · Gaben · Relikte · Inselgerüchte · Truhen-Tabs · Waystones · Tablets</p>
     <!-- The version is written here by tools/build_release.py. -->
-    <p class="meta">Version <span id="version">1.3.0</span> · saxe78 · <a href="https://github.com/saxe78/poe2pricer">github.com/saxe78/poe2pricer</a> · MIT</p>
+    <p class="meta"><span id="version-label">Version</span> <span id="version">1.3.0</span> · saxe78 · <a href="https://github.com/saxe78/poe2pricer">github.com/saxe78/poe2pricer</a> · MIT</p>
   </div>
   <div class="switch" role="group" aria-label="Language">
     <button type="button" data-set="en">English</button>
     <button type="button" data-set="de">Deutsch</button>
+    <button type="button" data-set="ru">Русский</button>
   </div>
 </div>
 
 
-<h2 id="what"><span class="en">What it does</span><span class="de">Was es tut</span></h2>
+<h2 id="what"><span class="en">What it does</span>
+<span class="ru">Что делает программа</span><span class="de">Was es tut</span></h2>
 <p class="en">poe2pricer reads the picture of the Path of Exile 2 window and writes prices from poe.ninja
 next to what it recognises: the <strong>Ritual</strong> window (Favours), the <strong>Expedition
 remnant list</strong> (Runeshape Combinations), the <strong>special stash tabs</strong> and the
@@ -91,6 +104,7 @@ it requests: prices from poe.ninja and the item images they refer to from web.po
 ratings from Gnejs PoE Tools and a public Google sheet, waystone and tablet prices from the trade site
 of pathofexile.com (the item's values and mods, nothing else), and once per start the newest release
 from github.com (can be switched off).</p>
+<p class="ru">poe2pricer считывает изображение окна Path of Exile 2 и показывает цены с poe.ninja рядом с распознанными предметами: в окне наград <strong>Ритуала</strong> (Favours), <strong>списке останков Экспедиции</strong> (Runeshape Combinations) и <strong>специальных вкладках сундука</strong>. Рядом с панелью <strong>слухов об островах</strong> на Атласе появляются оценки сообщества. Для <strong>путевых камней</strong> и <strong>плиток</strong> программа запрашивает цену на торговой площадке и показывает её у подсказки предмета. Программа не нажимает клавиши и не щёлкает мышью: она считывает изображение игры и рисует поверх него. По сети запрашиваются цены с poe.ninja, изображения предметов с web.poecdn.com, оценки слухов с Gnejs PoE Tools и из открытой Google Таблицы, а также цены путевых камней и плиток с pathofexile.com (передаются значения и модификаторы предмета). При запуске также проверяется последняя версия на github.com; эту проверку можно отключить.</p>
 <p class="de">poe2pricer liest das Bild des Fensters von Path of Exile 2 und schreibt Preise von poe.ninja
 neben das, was es erkennt: das <strong>Ritual</strong>-Fenster (Gaben), die <strong>Relikt-Liste der
 Expedition</strong> (Runenformen-Kombinationen), die <strong>besonderen Truhen-Tabs</strong> und das
@@ -103,7 +117,8 @@ Tablet-Preise von der Trade-Seite von pathofexile.com (die Werte und Mods des It
 einmal je Start die neueste Veröffentlichung von github.com (abschaltbar).</p>
 
 
-<h2 id="start"><span class="en">Getting started</span><span class="de">Erste Schritte</span></h2>
+<h2 id="start"><span class="en">Getting started</span>
+<span class="ru">Первый запуск</span><span class="de">Erste Schritte</span></h2>
 <ol class="en">
   <li>Run <code>poe2pricer-app-win-Setup.exe</code> (installs for your user account, installs updates on a click),
       or unpack the zip anywhere and start <code>poe2pricer.exe</code>. The installed folder holds the
@@ -122,6 +137,7 @@ einmal je Start die neueste Veröffentlichung von github.com (abschaltbar).</p>
       soon as one of the windows opens. Press <kbd>Alt</kbd>+<kbd>F</kbd> to show or hide them by
       hand.</li>
 </ol>
+<ol class="ru"><li>Запустите <code>poe2pricer-app-win-Setup.exe</code>: он устанавливает программу для текущего пользователя и позволяет устанавливать обновления по нажатию. Либо распакуйте ZIP-архив в любую папку и запустите <code>poe2pricer.exe</code>. Установленная программа находится в папке <code>current</code>, которую заменяет каждое обновление. Рядом расположен файл запуска <code>poe2pricer.exe</code>, всегда открывающий текущую версию.</li><li>Первый запуск начинается с уведомления о том, что программа делает и чего не делает, и о том, что GGG не одобряет сторонние программы. Кнопка <strong>«Запустить»</strong> продолжает запуск, <strong>«Выйти»</strong> закрывает программу (см. <a href="#thirdparty">«Сторонние программы и GGG»</a>). Затем проверяется наличие <strong>распознавания английского текста Windows (США)</strong>. Если компонент отсутствует, программа предложит его установить: Windows запросит права администратора, скачает и установит языковой компонент. Это занимает от 3 до 10 минут. Если для обновления Windows требуется перезагрузка, сначала перезагрузите компьютер через Параметры → Центр обновления Windows → Перезагрузить сейчас.</li><li>При первом запуске открывается окно настроек. При последующих программа запускается в области уведомлений (трее); нажмите на её значок, чтобы открыть окно.</li><li>В правом верхнем углу окна программы выберите <strong>RU</strong>. Запустите игру. При включённом автосканировании (по умолчанию) цены появляются автоматически при открытии поддерживаемых окон. Сочетание <kbd>Alt</kbd>+<kbd>F</kbd> показывает или скрывает их вручную.</li></ol>
 <ol class="de">
   <li><code>poe2pricer-app-win-Setup.exe</code> ausführen (installiert für dein Benutzerkonto, installiert
       Updates per Klick), oder das Zip irgendwohin entpacken und <code>poe2pricer.exe</code> starten. Im
@@ -145,26 +161,32 @@ the tooltips (waystones, tablets, omens) and the rumours: they are read as text.
 the stash tabs work in any game language. Any <strong>UI Text Size</strong>: large and extra large are checked on two players'
 pictures at 1080, 1440, 2160 and 3440, every window
 (<a href="https://github.com/saxe78/poe2pricer/issues/1">issue #1</a>). Any Popup Size is fine.</div>
+<div class="note ru"><strong>Язык программы и язык игры — разные настройки.</strong> Русский перевод охватывает интерфейс программы и эту справку. Для списка останков, подсказок предметов (путевые камни, плитки, знамения) и слухов нужен <strong>английский или немецкий клиент игры</strong>: эти окна распознаются по тексту. Ритуал и вкладки сундука работают при любом языке игры. Названия модификаторов, типов плиток и строки поиска следуют языку клиента, а данные сообщества сохраняют исходный язык. Игровые скриншоты ниже поэтому оставлены на английском; снимки самой программы — на русском. Поддерживается любой размер текста интерфейса: large и extra large проверены при разрешениях 1080, 1440, 2160 и 3440 во всех поддерживаемых окнах (<a href="https://github.com/saxe78/poe2pricer/issues/1">обсуждение № 1</a>). Размер всплывающих окон (Popup Size) может быть любым.</div>
 <div class="note de">Das Spiel muss für Relikt-Liste, Tooltips (Waystones, Tablets, Omen) und Gerüchte auf
 <strong>Englisch oder Deutsch</strong> laufen: sie werden als Text gelesen. Ritual-Fenster und Truhen-Tabs
 gehen in jeder Spielsprache. Jede <strong>UI Text Size</strong>: „large“ und „extra large“ sind an den
 Bildern zweier Spieler bei 1080, 1440, 2160 und 3440 geprüft, jedes Fenster
 (<a href="https://github.com/saxe78/poe2pricer/issues/1">Issue #1</a>). Die Popup Size ist beliebig.</div>
 
-<h2 id="league"><span class="en">Choose your league</span><span class="de">Liga wählen</span></h2>
+<h2 id="league"><span class="en">Choose your league</span>
+<span class="ru">Выбор лиги</span><span class="de">Liga wählen</span></h2>
 <p class="en">In the settings window, <strong>League</strong> is set to "Auto (current league)": the newest
 league poe.ninja lists. Pick another one if you play elsewhere, for example Standard or a
 hardcore league. In Standard poe.ninja lists no prices for most uniques; they show "?".</p>
+<p class="ru">В разделе <strong>«Настройки → Цены и отображение»</strong> для лиги по умолчанию выбрано «Авто (текущая лига)» — последняя лига из списка poe.ninja. Если вы играете в другой лиге, например Standard или хардкорной, выберите её вручную. В Standard у poe.ninja нет цен для большинства уникальных предметов; вместо цены показывается «?».</p>
 <p class="de">Im Einstellungsfenster steht <strong>Liga</strong> auf „Auto (aktuelle Liga)“: die neueste Liga,
 die poe.ninja führt. Wähle eine andere, wenn du woanders spielst, etwa Standard oder eine
 Hardcore-Liga. In Standard führt poe.ninja für die meisten Uniques keine Preise; dort steht „?“.</p>
 
-<h2 id="prices"><span class="en">See prices</span><span class="de">Preise sehen</span></h2>
-<h3><span class="en">What the numbers and marks mean</span><span class="de">Was Zahlen und Zeichen bedeuten</span></h3>
+<h2 id="prices"><span class="en">See prices</span>
+<span class="ru">Отображение цен</span><span class="de">Preise sehen</span></h2>
+<h3><span class="en">What the numbers and marks mean</span>
+<span class="ru">Числа, цвета и обозначения</span><span class="de">Was Zahlen und Zeichen bedeuten</span></h3>
 <p class="en">Prices are in Exalted Orbs (or Chaos, see Settings); from one Divine on they are shown in Divine Orbs
 with the Divine icon. The colour is the price band, so it follows the exchange rate: grey under 0.02 div,
 white under 0.2 div, yellow under 1 div, orange from 1 div. The most valuable item of a window is marked in green. Prices are refreshed every few minutes;
 <strong>Refresh prices</strong> in the settings window fetches them at once.</p>
+<p class="ru">Цены отображаются в сферах возвышения (или хаоса — см. настройки), а начиная с одной божественной сферы — в божественных сферах, с соответствующим значком. Цвет зависит от стоимости в божественных сферах и меняется вместе с курсом: серый — ниже 0,02 div, белый — ниже 0,2 div, жёлтый — ниже 1 div, оранжевый — от 1 div. Самый дорогой предмет окна выделен зелёным. Цены обновляются раз в несколько минут; кнопка со значком обновления рядом с выбором лиги в настройках запрашивает их сразу.</p>
 <p class="de">Preise stehen in Exalted Orbs (oder Chaos, siehe Einstellungen); ab einem Divine in Divine Orbs mit
 Divine-Symbol. Die Farbe ist die Preisstufe und folgt dem Kurs: grau unter 0,02 div, weiß unter 0,2 div,
 gelb unter 1 div, orange ab 1 div. Der wertvollste Gegenstand eines Fensters ist grün markiert. Preise werden alle paar Minuten aktualisiert;
@@ -177,6 +199,7 @@ gelb unter 1 div, orange ab 1 div. Der wertvollste Gegenstand eines Fensters ist
   <tr><td><code>▲</code> <code>▼</code></td><td>In the remnant list: the best reward is scrolled out of view in that direction.</td></tr>
   <tr><td><code>…</code> <code>–</code> <code>⏳</code></td><td>At a waystone's or tablet's tooltip: the price is being asked, no listing, the trade site busy (see <a href="#waystones">Waystones</a>).</td></tr>
 </table>
+<table class="ru"><tr><th>Знак</th><th>Значение</th></tr><tr><td><code>?</code></td><td>Предмет распознан, но у poe.ninja нет цены.</td></tr><tr><td><code>&lt;</code></td><td>Цена ниже заданного порога.</td></tr><tr><td><code>!</code> (красный)</td><td>Затемнённое знамение, тип которого нельзя определить по одному значку. Наведите мышь или курсор контроллера: программа прочитает подсказку и покажет цену.</td></tr><tr><td><code>▲</code> <code>▼</code></td><td>В списке останков: самая дорогая награда находится за пределами видимой части в указанном направлении.</td></tr><tr><td><code>…</code> <code>–</code> <code>⏳</code></td><td>У подсказки путевого камня или плитки: идёт запрос цены; предложений нет; торговая площадка занята или недоступна (см. <a href="#waystones">«Путевые камни»</a>).</td></tr></table>
 <table class="de">
   <tr><th>Zeichen</th><th>Bedeutung</th></tr>
   <tr><td><code>?</code></td><td>Erkannt, aber poe.ninja führt keinen Preis dafür.</td></tr>
@@ -186,42 +209,55 @@ gelb unter 1 div, orange ab 1 div. Der wertvollste Gegenstand eines Fensters ist
   <tr><td><code>…</code> <code>–</code> <code>⏳</code></td><td>Am Tooltip eines Waystones oder Tablets: der Preis wird gefragt, kein Angebot, die Trade-Seite ausgelastet (siehe <a href="#waystones">Waystones</a>).</td></tr>
 </table>
 
-<h3><span class="en">Ritual window (Favours)</span><span class="de">Ritual-Fenster (Gaben)</span></h3>
+<h3><span class="en">Ritual window (Favours)</span>
+<span class="ru">Награды Ритуала (Favours)</span><span class="de">Ritual-Fenster (Gaben)</span></h3>
 <p class="en">Every item in the grid gets its price; the most valuable one is marked. Items under a tooltip
 or a notification are left alone until it is gone. Prices below your price floor show a grey
 "&lt;" instead of a number.</p>
+<p class="ru">Рядом с каждым предметом в сетке появляется цена; самый дорогой выделен. Предметы под подсказкой или уведомлением не оцениваются, пока перекрытие не исчезнет. Если цена ниже заданного порога, вместо числа показывается серый знак «&lt;».</p>
 <p class="de">Jeder Gegenstand im Raster bekommt seinen Preis; der wertvollste ist markiert. Gegenstände unter
 einem Tooltip oder einer Meldung bleiben frei, bis sie weg ist. Preise unter deiner Schwelle zeigen
 ein graues „&lt;“ statt einer Zahl.</p>
-<figure><img src="ritual.png" width="900" height="908" alt="Ritual: a price at every item, the best one marked."><figcaption class="en">Ritual: a price at every item, the best one marked.</figcaption><figcaption class="de">Ritual: ein Preis an jedem Gegenstand, der beste markiert.</figcaption></figure>
-<h3><span class="en">Expedition remnant list (Runeshape Combinations)</span><span class="de">Relikt-Liste der Expedition (Runenformen-Kombinationen)</span></h3>
+<figure><img src="ritual.png" width="900" height="908" alt="Ritual: a price at every item, the best one marked." data-alt-en="Ritual: a price at every item, the best one marked." data-alt-ru="Награды Ритуала: цены предметов и выделение самой дорогой награды."><figcaption class="en">Ritual: a price at every item, the best one marked.</figcaption>
+<figcaption class="ru">Ритуал: цена у каждого предмета, самый дорогой выделен.</figcaption><figcaption class="de">Ritual: ein Preis an jedem Gegenstand, der beste markiert.</figcaption></figure>
+<h3><span class="en">Expedition remnant list (Runeshape Combinations)</span>
+<span class="ru">Список останков Экспедиции (Runeshape Combinations)</span><span class="de">Relikt-Liste der Expedition (Runenformen-Kombinationen)</span></h3>
 <p class="en">Every reward row gets the price of the whole row: "3x Exalted Orb" is priced as three. When
 the best reward is scrolled out of view, an arrow at the edge of the list points to it. Skill
 rows ("Skill Level 20: …") have no market and get no price. Rows below the price floor show
 nothing.</p>
+<p class="ru">Для каждой строки наград показывается стоимость всей строки: «3x Exalted Orb» оценивается как три сферы возвышения. Если самая дорогая награда скрыта прокруткой, стрелка у края списка указывает на неё. Строки умений («Skill Level 20: …») не продаются и не получают цену. Строки дешевле заданного порога остаются без подписи.</p>
 <p class="de">Jede Belohnungszeile bekommt den Preis der ganzen Zeile: „3x Exalted Orb“ zählt dreifach. Ist die
 beste Belohnung aus dem Sichtbereich gescrollt, zeigt ein Pfeil am Rand der Liste dorthin.
 Skill-Zeilen („Skill Level 20: …“) haben keinen Markt und bekommen keinen Preis. Zeilen unter der
 Schwelle zeigen nichts.</p>
-<figure><img src="remnants.png" width="700" height="877" alt="Remnant list: a price at every reward row; the arrow at the lower edge points to the best reward, scrolled out of view"><figcaption class="en">Remnant list: a price at every reward row, the arrow to the best reward out of view.</figcaption><figcaption class="de">Relikt-Liste: ein Preis an jeder Belohnungszeile, der Pfeil zur besten Belohnung außer Sicht.</figcaption></figure>
-<h3><span class="en">Special stash tabs</span><span class="de">Besondere Truhen-Tabs</span></h3>
+<figure><img src="remnants.png" width="700" height="877" alt="Remnant list: a price at every reward row; the arrow at the lower edge points to the best reward, scrolled out of view" data-alt-en="Remnant list: a price at every reward row; the arrow at the lower edge points to the best reward, scrolled out of view" data-alt-ru="Список останков: цены наград и стрелка к самой дорогой награде за пределами экрана."><figcaption class="en">Remnant list: a price at every reward row, the arrow to the best reward out of view.</figcaption>
+<figcaption class="ru">Список останков: цены строк наград и стрелка к самой дорогой награде за пределами видимой части.</figcaption><figcaption class="de">Relikt-Liste: ein Preis an jeder Belohnungszeile, der Pfeil zur besten Belohnung außer Sicht.</figcaption></figure>
+<h3><span class="en">Special stash tabs</span>
+<span class="ru">Специальные вкладки сундука</span><span class="de">Besondere Truhen-Tabs</span></h3>
 <p class="en">Orbs, essences, breach, delirium, expedition, ritual, abyss, tablets and socketables: every
 filled slot gets the price per item. A slot below the price floor shows a grey "&lt;".</p>
+<p class="ru">Сферы, сущности, Разлом, Делириум, Экспедиция, Ритуал, Бездна, плитки и вставляемые предметы: у каждой занятой ячейки показывается цена за один предмет. Если она ниже порога, появляется серый знак «&lt;».</p>
 <p class="de">Orbs, Essenzen, Breach, Delirium, Expedition, Ritual, Abyss, Tablets und Sockelbares: jedes
 belegte Feld bekommt den Preis je Stück. Ein Feld unter der Schwelle zeigt ein graues „&lt;“.</p>
-<figure><img src="stash.png" width="900" height="914" alt="Orbs tab: a price at every filled slot, Divine values in orange with the Divine icon, &lt; below the price floor, ? without a market price"><figcaption class="en">Orbs tab: a price at every filled slot.</figcaption><figcaption class="de">Orbs-Tab: ein Preis an jedem belegten Feld.</figcaption></figure>
-<h2 id="waystones"><span class="en">Waystones</span><span class="de">Waystones</span></h2>
+<figure><img src="stash.png" width="900" height="914" alt="Orbs tab: a price at every filled slot, Divine values in orange with the Divine icon, &lt; below the price floor, ? without a market price" data-alt-en="Orbs tab: a price at every filled slot, Divine values in orange with the Divine icon, &lt; below the price floor, ? without a market price" data-alt-ru="Вкладка сфер: цены занятых ячеек, знаки порога и отсутствующей цены."><figcaption class="en">Orbs tab: a price at every filled slot.</figcaption>
+<figcaption class="ru">Вкладка сфер: цена у каждой занятой ячейки.</figcaption><figcaption class="de">Orbs-Tab: ein Preis an jedem belegten Feld.</figcaption></figure>
+<h2 id="waystones"><span class="en">Waystones</span>
+<span class="ru">Путевые камни</span><span class="de">Waystones</span></h2>
 <p class="en">The <strong>Waystones</strong> tab of the program window holds your waystone profiles. A
 profile says what a waystone must have. From it come three things: a <strong>search text</strong>
 for the stash search of the game, the profile's <strong>price</strong> on the trade site, and the
 words in which the <strong>live price</strong> at a waystone's tooltip is asked.</p>
+<p class="ru">На вкладке <strong>«Путевые камни»</strong> хранятся профили с нужными характеристиками камней. Профиль используется для трёх задач: создания <strong>строки поиска</strong> для сундука в игре, запроса <strong>цены профиля</strong> на торговой площадке и выбора условий для <strong>цены у подсказки</strong> путевого камня.</p>
 <p class="de">Der Tab <strong>Waystones</strong> des Programmfensters hält deine Waystone-Profile. Ein
 Profil sagt, was ein Waystone haben muss. Daraus entstehen drei Dinge: ein <strong>Suchtext</strong>
 für die Stash-Suche des Spiels, der <strong>Preis</strong> des Profils auf der Trade-Seite, und die
 Worte, in denen der <strong>Live-Preis</strong> am Tooltip eines Waystones gefragt wird.</p>
-<figure><img src="window-waystones.png" width="780" height="775" alt="The Waystones tab: profile with tolerance, properties, one mod group, the search text."><figcaption class="en">The Waystones tab with a profile: properties, one "and" group with two mods, the search text built from it.</figcaption><figcaption class="de">Der Tab Waystones mit einem Profil: Item-Eigenschaften, eine „und“-Gruppe mit zwei Mods, der daraus gebaute Suchtext.</figcaption></figure>
+<figure><img src="window-waystones.png" width="780" height="775" alt="The Waystones tab: profile with tolerance, properties, one mod group, the search text." data-alt-en="The Waystones tab: profile with tolerance, properties, one mod group, the search text." data-alt-ru="Русская вкладка «Путевые камни»: профиль, свойства, группа из двух модификаторов и строка поиска." data-src-en="window-waystones.png" data-src-ru="window-waystones-ru.png"><figcaption class="en">The Waystones tab with a profile: properties, one "and" group with two mods, the search text built from it.</figcaption>
+<figcaption class="ru">Вкладка «Путевые камни»: пример профиля с характеристиками, группой «и» из двух модификаторов и сформированной строкой поиска. Названия модификаторов остаются на языке клиента игры.</figcaption><figcaption class="de">Der Tab Waystones mit einem Profil: Item-Eigenschaften, eine „und“-Gruppe mit zwei Mods, der daraus gebaute Suchtext.</figcaption></figure>
 
-<h3><span class="en">Profiles</span><span class="de">Profile</span></h3>
+<h3><span class="en">Profiles</span>
+<span class="ru">Профили</span><span class="de">Profile</span></h3>
 <ul class="en">
   <li>Pick a profile from the list, or type a new name into it to start one.</li>
   <li><strong>✓</strong> saves the profile (on its own, the other settings are not touched);
@@ -234,6 +270,7 @@ Worte, in denen der <strong>Live-Preis</strong> am Tooltip eines Waystones gefra
   much, so that enough listings are found, and lets a value that much under a minimum count as
   met.</li>
 </ul>
+<ul class="ru"><li>Выберите профиль из списка или введите новое имя, чтобы создать его.</li><li><strong>✓</strong> сохраняет только профиль; кнопка <strong>«Сохранить»</strong> внизу окна сохраняет его вместе с остальными настройками. <strong>✕</strong> удаляет профиль. После удаления последнего остаётся пустой профиль «default».</li><li>Если при переключении профиля или нажатии <strong>«Выйти»</strong> есть несохранённые изменения, появятся варианты: <em>«Сохранить»</em>, <em>«Не сохранять»</em> (вернуться к сохранённому состоянию) и <em>«Отмена»</em> (остаться). Переключение вкладок не вызывает вопроса: изменения остаются на вкладке.</li><li><strong>«Допуск, %»</strong> уменьшает значения, используемые для поиска цены у подсказки, на указанный процент, чтобы найти больше предложений. Значение ниже минимума профиля в пределах этого допуска тоже считается подходящим.</li></ul>
 <ul class="de">
   <li>Wähle ein Profil aus der Liste, oder tippe einen neuen Namen hinein, um eines anzulegen.</li>
   <li><strong>✓</strong> speichert das Profil (für sich, die übrigen Einstellungen bleiben unberührt);
@@ -247,17 +284,21 @@ Worte, in denen der <strong>Live-Preis</strong> am Tooltip eines Waystones gefra
   Mindestwert liegt, noch als erfüllt gelten.</li>
 </ul>
 
-<h3><span class="en">Properties</span><span class="de">Item-Eigenschaften</span></h3>
+<h3><span class="en">Properties</span>
+<span class="ru">Свойства</span><span class="de">Item-Eigenschaften</span></h3>
 <p class="en">Item rarity, pack size, monster rarity, monster effectiveness and waystone drop chance are
 each "at least". Tier and revives take a range ("15 to 16"; one side may stay empty). Corrupted:
 any, yes or no. An empty field asks nothing.</p>
+<p class="ru">Редкость предметов, размер групп, редкость и эффективность монстров, а также выпадение камней задают минимальные значения. Для уровня и возрождений можно указать диапазон, например «15 до 16»; одну из границ можно оставить пустой. Осквернение: любое, осквернён или не осквернён. Пустое поле не добавляет условия.</p>
 <p class="de">Item Rarity, Pack Size, Monster Rarity, Monster Effectiveness und Waystone Drop Chance gelten
 jeweils als „mindestens“. Stufe und Revives nehmen einen Bereich („15 bis 16“; eine Seite darf leer
 bleiben). Corrupted: egal, ja oder nein. Ein leeres Feld fragt nichts.</p>
 
-<h3><span class="en">Mods in groups</span><span class="de">Mods in Gruppen</span></h3>
+<h3><span class="en">Mods in groups</span>
+<span class="ru">Группы модификаторов</span><span class="de">Mods in Gruppen</span></h3>
 <p class="en">Mods stand in groups, as in the stat filters of the trade site. Each group has its kind in its
 head:</p>
+<p class="ru">Модификаторы объединяются в группы, как фильтры характеристик на торговой площадке. В заголовке группы выбирается правило:</p>
 <p class="de">Mods stehen in Gruppen, wie bei den Stat-Filtern der Trade-Seite. Jede Gruppe hat ihre Art im
 Kopf:</p>
 <table class="en">
@@ -266,6 +307,7 @@ Kopf:</p>
   <tr><td>or</td><td>at least one mod of the group</td></tr>
   <tr><td>not</td><td>none of the group's mods (no value field)</td></tr>
 </table>
+<table class="ru"><tr><th>Правило</th><th>Что требуется от путевого камня</th></tr><tr><td>и</td><td>Все модификаторы группы, каждый — не ниже своего значения.</td></tr><tr><td>или</td><td>Хотя бы один модификатор группы.</td></tr><tr><td>не</td><td>Ни одного модификатора группы; поле значения не используется.</td></tr></table>
 <table class="de">
   <tr><th>Art</th><th>Der Waystone muss haben</th></tr>
   <tr><td>und</td><td>jeden Mod der Gruppe, jeden mindestens mit seinem Wert</td></tr>
@@ -282,6 +324,7 @@ Kopf:</p>
   again.</li>
   <li>The value field: the least value; empty, it shows the span the mod rolls.</li>
 </ul>
+<ul class="ru"><li>Условия всех групп должны выполняться одновременно. Первая группа использует правило «и». Кнопка <strong>«Добавить группу»</strong> создаёт сразу после текущей группу «или» с первой строкой; правило можно изменить в заголовке.</li><li><strong>«Добавить мод.»</strong> добавляет строку в группу; ✕ удаляет строку или группу. В группе путевого камня может быть до восьми модификаторов, плитки — до четырёх.</li><li>Начните вводить текст в строке, чтобы отфильтровать список модификаторов. Уже выбранный модификатор не предлагается повторно в той же группе, но может использоваться в другой.</li><li>В поле значения задаётся минимум. Если оно пустое, показывается возможный диапазон значений модификатора.</li></ul>
 <ul class="de">
   <li>Alle Gruppen müssen zugleich gelten. Gruppe 1 ist „und“; <strong>Neue Gruppe</strong> setzt eine
   „oder“-Gruppe direkt hinter die eigene, mit ihrer ersten Zeile; die Art lässt sich im Kopf der
@@ -296,21 +339,25 @@ Kopf:</p>
 <p class="en">Example: group 1 "and" with more Monster Life ≥ 20; group 2 "or" with Ailment Threshold ≥ 60
 and Stun Threshold ≥ 60; group 3 "not" with Ignited Ground. That is: more life, at least one of the
 two thresholds, and no ignited ground.</p>
+<p class="ru">Пример: в группе «и» — more Monster Life ≥ 20; в группе «или» — Ailment Threshold ≥ 60 и Stun Threshold ≥ 60; в группе «не» — Ignited Ground. Это означает: больше здоровья монстров, хотя бы один из двух порогов и отсутствие горящей земли. Названия в списке модификаторов следуют языку игры.</p>
 <p class="de">Beispiel: Gruppe 1 „und“ mit more Monster Life ≥ 20; Gruppe 2 „oder“ mit Ailment Threshold ≥ 60
 und Stun Threshold ≥ 60; Gruppe 3 „nicht“ mit Ignited Ground. Das heißt: mehr Leben, mindestens eine
 der beiden Schwellen, und kein entzündeter Boden.</p>
 
-<h3><span class="en">Search text for the stash</span><span class="de">Suchtext für den Stash</span></h3>
+<h3><span class="en">Search text for the stash</span>
+<span class="ru">Строка поиска для сундука</span><span class="de">Suchtext für den Stash</span></h3>
 <p class="en"><strong>Copy</strong> puts it on the clipboard; paste it into the search box of a stash tab, and
 the waystones that match the profile light up. It is written in the words of your game client
 (English or German). The game's search box takes 250 characters; the counter under the text says
 how many are used, and a text that is too long is marked.</p>
+<p class="ru">Нажмите <strong>«Копировать»</strong> и вставьте текст в поле поиска вкладки сундука: камни, соответствующие профилю, подсветятся. Строка формируется на языке клиента игры (английском или немецком). Поиск в игре допускает 250 символов; счётчик под строкой показывает использованное количество, слишком длинная строка отмечается.</p>
 <p class="de"><strong>Kopieren</strong> legt ihn in die Zwischenablage; füge ihn in das Suchfeld eines Stash-Tabs
 ein, und die Waystones, die zum Profil passen, leuchten auf. Er steht in den Worten deines Spielclients
 (Englisch oder Deutsch). Das Suchfeld des Spiels nimmt 250 Zeichen; der Zähler unter dem Text sagt, wie
 viele belegt sind, und ein zu langer Text wird markiert.</p>
 
-<h3><span class="en">The profile's price</span><span class="de">Preis des Profils</span></h3>
+<h3><span class="en">The profile's price</span>
+<span class="ru">Цена профиля</span><span class="de">Preis des Profils</span></h3>
 <p class="en"><strong>Refresh price</strong> asks the trade site of pathofexile.com for the cheapest waystone the
 profile describes; the answer shows the price, the number of listings and the time it was asked.
 Before that an Exalted Orb and "→ Refresh price" stand there: nothing is asked by itself (the
@@ -318,6 +365,7 @@ trade site's limit is shared with the live price in the game). An asked price is
 profile while the program runs. Counted are Instant Buyout listings, and with "incl. premium
 stash (online)" in Settings → Prices and display also those of sellers who are online; offline sellers never.
 With four or more listings the second cheapest counts, so that one price fixer does not.</p>
+<p class="ru">Кнопка <strong>«Узнать цену»</strong> запрашивает на pathofexile.com самые дешёвые путевые камни, соответствующие профилю. Показываются цена, число предложений и время запроса. До запроса стоит подсказка «→ Узнать цену»: автоматически цена профиля не запрашивается, поскольку лимит площадки используется и для цен в игре. Полученная цена хранится у профиля до завершения работы программы. По умолчанию учитывается мгновенный выкуп (Instant Buyout), а с настройкой «Учитывать премиум-вкладки (онлайн)» в разделе «Цены и отображение» — также премиум-вкладки продавцов онлайн. Предложения премиум-вкладок продавцов не в сети не учитываются. При четырёх и более предложениях берётся вторая по дешевизне цена, чтобы одиночное заниженное предложение меньше влияло на результат.</p>
 <p class="de"><strong>Preis abfragen</strong> fragt die Trade-Seite von pathofexile.com nach dem günstigsten
 Waystone, den das Profil beschreibt; die Antwort zeigt den Preis, die Zahl der Angebote und die Uhrzeit
 der Abfrage. Vorher stehen dort ein Exalted Orb und „→ Preis abfragen“: von selbst wird nichts gefragt
@@ -327,17 +375,20 @@ Ein abgefragter Preis bleibt beim Profil, solange das Programm läuft. Es zähle
 Verkäufer offline nie. Ab vier Angeboten zählt das zweitgünstigste, damit ein einzelner Preisdrücker
 nicht zählt.</p>
 
-<h3><span class="en">Live price at the tooltip</span><span class="de">Live-Preis am Tooltip</span></h3>
+<h3><span class="en">Live price at the tooltip</span>
+<span class="ru">Цена у подсказки предмета</span><span class="de">Live-Preis am Tooltip</span></h3>
 <p class="en">Switched on in Settings → Prices and display ("Live price from the trade site", one switch for waystones
 and tablets), the program reads the tooltip of the waystone under your mouse or cursor (in a stash
 tab, the inventory, anywhere) and writes its price at the right end of the title bar. The "Stash"
 switch of the automatic scan covers the tooltips as well; with it off, <kbd>Alt</kbd>+<kbd>F</kbd>
 shows them.</p>
+<p class="ru">Включите <strong>«Цена с торговой площадки в подсказке»</strong> в разделе «Настройки → Цены и отображение» — переключатель общий для путевых камней и плиток. Программа прочитает подсказку предмета под мышью или курсором (в сундуке, инвентаре или другом месте) и покажет цену справа в заголовке. Переключатель автосканирования <strong>«Сундук»</strong> действует и для этих подсказок; если он выключен, используйте <kbd>Alt</kbd>+<kbd>F</kbd>.</p>
 <p class="de">In Einstellungen → Preise und Anzeige eingeschaltet („Live-Preis von der Trade-Seite“, ein Schalter für
 Waystones und Tablets), liest das Programm den Tooltip des Waystones unter Maus oder Cursor (im Stash-Tab,
 im Inventar, überall) und schreibt seinen Preis rechts an die Titelleiste. Der Schalter „Truhe“ des
 Auto-Scans gilt auch für die Tooltips; ist er aus, zeigt <kbd>Alt</kbd>+<kbd>F</kbd> sie.</p>
-<figure><img src="waystone.png" width="900" height="435" alt="Waystone tooltip with its price at the right end of the title bar."><figcaption class="en">A waystone's tooltip with its live price at the title bar.</figcaption><figcaption class="de">Der Tooltip eines Waystones mit seinem Live-Preis an der Titelleiste.</figcaption></figure>
+<figure><img src="waystone.png" width="900" height="435" alt="Waystone tooltip with its price at the right end of the title bar." data-alt-en="Waystone tooltip with its price at the right end of the title bar." data-alt-ru="Подсказка путевого камня с ценой в правой части заголовка."><figcaption class="en">A waystone's tooltip with its live price at the title bar.</figcaption>
+<figcaption class="ru">Подсказка путевого камня с ценой в заголовке.</figcaption><figcaption class="de">Der Tooltip eines Waystones mit seinem Live-Preis an der Titelleiste.</figcaption></figure>
 <table class="en">
   <tr><th>At the title bar</th><th>Meaning</th></tr>
   <tr><td>a price</td><td>The cheapest listing of a waystone like this one (counted as above).</td></tr>
@@ -345,6 +396,7 @@ Auto-Scans gilt auch für die Tooltips; ist er aus, zeigt <kbd>Alt</kbd>+<kbd>F<
   <tr><td><code>–</code></td><td>No listing. Asked again after a while.</td></tr>
   <tr><td><code>⏳</code></td><td>Not asked: the trade site is busy or not reachable; the status line says how long until it is asked again.</td></tr>
 </table>
+<table class="ru"><tr><th>В заголовке</th><th>Значение</th></tr><tr><td>Цена</td><td>Оценка по самым дешёвым предложениям похожих камней с учётом правил выше.</td></tr><tr><td><code>…</code></td><td>Идёт запрос к торговой площадке.</td></tr><tr><td><code>–</code></td><td>Предложений нет. Через некоторое время запрос повторится.</td></tr><tr><td><code>⏳</code></td><td>Запрос отложен: площадка занята или недоступна. В строке состояния указано время до повторной попытки.</td></tr></table>
 <table class="de">
   <tr><th>An der Titelleiste</th><th>Bedeutung</th></tr>
   <tr><td>ein Preis</td><td>Das günstigste Angebot eines Waystones wie dieses (gezählt wie oben).</td></tr>
@@ -359,6 +411,7 @@ minute before it asks again, twice as long after each further failure, ten minut
 <kbd>Alt</kbd>+<kbd>D</kbd> ("Force live price") asks for the waystone under the mouse exactly as it
 is, past the profiles, also while the live price is switched off. When nothing of a tooltip could
 be read (no value, no mod), no price is asked; the status line says "tooltip text not read".</p>
+<p class="ru">Цена появляется с задержкой: торговая площадка разрешает лишь несколько запросов за десять секунд, и программа соблюдает лимит. Ответ хранится десять минут; повторное наведение на тот же камень в этот срок не создаёт новый запрос. После сбоя площадки программа ждёт минуту, после каждого следующего — вдвое дольше, максимум десять минут. <kbd>Alt</kbd>+<kbd>D</kbd> (<strong>«Запросить точную цену»</strong>) запрашивает камень по всем его значениям и модификаторам, без профилей, даже если автоматическая цена у подсказки выключена. Если не удалось прочитать ни значения, ни модификаторы, цена не запрашивается; в строке состояния появляется сообщение «не удалось прочитать подсказку».</p>
 <p class="de">Der Preis braucht einen Moment: Die Trade-Seite erlaubt wenige Anfragen in zehn Sekunden, und
 das Programm bleibt darunter. Eine Antwort wird zehn Minuten aufgehoben: derselbe Waystone, in dieser
 Zeit noch einmal gezeigt, wird nicht neu gefragt. Nach einem Ausfall der Seite (nicht erreichbar, eine
@@ -367,7 +420,8 @@ so lange, höchstens zehn Minuten. <kbd>Alt</kbd>+<kbd>D</kbd> („Live-Preis er
 wie er ist, an den Profilen vorbei, auch bei ausgeschaltetem Live-Preis. Konnte vom Tooltip nichts gelesen
 werden (kein Wert, kein Mod), wird nicht gefragt; die Statuszeile sagt „Tooltip-Text nicht gelesen“.</p>
 
-<h3><span class="en">How the question is formed</span><span class="de">Wie die Frage entsteht</span></h3>
+<h3><span class="en">How the question is formed</span>
+<span class="ru">Как формируется запрос</span><span class="de">Wie die Frage entsteht</span></h3>
 <p class="en">The <strong>profile</strong> says <em>what</em> is asked about, the <strong>waystone</strong> gives the numbers. With several
 profiles saved, the one the waystone has most in common with (the most conditions met; an "or" group
 counts as one; the one in use in the tab on a tie) sets the question: the properties and mods it
@@ -376,6 +430,7 @@ or an excluded mod it has, is left out, so the price is that of this waystone, n
 Without a profile, or when nothing of the profile is left for this waystone, it is asked for
 exactly as it is, every value and every mod; that finds fewer listings, and a strong waystone may
 find none ("–").</p>
+<p class="ru"><strong>Профиль</strong> определяет, какие свойства и модификаторы учитывать, а <strong>путевой камень</strong> задаёт их значения. Из сохранённых профилей выбирается тот, у которого больше выполненных условий; группа «или» считается одним условием, при равенстве приоритет у выбранного на вкладке профиля. Для указанных свойств и модификаторов берутся значения самого камня, уменьшенные на допуск. Желаемый модификатор, которого на камне нет, или запрещённый модификатор, который на нём есть, не включается в запрос: оценивается этот камень, а не его улучшенный вариант. Без профиля, либо если ни одно его условие не применимо, запрашиваются все значения и модификаторы камня. Такой точный запрос находит меньше предложений; для сильного камня их может не оказаться («–»).</p>
 <p class="de">Das <strong>Profil</strong> sagt, <em>wonach</em> gefragt wird, der <strong>Waystone</strong> liefert die Zahlen. Sind mehrere
 Profile gespeichert, bestimmt das mit den meisten Gemeinsamkeiten (die meisten erfüllten Bedingungen; eine
 „oder“-Gruppe zählt als eine; bei Gleichstand das im Tab gewählte) die Frage: die Eigenschaften und Mods,
@@ -385,11 +440,13 @@ dieses Waystones, nicht der eines besseren. Ohne Profil, oder wenn vom Profil f�
 übrig bleibt, wird er exakt gefragt, wie er ist, jeder Wert und jeder Mod; das findet weniger Angebote,
 und ein starker Waystone findet womöglich keines („–“).</p>
 
-<h3><span class="en">German game client</span><span class="de">Deutscher Spielclient</span></h3>
+<h3><span class="en">German game client</span>
+<span class="ru">Немецкий клиент игры</span><span class="de">Deutscher Spielclient</span></h3>
 <p class="en">Waystone and tablet tooltips are read in English and in German, with <kbd>Alt</kbd> held (the
 title in English) or without. In a German client the search text, the mod lists and the kinds of
 tablets in the program window are German; a profile keeps the English names of its mods and holds
 in both languages.</p>
+<p class="ru">Подсказки путевых камней и плиток читаются на английском и немецком — с зажатой <kbd>Alt</kbd> (английское название) или без неё. В немецком клиенте строки поиска, списки модификаторов и типы плиток в программе будут немецкими. Профиль сохраняет английские названия модификаторов и работает с обоими поддерживаемыми языками игры. Выбор RU в программе не меняет язык распознавания.</p>
 <p class="de">Waystone- und Tablet-Tooltips werden auf Englisch und auf Deutsch gelesen, mit gedrückter
 <kbd>Alt</kbd>-Taste (der Titel englisch) oder ohne. Im deutschen Client sind Suchtext, Mod-Listen und
 Tablet-Arten im Programmfenster deutsch; ein Profil behält die englischen Namen seiner Mods und gilt in
@@ -398,20 +455,24 @@ beiden Sprachen.</p>
 <p class="en">Nothing is sent to the game for this: the tooltip is read from the picture like every other
 window. The trade site is asked without an account or session; a request holds the profile's or
 the item's values and mods, nothing about you.</p>
+<p class="ru">Для этого программа ничего не отправляет в игру: подсказка считывается из изображения окна, как и остальные окна. Торговая площадка запрашивается без учётной записи и игровой сессии; запрос содержит значения и модификаторы профиля или предмета.</p>
 <p class="de">Dafür wird nichts ins Spiel gesendet: der Tooltip wird wie jedes andere Fenster aus dem Bild
 gelesen. Die Trade-Seite wird ohne Konto oder Sitzung gefragt; eine Anfrage enthält die Werte und Mods des
 Profils oder des Items, nichts über dich.</p>
 
-<h2 id="tablets"><span class="en">Tablets</span><span class="de">Tablets</span></h2>
+<h2 id="tablets"><span class="en">Tablets</span>
+<span class="ru">Плитки</span><span class="de">Tablets</span></h2>
 <p class="en">The <strong>Tablets</strong> tab works like the Waystones tab, with one profile per kind of tablet:
 pick the kind (Breach, Expedition, Delirium, Ritual, Irradiated, Overseer, Abyss, Temple) and the
 fields below belong to it. A kind with a profile is marked "●" in the list. ✓ saves the kind's
 profile; ✕ clears its fields, and tablets of that kind are then asked for exactly as they are.</p>
+<p class="ru">Вкладка <strong>«Плитки»</strong> устроена так же, как «Путевые камни», но для каждого типа есть один профиль. Выберите тип (Breach, Expedition, Delirium, Ritual, Irradiated, Overseer, Abyss, Temple); поля ниже относятся к нему. Типы с профилем отмечены в списке символом «●». ✓ сохраняет профиль, ✕ очищает поля; после очистки плитки этого типа оцениваются по точным собственным параметрам.</p>
 <p class="de">Der Tab <strong>Tablets</strong> arbeitet wie der Tab Waystones, mit einem Profil je Art: wähle die Art
 (Breach, Expedition, Delirium, Ritual, Irradiated, Overseer, Abyss, Temple), und die Felder darunter
 gehören zu ihr. Eine Art mit Profil ist in der Liste mit „●“ markiert. ✓ speichert das Profil der Art;
 ✕ leert ihre Felder, und Tablets dieser Art werden dann exakt gefragt, wie sie sind.</p>
-<figure><img src="window-tablets.png" width="780" height="775" alt="The Tablets tab: Overseer Tablet profile with uses left and an or group of two mods."><figcaption class="en">The Tablets tab: an Overseer Tablet profile with uses left and an "or" group.</figcaption><figcaption class="de">Der Tab Tablets: ein Profil für das Overseer Tablet mit Nutzungen und einer „oder“-Gruppe.</figcaption></figure>
+<figure><img src="window-tablets.png" width="780" height="775" alt="The Tablets tab: Overseer Tablet profile with uses left and an or group of two mods." data-alt-en="The Tablets tab: Overseer Tablet profile with uses left and an or group of two mods." data-alt-ru="Русская вкладка «Плитки»: профиль Overseer Tablet с применениями и группой «или»." data-src-en="window-tablets.png" data-src-ru="window-tablets-ru.png"><figcaption class="en">The Tablets tab: an Overseer Tablet profile with uses left and an "or" group.</figcaption>
+<figcaption class="ru">Вкладка «Плитки»: профиль Overseer Tablet с оставшимися применениями и группой «или». Типы плиток и модификаторы показаны на языке клиента игры.</figcaption><figcaption class="de">Der Tab Tablets: ein Profil für das Overseer Tablet mit Nutzungen und einer „oder“-Gruppe.</figcaption></figure>
 <ul class="en">
   <li><strong>Uses left</strong> (under Properties): a tablet starts with 10 uses and loses one per map;
   the profile asks for at least this many.</li>
@@ -425,6 +486,7 @@ gehören zu ihr. Eine Art mit Profil ist in der Liste mit „●“ markiert. �
   <li>On an Overseer Tablet, "an additional Essence" (or Shrine) and "# additional Essences" (or Shrines)
   read alike at 1; a profile that names one is asked for either.</li>
 </ul>
+<ul class="ru"><li><strong>«Осталось применений»</strong> в разделе «Свойства»: у новой плитки 10 применений, на каждой карте расходуется одно. Профиль задаёт минимум оставшихся применений.</li><li><strong>Модификаторы</strong>: общие для всех плиток и доступные только выбранному типу. Группы работают так же, как у путевых камней; не более четырёх модификаторов в группе.</li><li><strong>Строка поиска</strong> учитывает название типа, применения и модификаторы.</li><li><strong>Цена</strong> запрашивается кнопкой «Узнать цену» по самым дешёвым плиткам нужного типа и профиля (без уникальных). Правила расчёта те же, что для путевых камней.</li><li><strong>Цена у подсказки</strong> работает так же, как у путевых камней. Профиль выбирается по типу плитки; без профиля используются точные параметры предмета.</li><li>У Overseer Tablet строки «an additional Essence» (или Shrine) и «# additional Essences» (или Shrines) при значении 1 читаются одинаково. Если профиль содержит один вариант, поиск учитывает оба.</li></ul>
 <ul class="de">
   <li><strong>Nutzungen übrig</strong> (unter Item-Eigenschaften): ein Tablet beginnt mit 10 Nutzungen und
   verliert eine je Map; das Profil fragt nach mindestens so vielen.</li>
@@ -438,19 +500,23 @@ gehören zu ihr. Eine Art mit Profil ist in der Liste mit „●“ markiert. �
   <li>Auf einem Overseer Tablet lesen sich „an additional Essence“ (oder Shrine) und „# additional
   Essences“ (oder Shrines) bei 1 gleich; ein Profil, das eines davon nennt, fragt nach beiden.</li>
 </ul>
-<figure><img src="tablet.png" width="900" height="354" alt="Overseer Tablet tooltip with its price at the right end of the title bar."><figcaption class="en">An Overseer Tablet's tooltip with its live price.</figcaption><figcaption class="de">Der Tooltip eines Overseer Tablets mit seinem Live-Preis.</figcaption></figure>
-<h2 id="rumours"><span class="en">Island Rumours</span><span class="de">Inselgerüchte</span></h2>
+<figure><img src="tablet.png" width="900" height="354" alt="Overseer Tablet tooltip with its price at the right end of the title bar." data-alt-en="Overseer Tablet tooltip with its price at the right end of the title bar." data-alt-ru="Подсказка Overseer Tablet с ценой в правой части заголовка."><figcaption class="en">An Overseer Tablet's tooltip with its live price.</figcaption>
+<figcaption class="ru">Подсказка Overseer Tablet с ценой.</figcaption><figcaption class="de">Der Tooltip eines Overseer Tablets mit seinem Live-Preis.</figcaption></figure>
+<h2 id="rumours"><span class="en">Island Rumours</span>
+<span class="ru">Слухи об островах</span><span class="de">Inselgerüchte</span></h2>
 <p class="en">On the Atlas, the Island Rumours panel of an uncharted island lists the rumours of the island.
 poe2pricer shows a table beside the panel as soon as it has come to rest: for each rumour its
 island, its mods, the community tier (S+ to F) and a note. The ratings and notes come from Gnejs
 PoE Tools (tiers and notes by Jestra1220) and are loaded at run time; the settings window shows
 the source and when it was updated.</p>
+<p class="ru">Панель Island Rumours на Атласе показывает слухи о неисследованном острове. Когда панель перестаёт двигаться, poe2pricer выводит рядом таблицу: остров, модификаторы, ранг сообщества (от S+ до F) и заметку для каждого слуха. Ранги и заметки поступают с Gnejs PoE Tools (автор оценок и заметок — Jestra1220) во время работы программы. Источник и время обновления видны в настройках. Эти данные сообщества сохраняют исходный язык.</p>
 <p class="de">Im Atlas listet das Inselgerüchte-Fenster einer unerforschten Insel ihre Gerüchte. poe2pricer
 zeigt neben dem Fenster eine Tabelle, sobald es zur Ruhe gekommen ist: je Gerücht die Insel, die
 Mods, die Community-Wertung (S+ bis F) und eine Notiz. Wertungen und Notizen kommen von Gnejs PoE
 Tools (Wertungen und Notizen von Jestra1220) und werden zur Laufzeit geladen; das
 Einstellungsfenster zeigt Quelle und Stand.</p>
-<figure><img src="rumours.png" width="900" height="429" alt="Island Rumours: the card beside the panel after two rolls."><figcaption class="en">Island Rumours: the card beside the panel after two rolls — expedition tier, the rumours with their tiers, a new one marked, a rotated one under the line.</figcaption><figcaption class="de">Inselgerüchte: die Karte neben dem Fenster nach zwei Würfen — Expeditionstier, die Gerüchte mit ihren Stufen, ein neues markiert, ein ausrotiertes unter dem Strich.</figcaption></figure>
+<figure><img src="rumours.png" width="900" height="429" alt="Island Rumours: the card beside the panel after two rolls." data-alt-en="Island Rumours: the card beside the panel after two rolls." data-alt-ru="Слухи об островах: ранг экспедиции и таблица слухов после двух обновлений."><figcaption class="en">Island Rumours: the card beside the panel after two rolls — expedition tier, the rumours with their tiers, a new one marked, a rotated one under the line.</figcaption>
+<figcaption class="ru">Слухи об островах после двух обновлений: ранг экспедиции, ранги слухов, отметка нового слуха и ранее увиденный слух под чертой.</figcaption><figcaption class="de">Inselgerüchte: die Karte neben dem Fenster nach zwei Würfen — Expeditionstier, die Gerüchte mit ihren Stufen, ein neues markiert, ein ausrotiertes unter dem Strich.</figcaption></figure>
 <p class="en">The panel shows three rumours at a time; moving an item in the inventory rolls them anew, and
 the panel closes and opens again. poe2pricer recognises the island by the sea chart around its
 ship marker and collects the rumours over the rolls (opening the panel again without moving
@@ -466,6 +532,7 @@ zooming the Atlas between two openings, or switching between keyboard and contro
 little of the chart in common — the Atlas is drawn in perspective, a moved map shows the same island
 distorted differently — and the program starts a new collection for the same island; opening the
 panel without moving the Atlas is always recognised.</p>
+<p class="ru">Панель показывает по три слуха. Перемещение предмета в инвентаре обновляет их: панель закрывается и открывается снова. poe2pricer узнаёт остров по морской карте вокруг значка корабля и собирает слухи между обновлениями. Если просто переоткрыть панель без перемещения предмета, останутся те же три слуха — это не считается обновлением. Под таблицей показывается <strong>ранг экспедиции</strong>, количество увиденных слухов и обновлений. Ниже перечисляются ранее увиденные слухи, которых сейчас нет на панели; впервые увиденный на этом острове слух отмечается как <em>новое</em>. Ранг экспедиции рассчитывается по среднему весу всех увиденных слухов, с приоритетом ваших оценок; показывается высший ранг, порога которого достигает средний вес. Меньше трёх слухов на панели означает <em>собрано всё</em>; при трёх программа напоминает переместить предмет для продолжения. Сбор действует до завершения программы; интересный остров лучше отметить в игре. Перемещение или масштабирование Атласа, а также смена клавиатуры на контроллер могут изменить вид карты настолько, что программа начнёт новый сбор для того же острова. Если Атлас не двигать, повторное открытие панели распознаётся.</p>
 <p class="de">Das Fenster zeigt drei Gerüchte auf einmal; wer einen Gegenstand im Inventar verschiebt, würfelt
 sie neu, das Fenster schließt und öffnet sich wieder. poe2pricer erkennt die Insel an der Seekarte um
 ihr Schiffssymbol und sammelt die Gerüchte über die Würfe hinweg (wer das Fenster nur schließt und
@@ -487,14 +554,17 @@ can give a rumour your own tier and a note; your own tier overrides the communit
 marked with * in the game. Rumours the table does not know can be added with "+ Add custom row".
 Below the table stand the weights of the tiers for the expedition tier (S+ 6 … F 1 to begin
 with). Everything is applied on <strong>Save</strong>.</p>
+<p class="ru">Вкладка <strong>«Слухи»</strong> показывает таблицу сообщества. Здесь можно назначить свой ранг и заметку. Свой ранг заменяет ранг сообщества и отмечается в игре символом *. Слух, которого нет в таблице, можно добавить кнопкой «+ Добавить свою строку». Под таблицей задаются веса рангов для оценки экспедиции (по умолчанию от S+ = 6 до F = 1). Изменения применяются после нажатия <strong>«Сохранить»</strong>.</p>
 <p class="de">Der Tab <strong>Gerüchte</strong> des Einstellungsfensters zeigt die Community-Tabelle. Dort kannst
 du einem Gerücht eine eigene Wertung und eine Notiz geben; die eigene Wertung geht der
 Community-Wertung vor und ist im Spiel mit * markiert. Gerüchte, die die Tabelle nicht kennt,
 lassen sich mit „+ Eigene Zeile hinzufügen“ anlegen. Unter der Tabelle stehen die Gewichte der
 Stufen für das Expeditionstier (anfangs S+ 6 … F 1). Alles gilt nach <strong>Speichern</strong>.</p>
 
-<h2 id="settings"><span class="en">Settings</span><span class="de">Einstellungen</span></h2>
-<figure><img src="window-settings.png" width="780" height="775" alt="The Settings tab of the program window."><figcaption class="en">The Settings tab.</figcaption><figcaption class="de">Der Tab Einstellungen.</figcaption></figure>
+<h2 id="settings"><span class="en">Settings</span>
+<span class="ru">Настройки</span><span class="de">Einstellungen</span></h2>
+<figure><img src="window-settings.png" width="780" height="775" alt="The Settings tab of the program window." data-alt-en="The Settings tab of the program window." data-alt-ru="Вкладка «Настройки» на русском языке." data-src-en="window-settings.png" data-src-ru="window-settings-ru.png"><figcaption class="en">The Settings tab.</figcaption>
+<figcaption class="ru">Вкладка «Настройки» с русским интерфейсом.</figcaption><figcaption class="de">Der Tab Einstellungen.</figcaption></figure>
 <table class="en">
   <tr><th>Setting</th><th>What it does</th></tr>
   <tr><td>League</td><td>Which league's prices are shown. "Auto" follows the current league.</td></tr>
@@ -510,7 +580,24 @@ Stufen für das Expeditionstier (anfangs S+ 6 … F 1). Alles gilt nach <strong>
   <tr><td>Start with Windows</td><td>Starts poe2pricer in the tray when you sign in. Applied or removed on save.</td></tr>
   <tr><td>Check for updates</td><td>Asks github.com once at every start whether a newer version is out. Installed with the setup: the message names it; a click downloads and installs it and starts poe2pricer again, nothing happens without the click. Unpacked from a zip: the message leads to the download page.</td></tr>
   <tr><td>Game settings file</td><td>The game's options file (poe2_production_Config.ini). The program reads the Popup Size, the UI Text Size and the game language from it; normally it finds the file by itself.</td></tr>
-  <tr><td>Program language</td><td>English or German for the settings window and the messages.</td></tr>
+  <tr><td>Program language</td><td>English, German or Russian for the settings window and the messages (independent of the game language).</td></tr>
+</table>
+<table class="ru settings-table">
+  <tr><th>Настройка</th><th>Назначение</th></tr>
+  <tr><td>Лига</td><td>Лига, для которой показываются цены. «Авто» выбирает текущую.</td></tr>
+  <tr><td>Валюта цен</td><td>Сферы возвышения (по умолчанию) или хаоса для цен ниже одной божественной сферы. От одной божественной сферы цены всегда в божественных сферах.</td></tr>
+  <tr><td>Скрывать цены ниже</td><td>Порог в сферах возвышения, хаоса или божественных сферах. Для Ритуала и сундука — цена за предмет, для награды останка — стоимость всей строки. Выделение самой дорогой награды сохраняется.</td></tr>
+  <tr><td>Захват только окна игры</td><td>По умолчанию включён: изображение считывается из самого окна игры, а программы записи (NVIDIA app, OBS, Game Bar) могут записывать рабочий стол вместе с ценами. Требуется Windows 11; в Windows 10 используется считывание экрана. Если выключено, изображение считывается с экрана, а цены скрываются из всех записей, как в версиях до 1.2.0 включительно. Захват окна также требует меньше ресурсов. Если окно не даёт изображения или оно чёрное, хотя игра видна на экране, программа автоматически переходит к считыванию экрана и сообщает об этом строкой в окне.</td></tr>
+  <tr><td>Цена с торговой площадки в подсказке</td><td>Показывает цену у подсказки путевого камня или плитки под мышью или курсором (см. <a href="#waystones">«Путевые камни»</a>). Один переключатель для обоих типов.</td></tr>
+  <tr><td>Учитывать премиум-вкладки (онлайн)</td><td>По умолчанию учитывается только мгновенный выкуп; при включении добавляются премиум-вкладки продавцов онлайн. Предложения премиум-вкладок продавцов не в сети не учитываются.</td></tr>
+  <tr><td>Горячие клавиши</td><td>«Показать / скрыть цены», «Сохранить диагностику» и «Запросить точную цену». Нажмите на поле и введите сочетание. Работают только при активном окне игры. Совпадающая с одной из двух других клавиша точной цены отключается с уведомлением.</td></tr>
+  <tr><td>Расширенная диагностика</td><td>По умолчанию выключена. При включении дополнительно сохраняется по несколько снимков автоматического распознавания каждого типа — например, обновления Ритуала или исправления первоначального чтения окна. Если выключена, снимки сохраняются только по клавише диагностики. Никуда не отправляются автоматически.</td></tr>
+  <tr><td>Автосканирование</td><td>Окна, в которых цены появляются автоматически: Ритуал, Экспедиция (слухи и останки), сундук (включая подсказки путевых камней и плиток). Горячая клавиша действует для всех поддерживаемых окон.</td></tr>
+  <tr><td>Интервалы</td><td>Частота поиска нужного окна и проверки уже открытого. Если игра подтормаживает, увеличьте оба интервала.</td></tr>
+  <tr><td>Запускать с Windows</td><td>Запускает poe2pricer в трее при входе в Windows. Изменение применяется при сохранении.</td></tr>
+  <tr><td>Проверять обновления</td><td>Один раз при запуске проверяет новую версию на github.com. Для установленной программы нажатие на уведомление скачивает и устанавливает обновление с перезапуском. Без нажатия обновление не устанавливается. Для ZIP-версии открывается страница загрузки.</td></tr>
+  <tr><td>Файл настроек игры</td><td>Файл poe2_production_Config.ini. Из него читаются размер всплывающих окон (Popup Size), размер текста интерфейса (UI Text Size) и язык игры. Обычно программа находит его сама.</td></tr>
+  <tr><td>Язык программы</td><td>Английский, немецкий или русский для окна программы, сообщений и справки. Язык распознавания игры выбирается отдельно из настроек самого клиента; русский интерфейс не добавляет распознавание русского клиента.</td></tr>
 </table>
 <table class="de">
   <tr><th>Einstellung</th><th>Wirkung</th></tr>
@@ -527,20 +614,23 @@ Stufen für das Expeditionstier (anfangs S+ 6 … F 1). Alles gilt nach <strong>
   <tr><td>Mit Windows starten</td><td>Startet poe2pricer beim Anmelden im Tray. Wird beim Speichern gesetzt oder entfernt.</td></tr>
   <tr><td>Nach Updates suchen</td><td>Fragt bei jedem Start einmal bei github.com an, ob eine neuere Version da ist. Mit dem Setup installiert: die Meldung nennt sie; ein Klick lädt sie herunter, installiert sie und startet poe2pricer neu, ohne Klick geschieht nichts. Aus dem Zip entpackt: die Meldung führt zur Download-Seite.</td></tr>
   <tr><td>Datei der Spieleinstellungen</td><td>Die Optionsdatei des Spiels (poe2_production_Config.ini). Das Programm liest daraus Popup Size, UI Text Size und Spielsprache; normalerweise findet es die Datei selbst.</td></tr>
-  <tr><td>Sprache des Programms</td><td>Englisch oder Deutsch für Einstellungsfenster und Meldungen.</td></tr>
+  <tr><td>Sprache des Programms</td><td>Englisch, Deutsch oder Russisch für Einstellungsfenster und Meldungen (unabhängig von der Spielsprache).</td></tr>
 </table>
 <p class="en">Closing the window minimises it to the tray; <strong>Exit</strong> quits the program. Settings
 are kept in <code>%LOCALAPPDATA%\poe2pricer</code>.</p>
+<p class="ru">Закрытие окна сворачивает программу в трей; кнопка <strong>«Выйти»</strong> завершает её работу. Настройки хранятся в <code>%LOCALAPPDATA%\poe2pricer</code>.</p>
 <p class="de">Schließen des Fensters minimiert es in den Tray; <strong>Beenden</strong> beendet das Programm.
 Einstellungen liegen in <code>%LOCALAPPDATA%\poe2pricer</code>.</p>
 
-<h2 id="hotkeys"><span class="en">Hotkeys</span><span class="de">Tastenkürzel</span></h2>
+<h2 id="hotkeys"><span class="en">Hotkeys</span>
+<span class="ru">Горячие клавиши</span><span class="de">Tastenkürzel</span></h2>
 <table class="en">
   <tr><th>Key</th><th>Action</th></tr>
   <tr><td><kbd>Alt</kbd>+<kbd>F</kbd></td><td>Show or hide the prices for the window that is open in the game.</td></tr>
   <tr><td><kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd></td><td>Save a diagnosis (a screenshot and what the program made of it) to <code>%LOCALAPPDATA%\poe2pricer\diagnostics</code>.</td></tr>
   <tr><td><kbd>Alt</kbd>+<kbd>D</kbd></td><td>"Force live price": at a waystone's or tablet's tooltip, ask its price exactly as the item is, every value and every mod, past the profiles, until the mouse or cursor leaves it; also while the live price is switched off.</td></tr>
 </table>
+<table class="ru hotkeys-table"><tr><th>Сочетание</th><th>Действие</th></tr><tr><td><kbd>Alt</kbd>+<kbd>F</kbd></td><td>Показать или скрыть цены для открытого в игре окна.</td></tr><tr><td><kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd></td><td>Сохранить диагностику (скриншот и результаты распознавания) в <code>%LOCALAPPDATA%\poe2pricer\diagnostics</code>.</td></tr><tr><td><kbd>Alt</kbd>+<kbd>D</kbd></td><td>«Запросить точную цену»: у подсказки путевого камня или плитки запрашивает цену по всем собственным значениям и модификаторам предмета, без профилей. Действует до ухода мыши или курсора с предмета; работает и при выключенной автоматической цене у подсказки.</td></tr></table>
 <table class="de">
   <tr><th>Taste</th><th>Wirkung</th></tr>
   <tr><td><kbd>Alt</kbd>+<kbd>F</kbd></td><td>Preise für das offene Spielfenster zeigen oder verstecken.</td></tr>
@@ -549,10 +639,12 @@ Einstellungen liegen in <code>%LOCALAPPDATA%\poe2pricer</code>.</p>
 </table>
 <p class="en">All three keys can be changed in the settings window. They work only while the game is in the
 foreground.</p>
+<p class="ru">Все три сочетания можно изменить в настройках. Они работают только при активном окне игры.</p>
 <p class="de">Alle drei Tasten lassen sich im Einstellungsfenster ändern. Sie wirken nur, während das Spiel im
 Vordergrund ist.</p>
 
-<h2 id="trouble"><span class="en">Tips &amp; troubleshooting</span><span class="de">Tipps &amp; Fehlersuche</span></h2>
+<h2 id="trouble"><span class="en">Tips &amp; troubleshooting</span>
+<span class="ru">Советы и решение проблем</span><span class="de">Tipps &amp; Fehlersuche</span></h2>
 <ul class="en">
   <li><strong>No prices appear.</strong> The window must be one of those above, the game in
       English or German for the text windows. Waystone and tablet tooltips need the live price on
@@ -584,6 +676,16 @@ Vordergrund ist.</p>
   <li><strong>Windows SmartScreen or a virus scanner warns.</strong> The program is not signed.
       Its source is public; the installation of the text recognition runs Windows' own
       <code>dism.exe</code>, no scripts.</li>
+</ul>
+<ul class="ru">
+  <li><strong>Цены не появляются.</strong> Окно должно быть одним из описанных выше; для окон с распознаванием текста нужен английский или немецкий клиент игры. Для подсказок путевых камней и плиток включите цену с торговой площадки («Настройки → Цены и отображение») и автосканирование сундука либо нажмите <kbd>Alt</kbd>+<kbd>F</kbd>. В файле <code>%LOCALAPPDATA%\poe2pricer\log.txt</code> записано, что увидела программа; строки с <code>hidden:</code> называют причину скрытия.</li>
+  <li><strong>Цены появляются с задержкой или игра подтормаживает.</strong> Увеличьте оба интервала в разделе «Настройки → Автосканирование» либо отключите ненужные типы окон. Сочетание <kbd>Alt</kbd>+<kbd>F</kbd> работает и при выключенном автосканировании. Одна проверка занимает около 2 мс при включённом захвате окна игры и около 8 мс при выключенном.</li>
+  <li><strong>В записи нет цен или NVIDIA app не записывает рабочий стол.</strong> При включённом захвате окна игры (Windows 11) цены видны в записях. В Windows 10 или при выключенном захвате окна цены скрываются из снимков экрана; NVIDIA app воспринимает это как защищённое видео. Чтобы записывать только игру, отключите захват рабочего стола: Alt+Z → настройки → Video capture.</li>
+  <li><strong>Программа требует распознавание английского текста Windows.</strong> Разрешите программе установить компонент или установите его вручную: Параметры Windows → Время и язык → Язык и регион → Добавить язык → English (United States), выбрав компонент распознавания текста (Text recognition). Если потребуется перезагрузка, выполните её через Параметры → Центр обновления Windows → Перезагрузить сейчас.</li>
+  <li><strong>Окно настроек пропало.</strong> Оно свёрнуто в трей. Нажмите значок poe2pricer в области уведомлений или снова запустите <code>poe2pricer.exe</code>: уже работающая программа покажет своё окно.</li>
+  <li><strong>При зажатом Ctrl нет цены.</strong> В режиме сравнения игра рисует соседние подсказки примерно в масштабе 85 %, который программа не распознаёт. Сначала отпустите Ctrl.</li>
+  <li><strong>У путевого камня или плитки показано «–».</strong> На торговой площадке нет подходящих предложений. Для путевого камня без подходящего профиля точный запрос по всем его свойствам редко находит результат. Профиль позволяет запрашивать только указанные в нём условия.</li>
+  <li><strong>Windows SmartScreen или антивирус показывает предупреждение.</strong> Программа не подписана. Исходный код открыт; для установки распознавания текста запускается штатный <code>dism.exe</code> Windows, без скриптов.</li>
 </ul>
 <ul class="de">
   <li><strong>Es erscheinen keine Preise.</strong> Das Fenster muss eines der oben genannten sein, das
@@ -621,9 +723,11 @@ Vordergrund ist.</p>
       eigenes <code>dism.exe</code>, ohne Skripte.</li>
 </ul>
 
-<h2 id="thirdparty"><span class="en">Third-party tools and GGG</span><span class="de">Drittprogramme und GGG</span></h2>
+<h2 id="thirdparty"><span class="en">Third-party tools and GGG</span>
+<span class="ru">Сторонние программы и GGG</span><span class="de">Drittprogramme und GGG</span></h2>
 <p class="en">poe2pricer is a third-party tool, and Grinding Gear Games approves none. What they have said about
 such tools, in their words:</p>
+<p class="ru">poe2pricer — сторонняя программа, а Grinding Gear Games не одобряет никакие сторонние программы. Вот что представители GGG сообщали о таких инструментах:</p>
 <p class="de">poe2pricer ist ein Drittprogramm, und Grinding Gear Games gibt keines frei. Was sie zu solchen
 Programmen gesagt haben, in ihren Worten (englisch, weil eine Übersetzung kein Zitat mehr wäre):</p>
 <ul class="en">
@@ -640,6 +744,11 @@ Programmen gesagt haben, in ihren Worten (englisch, weil eine Übersetzung kein 
   forbid modifying the client or its data, "automated software or bots" in relation to the services, and
   connecting to the servers through anything but the game client.</li>
 </ul>
+<ul class="ru">
+  <li>Правило, переданное Bex_GGG в 2020 году: нельзя запускать программы, взаимодействующие с игровым клиентом Path of Exile; полностью внешние по отношению к игре инструменты допустимы. (<a href="https://devtrackers.gg/pathofexile/p/cdea4d78-psa-waves-of-players-being-banned-for-use-of-third-party-tool-poe-overlay">Источник</a> — копия обсуждения на Reddit.)</li>
+  <li>Ответ поддержки, Sian_GGG, ноябрь 2024 года: GGG не может комментировать допустимость сторонних инструментов, поскольку не может тщательно проверить, как именно они работают. Поддержка советует воздержаться от программ, которые автоматизируют действия или выполняют больше одного действия на нажатие клавиши либо щелчок мыши, а также взаимодействуют с клиентом ради преимущества над другими игроками или показа информации, обычно недоступной игроку. (<a href="https://www.pathofexile.com/forum/view-thread/3584808">Источник.</a>)</li>
+  <li>Пункт 7 <a href="https://www.pathofexile.com/legal/terms-of-use-and-privacy-policy">условий использования</a> запрещает изменять клиент или его данные, использовать автоматизированное ПО или ботов в отношении сервисов и подключаться к серверам иначе, чем через игровой клиент.</li>
+</ul>
 <ul class="de">
   <li>Die Linie, 2020 von Bex_GGG weitergegeben: "You may not run programs that interact with the Path of Exile
   game client. It's okay to run things that are entirely external to the game."
@@ -655,6 +764,7 @@ Programmen gesagt haben, in ihren Worten (englisch, weil eine Übersetzung kein 
   die Dienste und die Verbindung zu den Servern über etwas anderes als den Spiel-Client.</li>
 </ul>
 <p class="en">Where poe2pricer stands to that, so you can judge for yourself:</p>
+<p class="ru">Как работает poe2pricer в контексте этих правил — чтобы вы могли оценить это самостоятельно:</p>
 <p class="de">Wo poe2pricer dazu steht, damit du selbst urteilen kannst:</p>
 <ul class="en">
   <li>It sends no input to the game: no key, no click, nothing on a timer. The "one action per key press" rule is
@@ -665,6 +775,12 @@ Programmen gesagt haben, in ihren Worten (englisch, weil eine Übersetzung kein 
   the site states, under a User-Agent that names the program), poecdn, the rumour sources and GitHub.</li>
   <li>It shows prices from outside the game, as every price checker does. That is the "information that isn't
   normally visible" part, and it applies to all of them alike.</li>
+</ul>
+<ul class="ru">
+  <li>Программа не отправляет в игру команды ввода: ни клавиш, ни щелчков, ни действий по таймеру. Правило «одно действие на нажатие» относится к вводу; poe2pricer не выполняет его ни при автоматическом сканировании, ни по <kbd>Alt</kbd>+<kbd>F</kbd>.</li>
+  <li>Программа считывает изображение игры через оконный композитор Windows (Windows.Graphics.Capture) или с экрана (GDI). Оба способа не отправляют сообщений игре, не открывают её процесс и не читают его память.</li>
+  <li>Программа не подключается к игровым серверам. Запросы идут на poe.ninja, торговый сайт (в пределах ограничений, которые сайт сообщает в каждом ответе, на момент написания «5 запросов за 10 секунд», а после отказа — только по истечении названной им паузы; с User-Agent, в котором указаны программа, её версия и репозиторий), poecdn, к источникам оценок слухов и на GitHub.</li>
+  <li>Программа показывает цены из внешних источников, как и другие инструменты оценки. Именно к этому относится упоминание информации, обычно недоступной в игре; оно касается всех таких инструментов.</li>
 </ul>
 <ul class="de">
   <li>Es sendet keine Eingabe ans Spiel: keine Taste, keinen Klick, nichts auf Zeit. Die Regel „eine Aktion je
@@ -682,23 +798,27 @@ Programmen gesagt haben, in ihren Worten (englisch, weil eine Übersetzung kein 
 The one documented action against such a tool, in 2020, concerned a tool that flooded the trade site with
 millions of failed requests, not the reading of the screen. The switches for the scans and the hotkeys are in
 Settings, and the program says all this once, before its first start.</p>
+<p class="ru">Никто не может обещать, что GGG продолжит допускать оверлеи с ценами: условия использования позволяют компании принимать меры без предупреждения. Единственный задокументированный случай мер против такого инструмента в 2020 году касался миллионов неудачных запросов к торговому сайту, а не считывания экрана. Переключатели сканирования и горячие клавиши находятся в настройках; перед первым запуском программа один раз показывает уведомление обо всём этом.</p>
 <p class="de">Niemand kann versprechen, dass GGG Preis-Overlays weiter duldet; die Nutzungsbedingungen erlauben
 ein Vorgehen ohne Ankündigung. Der eine belegte Fall gegen ein solches Programm, 2020, betraf ein Programm, das
 die Trade-Seite mit Millionen fehlgeschlagener Anfragen überflutete, nicht das Lesen des Bildschirms. Die
 Schalter für die Scans und die Tasten stehen in den Einstellungen, und das Programm sagt all das einmal, vor
 seinem ersten Start.</p>
 
-<h2 id="bug"><span class="en">Report a bug</span><span class="de">Fehler melden</span></h2>
+<h2 id="bug"><span class="en">Report a bug</span>
+<span class="ru">Сообщить об ошибке</span><span class="de">Fehler melden</span></h2>
 <p class="en">Press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> while the wrong price is on screen, then
 open an issue at <a href="https://github.com/saxe78/poe2pricer/issues">github.com/saxe78/poe2pricer/issues</a>
 with the files from <code>%LOCALAPPDATA%\poe2pricer\diagnostics</code> and the relevant lines
 of <code>log.txt</code>. The diagnosis picture shows your game as it was at that moment; the file next to it holds your settings (without file paths) and what was read.</p>
+<p class="ru">Пока неверная цена видна на экране, нажмите <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>. Затем создайте обращение на <a href="https://github.com/saxe78/poe2pricer/issues">github.com/saxe78/poe2pricer/issues</a> и приложите файлы из <code>%LOCALAPPDATA%\poe2pricer\diagnostics</code> и относящиеся к проблеме строки <code>log.txt</code>. Снимок диагностики показывает игру в момент нажатия; соседний файл содержит настройки без путей к файлам и результаты распознавания. Журналы и диагностические данные сохраняют английский язык, чтобы автору было проще разобрать ошибку.</p>
 <p class="de"><kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> drücken, solange der falsche Preis zu sehen ist,
 dann ein Issue unter <a href="https://github.com/saxe78/poe2pricer/issues">github.com/saxe78/poe2pricer/issues</a>
 anlegen, mit den Dateien aus <code>%LOCALAPPDATA%\poe2pricer\diagnostics</code> und den passenden
 Zeilen aus <code>log.txt</code>. Das Diagnosebild zeigt dein Spiel, wie es in dem Moment war; die Datei daneben enthält deine Einstellungen (ohne Dateipfade) und das Gelesene.</p>
 
 <p class="tagline foot en">poe2pricer is not affiliated with Grinding Gear Games or poe.ninja.</p>
+<p class="tagline foot ru">poe2pricer не связан с Grinding Gear Games или poe.ninja.</p>
 <p class="tagline foot de">poe2pricer steht in keiner Verbindung zu Grinding Gear Games oder poe.ninja.</p>
 
 </div>
@@ -727,21 +847,32 @@ Zeilen aus <code>log.txt</code>. Das Diagnosebild zeigt dein Spiel, wie es in de
   })();
 </script>
 <script>
-  // The language: from "?lang=de" or "?lang=en" in the address (the program opens the guide in
-  // its own language; "#de" still works), else the browser's; the buttons switch it.
+  // The program passes ?lang=en/de/ru. Hash links and the browser language also work.
   (function () {
     var root = document.documentElement;
     var buttons = document.querySelectorAll(".switch button");
+    var languages = ["en", "de", "ru"];
+    function known(lang) { return languages.indexOf(lang) !== -1; }
     function set(lang) {
-      lang = lang === "de" ? "de" : "en";
+      lang = known(lang) ? lang : "en";
       root.setAttribute("data-lang", lang);
       root.setAttribute("lang", lang);
-      document.title = lang === "de" ? "poe2pricer — Anleitung" : "poe2pricer — Guide";
+      document.title = { en: "poe2pricer — Guide", de: "poe2pricer — Anleitung", ru: "poe2pricer — Справка" }[lang];
+      document.querySelector(".switch").setAttribute("aria-label", { en: "Language", de: "Sprache", ru: "Язык" }[lang]);
+      document.getElementById("version-label").textContent = lang === "ru" ? "Версия" : "Version";
       for (var i = 0; i < buttons.length; i++)
         buttons[i].setAttribute("aria-pressed", buttons[i].getAttribute("data-set") === lang ? "true" : "false");
+      var pictures = document.querySelectorAll("figure:not(.lightbox) img");
+      for (var j = 0; j < pictures.length; j++) {
+        var picture = pictures[j];
+        if (picture.hasAttribute("data-src-en"))
+          picture.setAttribute("src", picture.getAttribute("data-src-" + lang) || picture.getAttribute("data-src-en"));
+        picture.setAttribute("alt", picture.getAttribute("data-alt-" + lang) || picture.getAttribute("data-alt-en"));
+      }
     }
-    var asked = (location.search.match(/[?&]lang=(de|en)/) || [])[1] || location.hash.replace("#", "");
-    set(asked === "de" || asked === "en" ? asked : (navigator.language || "").toLowerCase().indexOf("de") === 0 ? "de" : "en");
+    var asked = new URLSearchParams(location.search).get("lang") || location.hash.slice(1);
+    var browser = (navigator.language || "").toLowerCase().split("-")[0];
+    set(known(asked) ? asked : known(browser) ? browser : "en");
     for (var i = 0; i < buttons.length; i++)
       buttons[i].addEventListener("click", function () { set(this.getAttribute("data-set")); });
   })();

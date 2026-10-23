@@ -3,6 +3,15 @@
 All notable changes to poe2pricer, newest first. The release notes on GitHub say the same
 with more words: https://github.com/saxe78/poe2pricer/releases
 
+## Unreleased
+
+### Added
+- Russian program interface, including tooltips, status and tray messages, with Russian
+  plural forms. The game languages supported by recognition remain English and German
+  (contributed by OtShellNick, [#5](https://github.com/saxe78/poe2pricer/pull/5)).
+- Russian help guide with localized program screenshots, opening in the selected program
+  language; English and German remain available in the guide's language switcher.
+
 ## 1.3.0 — 2026-10-23
 
 ### Added

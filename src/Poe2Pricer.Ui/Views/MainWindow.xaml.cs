@@ -203,7 +203,7 @@ public partial class MainWindow : Window
 
     private void OpenGuide(object sender, RoutedEventArgs e)
     {
-        // The guide is in both languages and opens in the program's: the language goes as
+        // The guide opens in the program's language: the language goes as
         // "?lang=", which the browser gets only from a file URL, not from a bare path.
         string target = guide is not null && System.IO.File.Exists(guide) ? new Uri(guide).AbsoluteUri + "?lang=" + Poe2Pricer.Core.Texts.Language : OnlineGuide;
         try

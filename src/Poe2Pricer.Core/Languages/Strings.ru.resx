@@ -1,0 +1,880 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Russian program-window, status and tray texts. Game recognition, item/mod names,
+     logs and diagnostics keep their existing language. Counted texts use _one, _few
+     and _other (many); see Texts.CountForm. -->
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Subtitle" xml:space="preserve">
+    <value>Рыночные цены с poe.ninja · Ритуал · Останки · Слухи об островах · Сундук · Путевые камни · Плитки</value>
+  </data>
+  <data name="TipClose" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="TipMinimize" xml:space="preserve">
+    <value>Свернуть</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Выйти</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Справка</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Копировать</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="TabSettings" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="TabRumours" xml:space="preserve">
+    <value>Слухи</value>
+  </data>
+  <data name="GroupDisplay" xml:space="preserve">
+    <value>ЦЕНЫ И ОТОБРАЖЕНИЕ</value>
+  </data>
+  <data name="GroupHotkeys" xml:space="preserve">
+    <value>ГОРЯЧИЕ КЛАВИШИ</value>
+  </data>
+  <data name="GroupAutoScan" xml:space="preserve">
+    <value>АВТОСКАНИРОВАНИЕ</value>
+  </data>
+  <data name="GroupStartup" xml:space="preserve">
+    <value>ЗАПУСК</value>
+  </data>
+  <data name="LeagueAuto" xml:space="preserve">
+    <value>Авто ({0})</value>
+  </data>
+  <data name="LeagueAutoCurrent" xml:space="preserve">
+    <value>Авто (текущая лига)</value>
+  </data>
+  <data name="RefreshPrices" xml:space="preserve">
+    <value>Обновить цены</value>
+  </data>
+  <data name="HidePricesBelow" xml:space="preserve">
+    <value>Скрывать цены ниже</value>
+  </data>
+  <data name="PricesIn" xml:space="preserve">
+    <value>Валюта цен</value>
+  </data>
+  <data name="TipPriceUnit" xml:space="preserve">
+    <value>Цены отображаются в сферах возвышения или хаоса. Начиная с одной божественной сферы — всегда в божественных сферах. У порога цены выше своя валюта.</value>
+  </data>
+  <data name="TipVersion" xml:space="preserve">
+    <value>Изменения в этой версии: журнал на github.com (откроется в браузере).</value>
+  </data>
+  <data name="ExtendedDiagnostics" xml:space="preserve">
+    <value>Расширенная диагностика</value>
+  </data>
+  <data name="TipExtendedDiagnostics" xml:space="preserve">
+    <value>Для отчётов об ошибках: программа также сохраняет в папку диагностики по несколько снимков каждого типа, сделанных при автоматическом распознавании. Если выключено, снимки сохраняются только по горячей клавише диагностики. В обоих случаях данные никуда не отправляются.</value>
+  </data>
+  <data name="ToggleOverlay" xml:space="preserve">
+    <value>Показать / скрыть цены</value>
+  </data>
+  <data name="SaveDiagnostics" xml:space="preserve">
+    <value>Сохранить диагностику</value>
+  </data>
+  <data name="SwitchRitual" xml:space="preserve">
+    <value>Ритуал (награды)</value>
+  </data>
+  <data name="SwitchExpedition" xml:space="preserve">
+    <value>Экспедиция (слухи / останки)</value>
+  </data>
+  <data name="SwitchStash" xml:space="preserve">
+    <value>Сундук</value>
+  </data>
+  <data name="ScanIntervalIdle" xml:space="preserve">
+    <value>Интервал поиска окон</value>
+  </data>
+  <data name="ScanIntervalOpen" xml:space="preserve">
+    <value>Интервал проверки окна</value>
+  </data>
+  <data name="Seconds" xml:space="preserve">
+    <value>с</value>
+  </data>
+  <data name="StartWithWindows" xml:space="preserve">
+    <value>Запускать с Windows</value>
+  </data>
+  <data name="CloseHint" xml:space="preserve">
+    <value>При закрытии окно сворачивается в трей. Чтобы завершить работу, нажмите «Выйти».</value>
+  </data>
+  <data name="TipFloor" xml:space="preserve">
+    <value>Применяется к наградам Ритуала, наградам останков (стоимость всей строки) и вкладкам сундука (цена за предмет). Ниже порога предметы Ритуала и сундука помечаются серым «&lt;», награды останков — без подписи. Зелёное выделение самого дорогого предмета сохраняется.</value>
+  </data>
+  <data name="TipHotkey" xml:space="preserve">
+    <value>Нажмите на поле, затем нажмите клавишу или сочетание клавиш. Работает только при активном окне PoE 2.</value>
+  </data>
+  <data name="TipAutoScan" xml:space="preserve">
+    <value>Автоматически показывает цены в отмеченных окнах, когда они открыты. Горячая клавиша работает для всех окон. Если ничего не отмечено, цены появляются только по горячей клавише.</value>
+  </data>
+  <data name="TipIntervals" xml:space="preserve">
+    <value>Если игра подтормаживает, увеличьте оба интервала. Первый используется, пока нужное окно не найдено, второй — пока оно открыто (цены тоже будут исчезать с большей задержкой). Минимум: {0} с и {1} с; максимум для второго: {2} с. При сохранении значения за пределами диапазона исправляются.</value>
+  </data>
+  <data name="TipStartWithWindows" xml:space="preserve">
+    <value>Добавляет poe2pricer в автозагрузку Windows для текущего пользователя. Программа запускается в трее, без окна. Изменение применяется при сохранении.</value>
+  </data>
+  <data name="CheckForUpdates" xml:space="preserve">
+    <value>Проверять обновления</value>
+  </data>
+  <data name="TipCheckForUpdates" xml:space="preserve">
+    <value>При каждом запуске один раз проверяет на github.com, есть ли новая версия на странице Releases. Другие данные не отправляются; без вашего нажатия ничего не скачивается и не устанавливается. Новая версия отображается в строке состояния и уведомлении в трее.</value>
+  </data>
+  <data name="UpdateAvailable" xml:space="preserve">
+    <value>Доступна версия {0}. Нажмите здесь, чтобы открыть страницу загрузки.</value>
+  </data>
+  <data name="UpdateAvailableTray" xml:space="preserve">
+    <value>Доступна poe2pricer {0}. Нажмите, чтобы открыть страницу загрузки.</value>
+  </data>
+  <data name="UpdateOffered" xml:space="preserve">
+    <value>Доступна версия {0}. Нажмите здесь, чтобы скачать и установить её. poe2pricer перезапустится; игра продолжит работу.</value>
+  </data>
+  <data name="UpdateOfferedTray" xml:space="preserve">
+    <value>Доступна poe2pricer {0}. Нажмите, чтобы скачать и установить её.</value>
+  </data>
+  <data name="UpdateDownloading" xml:space="preserve">
+    <value>Загрузка версии {0}…</value>
+  </data>
+  <data name="UpdateFailed" xml:space="preserve">
+    <value>Не удалось скачать версию {0}: {1}. При следующем запуске уведомление появится снова.</value>
+  </data>
+  <data name="GroupIslandRumours" xml:space="preserve">
+    <value>СЛУХИ ОБ ОСТРОВАХ</value>
+  </data>
+  <data name="ColumnRumour" xml:space="preserve">
+    <value>Слух</value>
+  </data>
+  <data name="ColumnIsland" xml:space="preserve">
+    <value>Остров</value>
+  </data>
+  <data name="ColumnMods" xml:space="preserve">
+    <value>Модификаторы</value>
+  </data>
+  <data name="ColumnTier" xml:space="preserve">
+    <value>Ранг</value>
+  </data>
+  <data name="ColumnCustom" xml:space="preserve">
+    <value>Свой ранг</value>
+  </data>
+  <data name="ColumnNote" xml:space="preserve">
+    <value>Заметка</value>
+  </data>
+  <data name="AddCustomRow" xml:space="preserve">
+    <value>+ Добавить свою строку</value>
+  </data>
+  <data name="TipDeleteRow" xml:space="preserve">
+    <value>Удалить строку (после сохранения)</value>
+  </data>
+  <data name="CustomTierHint" xml:space="preserve">
+    <value>Свои ранги заменяют ранги сообщества и отмечаются в игре символом *. Применяются после сохранения.</value>
+  </data>
+  <data name="GroupCommunityData" xml:space="preserve">
+    <value>ДАННЫЕ СООБЩЕСТВА</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="Source" xml:space="preserve">
+    <value>Источник: {0} · {1} · {2}</value>
+  </data>
+  <data name="SourceGnejs" xml:space="preserve">
+    <value>Gnejs PoE Tools (ранги и заметки: Jestra1220)</value>
+  </data>
+  <data name="SourceSheet" xml:space="preserve">
+    <value>Expedition Cheatsheet (Google Таблицы)</value>
+  </data>
+  <data name="SourceNone" xml:space="preserve">
+    <value>пока нет</value>
+  </data>
+  <data name="SourceUpdated" xml:space="preserve">
+    <value>Обновлено {0:yyyy-MM-dd HH:mm}</value>
+  </data>
+  <data name="SourceNotLoaded" xml:space="preserve">
+    <value>ещё не загружено</value>
+  </data>
+  <data name="Entries_one" xml:space="preserve">
+    <value>{0:N0} запись</value>
+  </data>
+  <data name="Entries_few" xml:space="preserve">
+    <value>{0:N0} записи</value>
+  </data>
+  <data name="Entries_other" xml:space="preserve">
+    <value>{0:N0} записей</value>
+  </data>
+  <data name="CreditsBy" xml:space="preserve">
+    <value>Ранги и заметки — </value>
+  </data>
+  <data name="CreditsSheet" xml:space="preserve">
+    <value>Jestra1220 (Expedition Cheatsheet)</value>
+  </data>
+  <data name="CreditsCompiled" xml:space="preserve">
+    <value>, сводная таблица — </value>
+  </data>
+  <data name="CreditsTools" xml:space="preserve">
+    <value>Gnejs PoE Tools</value>
+  </data>
+  <data name="CreditsThanks" xml:space="preserve">
+    <value>. Спасибо!</value>
+  </data>
+  <data name="HotkeysSwapped" xml:space="preserve">
+    <value>Горячие клавиши поменялись местами</value>
+  </data>
+  <data name="InvalidHotkeysIdentical" xml:space="preserve">
+    <value>Ошибка ввода: обе горячие клавиши совпадают</value>
+  </data>
+  <data name="InvalidUnknownKey" xml:space="preserve">
+    <value>Ошибка ввода: неизвестная клавиша «{0}»</value>
+  </data>
+  <data name="InvalidNotANumber" xml:space="preserve">
+    <value>Ошибка ввода: в выделенном поле должно быть число</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Сохранено</value>
+  </data>
+  <data name="SavedAdjusted" xml:space="preserve">
+    <value>Сохранено · интервалы за пределами диапазона исправлены</value>
+  </data>
+  <data name="SettingsNotSaved" xml:space="preserve">
+    <value>Не удалось сохранить настройки ({0})</value>
+  </data>
+  <data name="CustomTiersNotSaved" xml:space="preserve">
+    <value>Настройки сохранены, но свои ранги слухов сохранить не удалось ({0})</value>
+  </data>
+  <data name="CustomTiersNotSavedKept" xml:space="preserve">
+    <value>Настройки сохранены. Свои ранги слухов не сохранены: при запуске не удалось прочитать файл: {0}</value>
+  </data>
+  <data name="StartupNotChanged" xml:space="preserve">
+    <value>Не удалось изменить автозагрузку Windows: {0}</value>
+  </data>
+  <data name="GameNotFound" xml:space="preserve">
+    <value>Path of Exile 2 не найдена</value>
+  </data>
+  <data name="NoWindowDetected" xml:space="preserve">
+    <value>Не найдены окна наград Ритуала, останков, слухов или вкладка сундука</value>
+  </data>
+  <data name="DiagnosticsNeedForeground" xml:space="preserve">
+    <value>Для диагностики окно Path of Exile 2 должно быть активным</value>
+  </data>
+  <data name="DiagnosticsSaved" xml:space="preserve">
+    <value>Диагностика сохранена: {0}</value>
+  </data>
+  <data name="DiagnosticsSavedTray" xml:space="preserve">
+    <value>Диагностика сохранена</value>
+  </data>
+  <data name="LoadingPrices" xml:space="preserve">
+    <value>Загрузка цен…</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Готово · {0} · {1}</value>
+  </data>
+  <data name="ItemImagesLoading" xml:space="preserve">
+    <value>Загрузка изображений предметов ({0:N0} из {1:N0})…</value>
+  </data>
+  <data name="ItemImagesLoaded" xml:space="preserve">
+    <value>Изображения предметов загружены</value>
+  </data>
+  <data name="LoadingCommunityData" xml:space="preserve">
+    <value>Загрузка данных сообщества…</value>
+  </data>
+  <data name="CommunityDataLoaded" xml:space="preserve">
+    <value>Данные сообщества загружены · {0}</value>
+  </data>
+  <data name="CommunityDataNotLoaded" xml:space="preserve">
+    <value>Не удалось загрузить данные сообщества. Используется последняя сохранённая копия.</value>
+  </data>
+  <data name="HotkeysUnavailable" xml:space="preserve">
+    <value>Горячие клавиши недоступны: Windows не разрешила перехват клавиатуры (ошибка {0})</value>
+  </data>
+  <data name="UnexpectedError" xml:space="preserve">
+    <value>Непредвиденная ошибка: {0}</value>
+  </data>
+  <data name="NinjaFailed" xml:space="preserve">
+    <value>poe.ninja: {0}</value>
+  </data>
+  <data name="NinjaRefreshFailed" xml:space="preserve">
+    <value>Не удалось обновить poe.ninja: {0} · используются прежние цены</value>
+  </data>
+  <data name="NinjaNoPrices" xml:space="preserve">
+    <value>нет цен для лиги «{0}»</value>
+  </data>
+  <data name="NinjaNotReachable" xml:space="preserve">
+    <value>сервис недоступен ({0})</value>
+  </data>
+  <data name="NinjaHttp" xml:space="preserve">
+    <value>HTTP {0} ({1})</value>
+  </data>
+  <data name="NinjaUnreadable" xml:space="preserve">
+    <value>не удалось прочитать ответ ({0})</value>
+  </data>
+  <data name="NinjaRateMissing" xml:space="preserve">
+    <value>нет курса сфер возвышения к божественным сферам</value>
+  </data>
+  <data name="NoReferenceImages" xml:space="preserve">
+    <value>Не найдены эталонные изображения</value>
+  </data>
+  <data name="ModelMismatch" xml:space="preserve">
+    <value>Версия recognition-model.json не совпадает с версией каталога</value>
+  </data>
+  <data name="MissingFile" xml:space="preserve">
+    <value>Отсутствует файл: {0}</value>
+  </data>
+  <data name="StashTabsEmpty" xml:space="preserve">
+    <value>Файл stash-tabs.json пуст</value>
+  </data>
+  <data name="RumourLinesDamaged" xml:space="preserve">
+    <value>Файл rumour-lines.json повреждён</value>
+  </data>
+  <data name="FileEmpty" xml:space="preserve">
+    <value>Файл {0} пуст</value>
+  </data>
+  <data name="CannotDrawRumourLines" xml:space="preserve">
+    <value>Не удалось отрисовать строки слухов: {0}</value>
+  </data>
+  <data name="FontMissing" xml:space="preserve">
+    <value>Отсутствует встроенный шрифт</value>
+  </data>
+  <data name="OcrMissing" xml:space="preserve">
+    <value>Распознавание текста Windows для языка {0} не установлено. Доступно: {1}</value>
+  </data>
+  <data name="TextRecognitionOffer" xml:space="preserve">
+    <value>Для poe2pricer нужно распознавание английского текста Windows (языковой компонент «Английский (США)»). На этом компьютере оно не установлено.
+
+Установить сейчас? Windows запросит права администратора и скачает компонент. Нужен доступ к интернету; установка может занять несколько минут.
+
+Без этого компонента poe2pricer не сможет запуститься.</value>
+  </data>
+  <data name="TextRecognitionFailed" xml:space="preserve">
+    <value>Не удалось установить распознавание текста ({0}).
+
+Его можно установить вручную: Параметры Windows → Время и язык → Язык и регион → Добавить язык → Английский (США), отметив компонент «Оптическое распознавание символов». Затем запустите poe2pricer снова.</value>
+  </data>
+  <data name="TextRecognitionRestart" xml:space="preserve">
+    <value>Распознавание текста установлено. Запустите poe2pricer снова.</value>
+  </data>
+  <data name="TextRecognitionWindowsRestart" xml:space="preserve">
+    <value>Распознавание текста установлено, но для завершения нужна перезагрузка Windows. Перезагрузите компьютер через Параметры → Центр обновления Windows → Перезагрузить сейчас (перезапуск из меню «Пуск» может отложить завершение установки), затем запустите poe2pricer снова.</value>
+  </data>
+  <data name="TextRecognitionRestartPending" xml:space="preserve">
+    <value>Windows ожидает перезагрузки для завершения обновления и пока не может установить распознавание английского текста. Перезагрузите компьютер через Параметры → Центр обновления Windows → Перезагрузить сейчас, затем запустите poe2pricer снова. Если распознавание по-прежнему отсутствует, программа предложит его установить.</value>
+  </data>
+  <data name="TextRecognitionInstalling" xml:space="preserve">
+    <value>Установка распознавания английского текста. Сначала Windows проверяет дополнительные компоненты (самый долгий этап), затем скачивает и устанавливает нужный компонент. Обычно это занимает от 3 до 10 минут. После завершения poe2pricer запустится автоматически. Это окно можно свернуть.</value>
+  </data>
+  <data name="TextRecognitionInstallingFor" xml:space="preserve">
+    <value>Прошло времени: {0}</value>
+  </data>
+  <data name="TextRecognitionCancelled" xml:space="preserve">
+    <value>Установка может продолжаться в фоне. Запустите poe2pricer снова позже.</value>
+  </data>
+  <data name="Items_one" xml:space="preserve">
+    <value>{0:N0} предмет</value>
+  </data>
+  <data name="Items_few" xml:space="preserve">
+    <value>{0:N0} предмета</value>
+  </data>
+  <data name="Items_other" xml:space="preserve">
+    <value>{0:N0} предметов</value>
+  </data>
+  <data name="Prices_one" xml:space="preserve">
+    <value>{0:N0} цена</value>
+  </data>
+  <data name="Prices_few" xml:space="preserve">
+    <value>{0:N0} цены</value>
+  </data>
+  <data name="Prices_other" xml:space="preserve">
+    <value>{0:N0} цен</value>
+  </data>
+  <data name="Rows_one" xml:space="preserve">
+    <value>{0:N0} строка</value>
+  </data>
+  <data name="Rows_few" xml:space="preserve">
+    <value>{0:N0} строки</value>
+  </data>
+  <data name="Rows_other" xml:space="preserve">
+    <value>{0:N0} строк</value>
+  </data>
+  <data name="FavoursStatus" xml:space="preserve">
+    <value>{0} · {1} · {2}</value>
+  </data>
+  <data name="AllBelowThreshold_one" xml:space="preserve">
+    <value>{0:N0} предмет дешевле порога ({1} {2})</value>
+  </data>
+  <data name="AllBelowThreshold_few" xml:space="preserve">
+    <value>Все {0:N0} предмета дешевле порога ({1} {2})</value>
+  </data>
+  <data name="AllBelowThreshold_other" xml:space="preserve">
+    <value>Все {0:N0} предметов дешевле порога ({1} {2})</value>
+  </data>
+  <data name="StashStatus" xml:space="preserve">
+    <value>Вкладка {0} · {1} · {2} · {3}</value>
+  </data>
+  <data name="StashAllBelowThreshold_one" xml:space="preserve">
+    <value>Вкладка {3} · {0:N0} предмет дешевле порога ({1} {2})</value>
+  </data>
+  <data name="StashAllBelowThreshold_few" xml:space="preserve">
+    <value>Вкладка {3} · все {0:N0} предмета дешевле порога ({1} {2})</value>
+  </data>
+  <data name="StashAllBelowThreshold_other" xml:space="preserve">
+    <value>Вкладка {3} · все {0:N0} предметов дешевле порога ({1} {2})</value>
+  </data>
+  <data name="RemnantStatus" xml:space="preserve">
+    <value>Останки · {0} · {1} · {2}</value>
+  </data>
+  <data name="RumourStatus" xml:space="preserve">
+    <value>Слухи · {0}</value>
+  </data>
+  <data name="SettingsUnreadableBackup" xml:space="preserve">
+    <value>Не удалось прочитать настройки. Используются значения по умолчанию. Резервная копия: {0}</value>
+  </data>
+  <data name="SettingsUnreadableNoBackup" xml:space="preserve">
+    <value>Не удалось прочитать настройки ({0}). Используются значения по умолчанию. Ошибка резервного копирования: {1}</value>
+  </data>
+  <data name="SettingsUnreadable" xml:space="preserve">
+    <value>Не удалось прочитать настройки ({0}). Используются значения по умолчанию.</value>
+  </data>
+  <data name="KeyUnreadable" xml:space="preserve">
+    <value>Не удалось прочитать клавишу «{0}» из настроек. Используется {1}.</value>
+  </data>
+  <data name="CustomTiersUnreadableBackup" xml:space="preserve">
+    <value>Не удалось прочитать свои ранги слухов. Резервная копия: {0}</value>
+  </data>
+  <data name="CustomTiersUnreadableNoBackup" xml:space="preserve">
+    <value>Не удалось прочитать свои ранги слухов и создать резервную копию ({0}). Сохранение отключено. Файл: {1}</value>
+  </data>
+  <data name="CustomTiersLocked" xml:space="preserve">
+    <value>Не удалось прочитать свои ранги слухов ({0}). Сохранение отключено до перезапуска. Файл: {1}</value>
+  </data>
+  <data name="StartFailed" xml:space="preserve">
+    <value>Не удалось запустить poe2pricer: {0}
+
+Подробности: {1}</value>
+  </data>
+  <data name="GameSettingsNotFound" xml:space="preserve">
+    <value>Настройки игры не найдены ({0}). Используется размер всплывающих окон по умолчанию.</value>
+  </data>
+  <data name="RunningInTray" xml:space="preserve">
+    <value>Программа работает в трее. Нажмите {0} в игре, чтобы показать цены.</value>
+  </data>
+  <data name="GameSettingsFile" xml:space="preserve">
+    <value>Файл настроек игры</value>
+  </data>
+  <data name="Browse" xml:space="preserve">
+    <value>Обзор…</value>
+  </data>
+  <data name="TipGameSettingsFile" xml:space="preserve">
+    <value>Файл настроек Path of Exile 2 (poe2_production_Config.ini). poe2pricer читает из него размер всплывающих окон и язык игры. Изменение применяется при сохранении.</value>
+  </data>
+  <data name="InvalidFileNotFound" xml:space="preserve">
+    <value>Ошибка ввода: файл настроек игры не найден</value>
+  </data>
+  <data name="PickGameSettingsFile" xml:space="preserve">
+    <value>Выберите файл настроек игры</value>
+  </data>
+  <data name="GameSettingsFileFilter" xml:space="preserve">
+    <value>Настройки игры (*.ini)</value>
+  </data>
+  <data name="KeyCtrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="KeyShift" xml:space="preserve">
+    <value>Shift</value>
+  </data>
+  <data name="KeyCapsLock" xml:space="preserve">
+    <value>Caps Lock</value>
+  </data>
+  <data name="LanguageTip" xml:space="preserve">
+    <value>Язык программы</value>
+  </data>
+  <data name="KeyPageDown" xml:space="preserve">
+    <value>Page Down</value>
+  </data>
+  <data name="KeyPageUp" xml:space="preserve">
+    <value>Page Up</value>
+  </data>
+  <data name="KeyEnter" xml:space="preserve">
+    <value>Enter</value>
+  </data>
+  <data name="KeyBackspace" xml:space="preserve">
+    <value>Backspace</value>
+  </data>
+  <data name="KeyEsc" xml:space="preserve">
+    <value>Esc</value>
+  </data>
+  <data name="KeySpace" xml:space="preserve">
+    <value>Пробел</value>
+  </data>
+  <data name="KeyDelete" xml:space="preserve">
+    <value>Del</value>
+  </data>
+  <data name="KeyInsert" xml:space="preserve">
+    <value>Ins</value>
+  </data>
+  <data name="KeyHome" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="KeyEnd" xml:space="preserve">
+    <value>End</value>
+  </data>
+  <data name="KeyLeft" xml:space="preserve">
+    <value>Влево</value>
+  </data>
+  <data name="KeyRight" xml:space="preserve">
+    <value>Вправо</value>
+  </data>
+  <data name="KeyUp" xml:space="preserve">
+    <value>Вверх</value>
+  </data>
+  <data name="KeyDown" xml:space="preserve">
+    <value>Вниз</value>
+  </data>
+  <data name="KeyPrintScreen" xml:space="preserve">
+    <value>Print Screen</value>
+  </data>
+  <data name="KeyScrollLock" xml:space="preserve">
+    <value>Scroll Lock</value>
+  </data>
+  <data name="KeyPause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="KeyNumLock" xml:space="preserve">
+    <value>Num Lock</value>
+  </data>
+  <data name="GameTextSizeNotDefault" xml:space="preserve">
+    <value>Размер текста интерфейса «{0}» проверен менее подробно: если часть окна не распознаётся, нажмите {1} и сообщите об этом.</value>
+  </data>
+  <data name="OverlayNew" xml:space="preserve">
+    <value>новое</value>
+  </data>
+  <data name="OverlayExpeditionUnrated" xml:space="preserve">
+    <value>Экспедиция</value>
+  </data>
+  <data name="ExpeditionRumours_one" xml:space="preserve">
+    <value>{0} слух</value>
+  </data>
+  <data name="ExpeditionRumours_few" xml:space="preserve">
+    <value>{0} слуха</value>
+  </data>
+  <data name="ExpeditionRumours_other" xml:space="preserve">
+    <value>{0} слухов</value>
+  </data>
+  <data name="ExpeditionRolls_one" xml:space="preserve">
+    <value>{0} обновление</value>
+  </data>
+  <data name="ExpeditionRolls_few" xml:space="preserve">
+    <value>{0} обновления</value>
+  </data>
+  <data name="ExpeditionRolls_other" xml:space="preserve">
+    <value>{0} обновлений</value>
+  </data>
+  <data name="ExpeditionProbablyComplete" xml:space="preserve">
+    <value>вероятно, собрано всё</value>
+  </data>
+  <data name="OverlayRollHint" xml:space="preserve">
+    <value>Переместите предмет в инвентаре, чтобы увидеть другие слухи</value>
+  </data>
+  <data name="ExpeditionComplete" xml:space="preserve">
+    <value>собрано всё</value>
+  </data>
+  <data name="GroupExpeditionTier" xml:space="preserve">
+    <value>ВЕСА РАНГОВ ЭКСПЕДИЦИИ</value>
+  </data>
+  <data name="ExpeditionTierHint" xml:space="preserve">
+    <value>Ранг экспедиции на острове определяется средним весом всех увиденных там слухов (свои ранги имеют приоритет). Показывается высший ранг, порога которого достигает средний вес. Применяется после сохранения.</value>
+  </data>
+  <data name="TabletStatus" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="TabTablets" xml:space="preserve">
+    <value>Плитки</value>
+  </data>
+  <data name="TipTabletKind" xml:space="preserve">
+    <value>Тип плитки. Для каждого типа можно сохранить один профиль. Поля ниже относятся к выбранному типу; типы с профилем отмечены в списке. ✕ очищает поля.</value>
+  </data>
+  <data name="TipTabletRemoveProfile" xml:space="preserve">
+    <value>Очистить поля и удалить профиль этого типа. После этого цена плиток определяется по их собственным модификаторам</value>
+  </data>
+  <data name="TipTabletTolerance" xml:space="preserve">
+    <value>В процентах. При поиске на торговой площадке минимумом служит значение модификатора плитки, уменьшенное на этот процент: для 36 при допуске 10 % ищется 33 и выше, для 2 — по-прежнему 2. Минимум профиля считается выполненным, если значение ниже него не более чем на этот процент.</value>
+  </data>
+  <data name="FieldUses" xml:space="preserve">
+    <value>Осталось применений</value>
+  </data>
+  <data name="TipTabletUses" xml:space="preserve">
+    <value>У новой плитки 10 применений; на каждой карте тратится одно. На торговой площадке ищутся плитки, у которых осталось не меньше указанного числа применений. Это значение также учитывается в строке поиска и при оценке подсказки.</value>
+  </data>
+  <data name="TipTabletMods" xml:space="preserve">
+    <value>В группе не более четырёх модификаторов — столько бывает на плитки</value>
+  </data>
+  <data name="TabletProfileSaved" xml:space="preserve">
+    <value>Профиль для {0} сохранён</value>
+  </data>
+  <data name="TipTablets" xml:space="preserve">
+    <value>Вставьте строку поиска в поле поиска вкладки сундука: она подсветит плитки выбранного типа, соответствующие профилю. Цена определяется по самым дешёвым предложениям таких плиток на pathofexile.com (без уникальных) и запрашивается только кнопкой «Узнать цену». Для подсказки используется профиль, а при его отсутствии — точные параметры плитки. Площадка разрешает лишь несколько запросов за десять секунд; программа соблюдает лимит.</value>
+  </data>
+  <data name="TooltipExact" xml:space="preserve">
+    <value>точные параметры, без профиля</value>
+  </data>
+  <data name="RuleAnd" xml:space="preserve">
+    <value>и</value>
+  </data>
+  <data name="RuleOr" xml:space="preserve">
+    <value>или</value>
+  </data>
+  <data name="RuleNot" xml:space="preserve">
+    <value>не</value>
+  </data>
+  <data name="RuleGroup" xml:space="preserve">
+    <value>Группа {0}</value>
+  </data>
+  <data name="AddGroup" xml:space="preserve">
+    <value>Новая группа</value>
+  </data>
+  <data name="TipAddGroup" xml:space="preserve">
+    <value>Добавить группу сразу после этой. Строки внутри группы объединяются по выбранному правилу; условия всех групп должны выполняться одновременно.</value>
+  </data>
+  <data name="TipRemoveGroup" xml:space="preserve">
+    <value>Удалить группу вместе с её строками</value>
+  </data>
+  <data name="TipGroupKind" xml:space="preserve">
+    <value>«и»: обязательна каждая строка группы. «или»: достаточно хотя бы одной строки. «не»: ни одной из строк не должно быть. Условия всех групп должны выполняться одновременно.</value>
+  </data>
+  <data name="UnsavedProfile" xml:space="preserve">
+    <value>В профиле «{0}» есть несохранённые изменения. Сохранить их перед переключением?</value>
+  </data>
+  <data name="ExactPriceKey" xml:space="preserve">
+    <value>Запросить точную цену</value>
+  </data>
+  <data name="TipExactPriceKey" xml:space="preserve">
+    <value>Когда открыта подсказка путевого камня или плитки: запросить цену по всем значениям и модификаторам предмета, без профилей. Действует, пока мышь или курсор не покинет предмет. Нажмите на поле, затем нажмите клавишу или сочетание клавиш.</value>
+  </data>
+  <data name="TradeBusy" xml:space="preserve">
+    <value>торговая площадка занята, повтор через {0} с</value>
+  </data>
+  <data name="TradeNoRates" xml:space="preserve">
+    <value>ожидание курсов с poe.ninja</value>
+  </data>
+  <data name="RefreshProfilePrice" xml:space="preserve">
+    <value>Узнать цену</value>
+  </data>
+  <data name="ProfilePriceAsk" xml:space="preserve">
+    <value>→ Узнать цену</value>
+  </data>
+  <data name="ExactKeyTaken" xml:space="preserve">
+    <value>Клавиша {0} для запроса точной цены уже используется одной из двух других команд и поэтому отключена. Выберите свободное сочетание в настройках.</value>
+  </data>
+  <data name="TradeInPerson" xml:space="preserve">
+    <value>Учитывать премиум-вкладки (онлайн)</value>
+  </data>
+  <data name="TipTradeInPerson" xml:space="preserve">
+    <value>Какие предложения учитываются при оценке путевых камней и плиток — в игре и на вкладках программы. По умолчанию только мгновенный выкуп (Instant Buyout): предметы из торговых вкладок, которые продаёт Ange, даже когда продавец не в сети. Если отмечено, учитываются также премиум-вкладки продавцов онлайн (сообщение и личный обмен). Предложения премиум-вкладок продавцов не в сети не учитываются: они часто устарели, а предметы давно проданы.</value>
+  </data>
+  <data name="WaystoneStatus" xml:space="preserve">
+    <value>Путевой камень (уровень {0}) · {1}</value>
+  </data>
+  <data name="WaystoneNoPrice" xml:space="preserve">
+    <value>нет предложений</value>
+  </data>
+  <data name="WaystonePriceOff" xml:space="preserve">
+    <value>цена в подсказке отключена</value>
+  </data>
+  <data name="TabWaystones" xml:space="preserve">
+    <value>Путевые камни</value>
+  </data>
+  <data name="GroupWaystoneSearch" xml:space="preserve">
+    <value>СТРОКА ПОИСКА ДЛЯ СУНДУКА</value>
+  </data>
+  <data name="WaystoneCopy" xml:space="preserve">
+    <value>Копировать</value>
+  </data>
+  <data name="WaystoneSearchLength" xml:space="preserve">
+    <value>{0} из {1} символов</value>
+  </data>
+  <data name="WaystoneSearchTooLong" xml:space="preserve">
+    <value>Строка слишком длинная для поиска в игре: уберите модификатор или значение.</value>
+  </data>
+  <data name="WaystoneSearchCopied" xml:space="preserve">
+    <value>Строка поиска скопирована</value>
+  </data>
+  <data name="WaystoneProfileNoPrice" xml:space="preserve">
+    <value>нет предложений</value>
+  </data>
+  <data name="WaystonePriceAsking" xml:space="preserve">
+    <value>запрос цены…</value>
+  </data>
+  <data name="GroupWaystoneProfile" xml:space="preserve">
+    <value>ПРОФИЛЬ</value>
+  </data>
+  <data name="FieldItemRarity" xml:space="preserve">
+    <value>Редкость предметов</value>
+  </data>
+  <data name="FieldPackSize" xml:space="preserve">
+    <value>Размер групп</value>
+  </data>
+  <data name="FieldMonsterRarity" xml:space="preserve">
+    <value>Редкость монстров</value>
+  </data>
+  <data name="FieldEffectiveness" xml:space="preserve">
+    <value>Эффективность монстров</value>
+  </data>
+  <data name="FieldDropChance" xml:space="preserve">
+    <value>Выпадение камней</value>
+  </data>
+  <data name="FieldTier" xml:space="preserve">
+    <value>Уровень</value>
+  </data>
+  <data name="FieldRevives" xml:space="preserve">
+    <value>Возрождения</value>
+  </data>
+  <data name="FieldTo" xml:space="preserve">
+    <value>до</value>
+  </data>
+  <data name="FieldCorrupted" xml:space="preserve">
+    <value>Осквернение</value>
+  </data>
+  <data name="WaystoneCorruptedAny" xml:space="preserve">
+    <value>любое</value>
+  </data>
+  <data name="WaystoneCorruptedYes" xml:space="preserve">
+    <value>осквернён</value>
+  </data>
+  <data name="WaystoneCorruptedNo" xml:space="preserve">
+    <value>не осквернён</value>
+  </data>
+  <data name="WaystoneAddMod" xml:space="preserve">
+    <value>Добавить мод.</value>
+  </data>
+  <data name="WaystoneMinValue" xml:space="preserve">
+    <value>не менее</value>
+  </data>
+  <data name="WaystoneTolerance" xml:space="preserve">
+    <value>Допуск, %</value>
+  </data>
+  <data name="TipWaystoneTolerance" xml:space="preserve">
+    <value>В процентах. При поиске на торговой площадке минимумом служат значения путевого камня, уменьшенные на этот процент: для редкости 59 % при допуске 10 % ищется 54 % и выше. Минимум профиля считается выполненным, если значение ниже него не более чем на этот процент. Запрещённые профилем модификаторы исключаются и из поиска.</value>
+  </data>
+  <data name="TipWaystones" xml:space="preserve">
+    <value>Вставьте строку поиска в поле поиска вкладки сундука: она подсветит путевые камни, соответствующие профилю. Цена определяется по самым дешёвым предложениям на pathofexile.com и запрашивается только кнопкой «Узнать цену» (мгновенный выкуп; с настройкой «Учитывать премиум-вкладки (онлайн)» — также предложения продавцов онлайн). Площадка разрешает лишь несколько запросов за десять секунд; программа соблюдает лимит и запрашивает цену одного камня не чаще раза в десять минут.</value>
+  </data>
+  <data name="GroupWaystoneMods" xml:space="preserve">
+    <value>МОДИФИКАТОРЫ</value>
+  </data>
+  <data name="TipWaystoneFilter" xml:space="preserve">
+    <value>Введите часть текста модификатора: в списке останутся только совпадения.</value>
+  </data>
+  <data name="WaystoneListings_one" xml:space="preserve">
+    <value>{0} предложение</value>
+  </data>
+  <data name="WaystoneListings_few" xml:space="preserve">
+    <value>{0} предложения</value>
+  </data>
+  <data name="WaystoneListings_other" xml:space="preserve">
+    <value>{0} предложений</value>
+  </data>
+  <data name="TipWaystoneProfile" xml:space="preserve">
+    <value>Сохранённые профили. Введите новое имя, чтобы создать профиль из текущих значений полей, и нажмите «Сохранить». ✕ удаляет выбранный профиль.</value>
+  </data>
+  <data name="TipWaystoneSaveProfile" xml:space="preserve">
+    <value>Сохранить профиль (профили сохраняются отдельно от настроек программы)</value>
+  </data>
+  <data name="WaystoneProfileSaved" xml:space="preserve">
+    <value>Профиль «{0}» сохранён</value>
+  </data>
+  <data name="TipWaystoneRefreshPrice" xml:space="preserve">
+    <value>Запросить на торговой площадке цену по самым дешёвым предметам, соответствующим профилю. Запрос выполняется только этой кнопкой: площадка разрешает лишь несколько запросов за десять секунд, и они нужны также для цен в игре.</value>
+  </data>
+  <data name="WaystonePricesLoading" xml:space="preserve">
+    <value>загрузка цен…</value>
+  </data>
+  <data name="GroupProperties" xml:space="preserve">
+    <value>СВОЙСТВА</value>
+  </data>
+  <data name="LiveTradePrice" xml:space="preserve">
+    <value>Цена с торговой площадки в подсказке</value>
+  </data>
+  <data name="TipLiveTradePrice" xml:space="preserve">
+    <value>Цена в подсказке путевого камня или плитки: программа запрашивает самые дешёвые похожие предложения на торговой площадке и показывает цену справа в заголовке. Если выключено, автоматических запросов и цены в подсказке нет; горячая клавиша «Запросить точную цену» по-прежнему работает.</value>
+  </data>
+  <data name="UnsavedTitle" xml:space="preserve">
+    <value>НЕСОХРАНЁННЫЕ ИЗМЕНЕНИЯ</value>
+  </data>
+  <data name="Discard" xml:space="preserve">
+    <value>Не сохранять</value>
+  </data>
+  <data name="UnsavedProfileQuit" xml:space="preserve">
+    <value>В профиле «{0}» есть несохранённые изменения. Сохранить их перед выходом?</value>
+  </data>
+  <data name="TradeUnreachable" xml:space="preserve">
+    <value>торговая площадка недоступна ({0}), повтор через {1} с</value>
+  </data>
+  <data name="TooltipNotRead" xml:space="preserve">
+    <value>не удалось прочитать подсказку (проверьте язык игры), цена недоступна</value>
+  </data>
+  <data name="ProfileRemoved" xml:space="preserve">
+    <value>Профиль «{0}» удалён.</value>
+  </data>
+  <data name="InvalidInTab" xml:space="preserve">
+    <value>Не сохранено: в одном из полей вкладки «{0}» должно быть число.</value>
+  </data>
+  <data name="ModUnknown" xml:space="preserve">
+    <value>Модификатора «{0}» больше нет в списке игры; его строка остаётся пустой. Выберите модификатор заново и сохраните.</value>
+  </data>
+  <data name="League" xml:space="preserve">
+    <value>Лига</value>
+  </data>
+  <data name="TipCloseHint" xml:space="preserve">
+    <value>Скрыть до следующей версии</value>
+  </data>
+  <data name="TextSize_large" xml:space="preserve">
+    <value>Крупный</value>
+  </data>
+  <data name="TextSize_extra_large" xml:space="preserve">
+    <value>Очень крупный</value>
+  </data>
+  <data name="CaptureGameWindow" xml:space="preserve">
+    <value>Захват только окна игры</value>
+  </data>
+  <data name="TipCaptureGameWindow" xml:space="preserve">
+    <value>Изображение считывается из самого окна игры, поэтому цены не попадают в поле зрения программы, а программы записи (NVIDIA app, OBS, Game Bar) могут записывать рабочий стол вместе с ценами. Если выключено: изображение считывается с экрана, цены скрываются из всех записей. Требуется Windows 11; в Windows 10 изображение считывается с экрана. Считывание окна также требует меньше времени: около 2 мс на проверку вместо 8.</value>
+  </data>
+  <data name="CaptureFellBack" xml:space="preserve">
+    <value>При захвате окна игры не удалось получить изображение; до следующего запуска используется считывание экрана. В записях цены пока не будут видны.</value>
+  </data>
+  <data name="CaptureUnavailable" xml:space="preserve">
+    <value>Эта версия Windows не поддерживает захват окна игры без рамки вокруг него (требуется Windows 11); используется считывание экрана. В записях цены не будут видны.</value>
+  </data>
+  <data name="NoticeTitle" xml:space="preserve">
+    <value>ПЕРЕД ПЕРВЫМ ЗАПУСКОМ</value>
+  </data>
+  <data name="NoticeText" xml:space="preserve">
+    <value>poe2pricer — сторонняя программа для Path of Exile 2. Прежде чем запускать её вместе с игрой, ознакомьтесь с тем, как она работает.
+
+• Считывает изображение окна игры и показывает поверх него цены: автоматически при открытии поддерживаемого окна или по Alt+F, в зависимости от настроек.
+• Не нажимает клавиши и не щёлкает мышью.
+• Не открывает процесс игры, не читает его память и не изменяет игровые файлы. Считывается только файл настроек игры, чтобы определить размер текста и язык.
+• Не подключается к игровым серверам. Запросы отправляются на poe.ninja и poecdn (цены и изображения предметов), торговую площадку, к источникам оценок слухов сообщества (gnejs.app и открытая Google Таблица), а также на GitHub.
+• Grinding Gear Games не одобряет никакие сторонние программы и может принять меры против любого аккаунта по своему усмотрению. Никто не может обещать, что использование программы останется допустимым. Вы используете её на свой риск.
+
+Высказывания GGG о сторонних программах, ссылки на источники и их отношение к этой программе: Справка → «Сторонние программы и GGG».</value>
+  </data>
+  <data name="NoticeRun" xml:space="preserve">
+    <value>Запустить</value>
+  </data>
+  <data name="NoticeQuit" xml:space="preserve">
+    <value>Выйти</value>
+  </data>
+</root>

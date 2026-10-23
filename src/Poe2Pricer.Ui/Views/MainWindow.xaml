@@ -54,6 +54,11 @@
                 <Rectangle Canvas.Top="4" Width="24" Height="4" Fill="#DD0000"/>
                 <Rectangle Canvas.Top="8" Width="24" Height="4" Fill="#FFCE00"/>
               </Canvas>
+              <Canvas x:Name="ru" Width="24" Height="12" ClipToBounds="True" Visibility="Collapsed">
+                <Rectangle Width="24" Height="4" Fill="White"/>
+                <Rectangle Canvas.Top="4" Width="24" Height="4" Fill="#0039A6"/>
+                <Rectangle Canvas.Top="8" Width="24" Height="4" Fill="#D52B1E"/>
+              </Canvas>
             </Grid>
           </Border>
           <TextBlock Text="{Binding Label}" Margin="7,0,0,0" VerticalAlignment="Center"/>
@@ -64,6 +69,9 @@
           </DataTrigger>
           <DataTrigger Binding="{Binding Code}" Value="de">
             <Setter TargetName="de" Property="Visibility" Value="Visible"/>
+          </DataTrigger>
+          <DataTrigger Binding="{Binding Code}" Value="ru">
+            <Setter TargetName="ru" Property="Visibility" Value="Visible"/>
           </DataTrigger>
         </DataTemplate.Triggers>
       </DataTemplate>
