@@ -852,4 +852,7 @@ What GGG has said about third-party tools, with the sources, and what that means
   <data name="ModUnknown" xml:space="preserve">
     <value>The mod "{0}" is no longer in the game's list; its row stays empty. Choose it anew and save.</value>
   </data>
+  <data name="GameLanguageNotRead" xml:space="preserve">
+    <value>Game language "{0}" is not read: prices need the English or German game client.</value>
+  </data>
 </root>

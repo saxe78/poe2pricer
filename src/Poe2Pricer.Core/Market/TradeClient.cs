@@ -64,8 +64,8 @@ public sealed class TradeClient : ITradePrices, IDisposable
         this.rates = rates;
         this.log = log ?? (_ => { });
         this.clock = clock ?? TimeProvider.System;
-        client = new HttpClient(handler ?? new HttpClientHandler()) { BaseAddress = new Uri(Host), Timeout = Tuning.Control.RequestTimeout, MaxResponseContentBufferSize = Tuning.Control.ResponseLimit };
-        client.DefaultRequestHeaders.UserAgent.ParseAdd($"poe2pricer/{AppInfo.Version} (local, private)");
+        client = new HttpClient(handler ?? Connecting.Handler()) { BaseAddress = new Uri(Host), Timeout = Tuning.Control.RequestTimeout, MaxResponseContentBufferSize = Tuning.Control.ResponseLimit };
+        client.DefaultRequestHeaders.UserAgent.ParseAdd(AppInfo.UserAgent);
         client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
     }
 

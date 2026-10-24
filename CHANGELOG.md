@@ -3,14 +3,34 @@
 All notable changes to poe2pricer, newest first. The release notes on GitHub say the same
 with more words: https://github.com/saxe78/poe2pricer/releases
 
-## Unreleased
+## 1.3.1 — 2026-10-24
 
 ### Added
 - Russian program interface, including tooltips, status and tray messages, with Russian
   plural forms. The game languages supported by recognition remain English and German
   (contributed by OtShellNick, [#5](https://github.com/saxe78/poe2pricer/pull/5)).
+- A red line in the window, a tray notice and a log line when the game's settings file names
+  a language the program does not read (it reads English and German): nothing is recognised
+  then, whatever language the window is in. Before, such a client was silently taken for
+  English.
 - Russian help guide with localized program screenshots, opening in the selected program
   language; English and German remain available in the guide's language switcher.
+- The first line of the log names the Windows build.
+- A log line says whether Windows accepted keeping the overlay out of screen captures, or
+  refused with which error; a refusal would leave the price labels in the program's own
+  reading of the screen ([#6](https://github.com/saxe78/poe2pricer/issues/6)).
+
+### Changed
+- Every request introduces itself as `poe2pricer/<version> (+https://github.com/saxe78/poe2pricer)`,
+  the form site operators know; before, the User-Agent named the program and version only.
+- The community data (rumour tables) is fetched with the same 20 s time-out as every other
+  request; before, a connection that stalled could hold "Loading community data…" for 100 s.
+
+### Fixed
+- poe.ninja, the trade site and GitHub are reached when the first address of the host does
+  not answer (a dead IPv6 route: "poe.ninja: not reachable … Timeout of 20 seconds"): the
+  next address is tried after 250 ms, the way browsers do it, instead of waiting out the
+  time-out on the first.
 
 ## 1.3.0 — 2026-10-23
 
@@ -29,11 +49,11 @@ with more words: https://github.com/saxe78/poe2pricer/releases
 ### Fixed
 - Ritual with a controller: the tribute dialog ("Offer all remaining Tribute to the king?") is
   recognised at UI Text Size Large and Extra Large too, so the items under it get no price
-  on its text (#1).
+  on its text ([#1](https://github.com/saxe78/poe2pricer/issues/1)).
 - Ritual: a dialog that opens while the prices are shown (tribute, reroll) is found at once
   even when it does not dim the window behind it; before, the prices stayed on its text.
 - Stash tabs at UI Text Size Large and Extra Large: items with a tier mark, and stacks with a
-  large number or mark, get their price (#1).
+  large number or mark, get their price ([#1](https://github.com/saxe78/poe2pricer/issues/1)).
 - Waystone and tablet tooltips over a stash tab: lines garbled by the stash showing through
   the tooltip are read all the same, and a tooltip the stash cut short keeps its mods.
 - Waystone and tablet tooltips: a number the text recognition leaves out (above all the roll
@@ -49,8 +69,8 @@ with more words: https://github.com/saxe78/poe2pricer/releases
   the key as the settings file has it.
 
 ### Changed
-- No more warning about the game's UI Text Size: Large and Extra Large are checked on two
-  players' pictures at 1080, 1440, 2160 and 3440, every window (#1). Only a size the program
+- No more warning about the game's UI Text Size: Large and Extra Large are checked at 1080,
+  1440, 2160 and 3440, every window ([#1](https://github.com/saxe78/poe2pricer/issues/1)). Only a size the program
   does not know is noted at the start, as a closable line in the window's brass colour.
 - Settings: the "Display" box is "Prices and display" and holds the league too, in a row like
   the two below it, with a small refresh sign in place of the "Refresh prices" button.
@@ -73,13 +93,13 @@ with more words: https://github.com/saxe78/poe2pricer/releases
 - Waystones and tablets in the English and the German game client; the search text and the
   mod lists follow the client's language.
 - Stash tabs inside a stash folder are found in the keyboard UI (contributed by
-  gazevans-pixel, #2).
+  gazevans-pixel, [#2](https://github.com/saxe78/poe2pricer/issues/2)).
 - The log's start line names the date.
 
 ### Changed
 - Updates are downloaded and installed only after a click on the message; before, they were
   downloaded in the background and installed when you quit.
-- A UI Text Size other than medium gives a hint only, without a tray notice (#1).
+- A UI Text Size other than medium gives a hint only, without a tray notice ([#1](https://github.com/saxe78/poe2pricer/issues/1)).
 - When poe.ninja cannot be reached, the log names the reason (host, secure connection,
   time-out).
 - Releases are built by GitHub Actions, with `SHA256SUMS.txt`.
@@ -87,8 +107,8 @@ with more words: https://github.com/saxe78/poe2pricer/releases
 
 ### Fixed
 - Favours: a tooltip over empty cells ended at the screen's edge at large text sizes and hid
-  the items below it (#1).
-- Island Rumours: the island was not recognised when its ship marker is drawn dimmer (#1).
+  the items below it ([#1](https://github.com/saxe78/poe2pricer/issues/1)).
+- Island Rumours: the island was not recognised when its ship marker is drawn dimmer ([#1](https://github.com/saxe78/poe2pricer/issues/1)).
 - A diagnosis taken after the overlay hid itself reported the window shown before.
 
 ## 1.1.2 — 2026-10-20

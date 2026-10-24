@@ -38,8 +38,19 @@ public sealed class OverlayWindow : Window
             // WS_EX_NOACTIVATE | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW
             SetWindowLongPtrW(hwnd, -20, GetWindowLongPtrW(hwnd, -20) | 0x08000000 | 0x20 | 0x80);
             this.hwnd = hwnd;
-            SetWindowDisplayAffinity(hwnd, excluded ? 0x11u : 0u);
+            Affinity(excluded);
         };
+    }
+
+    // Windows accepts the exclusion or not: Windows 10 before 2004 does not know 0x11, and a
+    // refusal leaves the labels in every screen capture, our own included (issue #6: prices
+    // that flicker every second). Either way in the log, once per change.
+    private void Affinity(bool exclude)
+    {
+        if (SetWindowDisplayAffinity(hwnd, exclude ? 0x11u : 0u))
+            FileLog.Write(exclude ? "Overlay: excluded from screen captures" : "Overlay: visible to screen captures (game window read)");
+        else
+            FileLog.Write($"Overlay: SetWindowDisplayAffinity({(exclude ? "exclude" : "none")}) refused, error {Marshal.GetLastWin32Error()}");
     }
 
     // Keep the window out of screen captures (0x11, WDA_EXCLUDEFROMCAPTURE) or let them see
@@ -47,9 +58,11 @@ public sealed class OverlayWindow : Window
     // flag is a plain field and SetWindowDisplayAffinity takes the handle.
     public void ExcludeFromCapture(bool exclude)
     {
+        if (excluded == exclude)
+            return;
         excluded = exclude;
         if (hwnd != 0)
-            SetWindowDisplayAffinity(hwnd, exclude ? 0x11u : 0u);
+            Affinity(exclude);
     }
 
     // scale: screen pixels per pixel of the labels' coordinates (the game runs at another
@@ -78,6 +91,6 @@ public sealed class OverlayWindow : Window
 
     [DllImport("user32.dll")] private static extern nint GetWindowLongPtrW(nint hwnd, int index);
     [DllImport("user32.dll")] private static extern nint SetWindowLongPtrW(nint hwnd, int index, nint value);
-    [DllImport("user32.dll")] private static extern bool SetWindowDisplayAffinity(nint hwnd, uint affinity);
+    [DllImport("user32.dll", SetLastError = true)] private static extern bool SetWindowDisplayAffinity(nint hwnd, uint affinity);
     [DllImport("user32.dll")] private static extern bool SetWindowPos(nint hwnd, nint after, int x, int y, int w, int h, uint flags);
 }

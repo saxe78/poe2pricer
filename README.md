@@ -148,7 +148,7 @@ All three keys can be changed in the settings window.
   the stash tabs are read (they work on pictures, not on text).
 - Game window with an aspect ratio of 16:10 or wider; any height (measured from 1080 to 2160
   pixels); any Popup Size setting of the game; any **UI Text Size** (large and extra large
-  checked on two players' pictures at 1080, 1440, 2160 and 3440, every window;
+  checked at 1080, 1440, 2160 and 3440, every window;
   [issue #1](https://github.com/saxe78/poe2pricer/issues/1)).
 
 ## Known limits
@@ -294,7 +294,9 @@ Where poe2pricer stands to that, so you can judge for yourself:
   from the screen (GDI). Neither sends the game a message, opens its process or reads its
   memory.
 - It never connects to the game servers. Its requests go to poe.ninja, the trade website
-  (within the limits the site states, under a User-Agent that names the program), poecdn, the
+  (within the limits the site states in every answer, "5 requests in 10 seconds" at the time
+  of writing, and after a refusal only after the pause it names; under a User-Agent that names
+  the program, its version and this repository), poecdn, the
   rumour sources and GitHub, see "Trust".
 - It shows prices from outside the game, as every price checker does. That is the
   "information that isn't normally visible" part, and it applies to all of them alike.

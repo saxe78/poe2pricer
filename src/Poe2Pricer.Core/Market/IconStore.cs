@@ -26,8 +26,8 @@ public sealed partial class IconStore : IDisposable
     {
         this.folder = folder ?? Path.Combine(Settings.Folder, "icons");
         this.fetch = fetch;
-        client = new HttpClient(handler ?? new HttpClientHandler()) { BaseAddress = new Uri("https://web.poecdn.com"), Timeout = Tuning.Control.RequestTimeout, MaxResponseContentBufferSize = Tuning.Control.ResponseLimit };
-        client.DefaultRequestHeaders.UserAgent.ParseAdd($"poe2pricer/{AppInfo.Version} (local, private)");
+        client = new HttpClient(handler ?? Connecting.Handler()) { BaseAddress = new Uri("https://web.poecdn.com"), Timeout = Tuning.Control.RequestTimeout, MaxResponseContentBufferSize = Tuning.Control.ResponseLimit };
+        client.DefaultRequestHeaders.UserAgent.ParseAdd(AppInfo.UserAgent);
     }
 
     [GeneratedRegex("[^A-Za-z0-9]+")]

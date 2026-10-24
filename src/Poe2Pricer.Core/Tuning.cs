@@ -966,6 +966,12 @@ public static class Tuning
         public static readonly TimeSpan RequestSpacing = TimeSpan.FromSeconds(1);
         public static readonly TimeSpan RequestTimeout = TimeSpan.FromSeconds(20);
 
+        // Connecting: the next address of a host is tried this long after the one before while
+        // that has not answered (Connecting; a dead IPv6 route otherwise costs the whole
+        // time-out). Browsers use 250 ms; a connection that is going to answer does so well
+        // within it.
+        public static readonly TimeSpan ConnectStagger = TimeSpan.FromMilliseconds(250);
+
         // A picture of the game window counts as black (the capture delivered nothing: a
         // window in exclusive fullscreen, a driver) when no pixel is brighter than this. Chosen: the
         // game is never that dark across the whole window with the UI drawn.

@@ -29,6 +29,7 @@ public sealed class GameConfig
     private DateTime? stamp;
     private double popup = StandardPopup;
     private string language = GameLanguage.English;
+    private string clientLanguage = GameLanguage.English;
     private string textSize = StandardTextSize;
     private bool looked;
 
@@ -108,6 +109,26 @@ public sealed class GameConfig
         }
     }
 
+    // The language as the file names it ("ru"), whether the program reads it or not; a missing
+    // file or entry: English. For telling the user (Program.CheckGameLanguage); the recognition
+    // goes by Language.
+    public string ClientLanguage
+    {
+        get
+        {
+            lock (gate)
+            {
+                Look();
+                return clientLanguage;
+            }
+        }
+    }
+
+    // The program reads the game in this language (GameLanguage: English and German). In any
+    // other, nothing is recognised: the tooltips are not read and the stash search text is in
+    // the wrong words — said in the window, not swallowed (23.10.2026, a Russian client).
+    public bool LanguageSupported => GameLanguage.Known(ClientLanguage) == ClientLanguage;
+
     // UI Text Size (Options → UI; "medium", "large", "extra_large"): the size of the stack
     // numbers and tier marks on items and of the lettering in dialogs. The program is measured
     // at "medium"; the value is read to be written into every diagnosis, where pictures of
@@ -156,14 +177,15 @@ public sealed class GameConfig
         looked = true;
         if (now is null)
         {
-            (stamp, popup, language, textSize) = (null, StandardPopup, GameLanguage.English, StandardTextSize);
+            (stamp, popup, language, clientLanguage, textSize) = (null, StandardPopup, GameLanguage.English, GameLanguage.English, StandardTextSize);
             return;
         }
         try
         {
             var lines = System.IO.File.ReadAllLines(file);
             popup = PopupOf(lines);
-            language = LanguageOf(lines);
+            clientLanguage = ClientLanguageOf(lines);
+            language = GameLanguage.Known(clientLanguage);
             textSize = lines.Select(l => l.Split('=', 2)).FirstOrDefault(p => p.Length == 2 && p[0].Trim() == TextSizeEntry)?[1].Trim() ?? StandardTextSize;
             stamp = now;
         }
@@ -188,8 +210,12 @@ public sealed class GameConfig
         return StandardPopup;
     }
 
-    // The client's language: the entry below its section (the file also holds "chat_language").
-    public static string LanguageOf(IEnumerable<string> lines)
+    // The client's language as the program reads it: the entry below its section (the file
+    // also holds "chat_language"), any language the program does not read counts as English.
+    public static string LanguageOf(IEnumerable<string> lines) => GameLanguage.Known(ClientLanguageOf(lines));
+
+    // The client's language as the file names it; no entry: English.
+    public static string ClientLanguageOf(IEnumerable<string> lines)
     {
         bool inSection = false;
         foreach (var line in lines)
@@ -198,7 +224,7 @@ public sealed class GameConfig
             if (text.StartsWith('['))
                 inSection = text.Equals(LanguageSection, StringComparison.OrdinalIgnoreCase);
             else if (inSection && text.Split('=', 2) is [var name, var value] && name.Trim() == LanguageEntry)
-                return GameLanguage.Known(value.Trim());
+                return value.Trim() is { Length: > 0 } named ? named : GameLanguage.English;
         }
         return GameLanguage.English;
     }

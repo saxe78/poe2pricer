@@ -58,8 +58,8 @@ public sealed class NinjaClient : IDisposable
         this.cacheDirectory =
             cacheDirectory
             ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "poe2pricer", "ninja");
-        client = new HttpClient(handler ?? new HttpClientHandler()) { BaseAddress = new Uri("https://poe.ninja"), Timeout = Tuning.Control.RequestTimeout, MaxResponseContentBufferSize = Tuning.Control.ResponseLimit };
-        client.DefaultRequestHeaders.UserAgent.ParseAdd($"poe2pricer/{AppInfo.Version} (local, private)");
+        client = new HttpClient(handler ?? Connecting.Handler()) { BaseAddress = new Uri("https://poe.ninja"), Timeout = Tuning.Control.RequestTimeout, MaxResponseContentBufferSize = Tuning.Control.ResponseLimit };
+        client.DefaultRequestHeaders.UserAgent.ParseAdd(AppInfo.UserAgent);
     }
 
     public async Task<string[]> LeaguesAsync(CancellationToken token = default)

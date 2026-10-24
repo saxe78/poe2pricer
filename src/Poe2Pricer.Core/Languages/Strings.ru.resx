@@ -877,4 +877,7 @@
   <data name="NoticeQuit" xml:space="preserve">
     <value>Выйти</value>
   </data>
+  <data name="GameLanguageNotRead" xml:space="preserve">
+    <value>Язык игры «{0}» не распознаётся: для цен нужен английский или немецкий клиент игры.</value>
+  </data>
 </root>

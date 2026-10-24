@@ -53,7 +53,10 @@ public static class Program
             // Which copy runs (several may lie around: the unpacked one, a built one), to
             // read the run from the log, and when it ended.
             // The log's lines carry the time only; the date here tells which day they belong to.
-            FileLog.Write($"Started: {AppInfo.NameAndVersion}, {DateTime.Now:yyyy-MM-dd}, {Environment.ProcessPath}, PID {Environment.ProcessId}");
+            // The Windows build in the first line: what a capture or a key can do depends on it
+            // (WDA_EXCLUDEFROMCAPTURE from 10.0.19041, the borderless window capture from 22621),
+            // and an issue rarely says it.
+            FileLog.Write($"Started: {AppInfo.NameAndVersion}, {DateTime.Now:yyyy-MM-dd}, {System.Runtime.InteropServices.RuntimeInformation.OSDescription}, {Environment.ProcessPath}, PID {Environment.ProcessId}");
         }
         try
         {
@@ -145,6 +148,7 @@ public static class Program
             {
                 shownModel.Warn("textsize", new("GameTextSizeNotDefault", new Poe2Pricer.Core.Told("TextSize_extra_large"), Poe2Pricer.Ui.HotKey.Shown(settings.DiagnoseKey)), hint: "textsize extra_large");
                 shownModel.Warn("gameconfig", new("GameSettingsNotFound", @"C:\Users\Name\Documents\My Games\Path of Exile 2\poe2_production_Config.ini"));
+                shownModel.Warn("gamelanguage", new("GameLanguageNotRead", "ru"));
             }
             var w = new MainWindow(shownModel, Path.Combine(AppContext.BaseDirectory, "poe2pricer.ico"));
             // POE2PRICER_NOTICE: the notice before the first start (AskWindow).
@@ -506,7 +510,8 @@ public static class Program
                 bool loaded = false;
                 try
                 {
-                    using var http = new System.Net.Http.HttpClient { MaxResponseContentBufferSize = Tuning.Control.ResponseLimit };
+                    using var http = new System.Net.Http.HttpClient(Poe2Pricer.Core.Market.Connecting.Handler()) { MaxResponseContentBufferSize = Tuning.Control.ResponseLimit, Timeout = Tuning.Control.RequestTimeout };
+                    http.DefaultRequestHeaders.UserAgent.ParseAdd(AppInfo.UserAgent);
                     loaded = await rumourBook.RefreshAsync(http);
                 }
                 catch (Exception e)
@@ -580,7 +585,26 @@ public static class Program
         model.Settings.Saved += s => tradeSettings = s;
         engine.Draw += _ => app.Dispatcher.BeginInvoke(CheckGameConfig);
         if (gameConfig.Found)
-            FileLog.Write($"Game settings: {gameConfig.File}, language {gameConfig.Language}, UI Text Size {gameConfig.TextSize}, Popup Size {gameConfig.PopupSize.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)}");
+            FileLog.Write($"Game settings: {gameConfig.File}, language {gameConfig.ClientLanguage}{(gameConfig.LanguageSupported ? "" : " (not read, English assumed)")}, UI Text Size {gameConfig.TextSize}, Popup Size {gameConfig.PopupSize.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)}");
+        // A client language the program does not read (English and German it does): nothing is
+        // recognised then, neither the tooltips nor the stash search text match the game's
+        // words, and a window in Russian must not suggest otherwise. A red line in the window
+        // as long as it lasts (no "✕": it is a fault, not a hint), once in the log and the tray
+        // when the value changes — the game writes its file when the language is switched.
+        string toldLanguage = GameLanguage.English;
+        void CheckGameLanguage()
+        {
+            // One reading of the file for both: the game may rewrite it between two.
+            string now = gameConfig.ClientLanguage;
+            bool supported = GameLanguage.Known(now) == now;
+            if (!supported && now != toldLanguage)
+                Warn(new("GameLanguageNotRead", now));
+            toldLanguage = now;
+            model.Warn("gamelanguage", supported ? null : new("GameLanguageNotRead", now));
+        }
+        CheckGameLanguage();
+        model.Settings.Saved += _ => CheckGameLanguage();
+        engine.Draw += _ => app.Dispatcher.BeginInvoke(CheckGameLanguage);
         // A larger UI Text Size is not supported: said at the start, and whenever another
         // value is found later — the game writes its settings file while it runs, so a size
         // changed in the game's options after the start shows up with the next prices drawn.

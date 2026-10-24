@@ -855,4 +855,7 @@ Was GGG zu Drittprogrammen gesagt hat, mit Quellen, und was das für dieses Prog
   <data name="ModUnknown" xml:space="preserve">
     <value>Der Mod „{0}“ steht nicht mehr in der Liste des Spiels; seine Zeile bleibt leer. Neu wählen und speichern.</value>
   </data>
+  <data name="GameLanguageNotRead" xml:space="preserve">
+    <value>Spielsprache „{0}“ wird nicht gelesen: Preise brauchen den englischen oder deutschen Spielclient.</value>
+  </data>
 </root>

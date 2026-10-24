@@ -18,8 +18,8 @@ public sealed class UpdateCheck : IDisposable
     // handler: the tests answer the request themselves.
     public UpdateCheck(HttpMessageHandler? handler = null)
     {
-        client = new HttpClient(handler ?? new HttpClientHandler()) { BaseAddress = new Uri("https://api.github.com"), Timeout = Tuning.Control.RequestTimeout, MaxResponseContentBufferSize = Tuning.Control.ResponseLimit };
-        client.DefaultRequestHeaders.UserAgent.ParseAdd($"poe2pricer/{AppInfo.Version} (local, private)");
+        client = new HttpClient(handler ?? Connecting.Handler()) { BaseAddress = new Uri("https://api.github.com"), Timeout = Tuning.Control.RequestTimeout, MaxResponseContentBufferSize = Tuning.Control.ResponseLimit };
+        client.DefaultRequestHeaders.UserAgent.ParseAdd(AppInfo.UserAgent);
         client.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github+json");
     }
 
