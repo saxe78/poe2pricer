@@ -7,13 +7,15 @@ using Poe2Pricer.Core.Market;
 
 namespace Poe2Pricer.App;
 
-// Transparent, click-through, never focused, always on top. Left out of screen captures
-// (SetWindowDisplayAffinity 0x11) while the game is read from the screen, so the tool never
-// sees its own labels — which also keeps the labels out of every recording, and makes the
-// NVIDIA app refuse to record the desktop at all; with the game read from its own window
-// (Settings.CaptureGameWindow) the flag is off. Window styles as in
-// Dev-Jahn/poe2-ritual-checker Overlay.cs (MIT).
-public sealed class OverlayWindow : Window
+// The WPF way of drawing the labels, since 1.4.0 only the fallback where CompositionOverlay
+// cannot be built (Overlays): transparent, click-through, never focused, always on top. Asked
+// to stay out of screen captures (SetWindowDisplayAffinity 0x11) while the game is read from
+// the screen, so the tool never sees its own labels — which also keeps the labels out of every
+// recording, and makes the NVIDIA app refuse to record the desktop at all; with the game read
+// from its own window (Settings.CaptureGameWindow) the flag is off. Windows 10 ignores the
+// request for a window drawn this way (issue #6), which is why CompositionOverlay exists.
+// Window styles as in Dev-Jahn/poe2-ritual-checker Overlay.cs (MIT).
+public sealed class OverlayWindow : Window, IOverlay
 {
     private readonly LabelLayer layer = new();
     private bool excluded = true;
@@ -53,9 +55,8 @@ public sealed class OverlayWindow : Window
             FileLog.Write($"Overlay: SetWindowDisplayAffinity({(exclude ? "exclude" : "none")}) refused, error {Marshal.GetLastWin32Error()}");
     }
 
-    // Keep the window out of screen captures (0x11, WDA_EXCLUDEFROMCAPTURE) or let them see
-    // it. Takes effect at once; before the window exists, when it is created. Any thread: the
-    // flag is a plain field and SetWindowDisplayAffinity takes the handle.
+    // 0x11 is WDA_EXCLUDEFROMCAPTURE. Any thread: the flag is a plain field and
+    // SetWindowDisplayAffinity takes the handle.
     public void ExcludeFromCapture(bool exclude)
     {
         if (excluded == exclude)
@@ -65,8 +66,6 @@ public sealed class OverlayWindow : Window
             Affinity(exclude);
     }
 
-    // scale: screen pixels per pixel of the labels' coordinates (the game runs at another
-    // height than the readers are measured at).
     public void Show(Box screen, Label[] labels, (Box Panel, RumourLine[] Lines, IslandSummary? Island)? rumours = null, double scale = 1)
     {
         layer.Rumours = rumours;
@@ -79,9 +78,9 @@ public sealed class OverlayWindow : Window
         layer.InvalidateVisual();
     }
 
-    // Nothing to show: the window stays and draws nothing. A hidden window keeps its last
-    // picture, and Windows shows that picture the moment the window is shown again, before the
-    // new labels are drawn — the old prices of the last window would flash up on the next one.
+    // The window stays: a hidden window keeps its last picture, and Windows shows that picture
+    // the moment the window is shown again, before the new labels are drawn — the old prices of
+    // the last window would flash up on the next one.
     public void Clear()
     {
         layer.Rumours = null;

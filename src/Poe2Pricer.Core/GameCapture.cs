@@ -8,7 +8,7 @@ namespace Poe2Pricer.Core;
 // exclusive fullscreen game cannot be overlaid anyway): from the window itself through the
 // desktop compositor (Settings.CaptureGameWindow, WindowCapture — the overlay and other windows
 // over the game are never in the picture, and the game gets no message for it), or from the
-// screen with BitBlt (then the overlay must keep out of captures, OverlayWindow). The game is recognised by its process
+// screen with BitBlt (then the overlay must keep out of captures, IOverlay.ExcludeFromCapture). The game is recognised by its process
 // name, as in Dev-Jahn/poe2-ritual-checker (MIT). Coordinates are physical pixels, so the
 // process must be per-monitor DPI aware.
 public static class GameCapture

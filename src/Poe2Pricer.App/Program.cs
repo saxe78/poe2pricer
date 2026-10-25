@@ -178,7 +178,7 @@ public static class Program
 
         var app = new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown };
         var iconPath = Path.Combine(AppContext.BaseDirectory, "poe2pricer.ico");
-        var overlay = new OverlayWindow(Orb("Divine_Orb"), Orb("Exalted_Orb"), Orb("Chaos_Orb"));
+        var overlay = Overlays.Create(Orb("Divine_Orb"), Orb("Exalted_Orb"), Orb("Chaos_Orb"));
         var gameConfig = new GameConfig(settings.GameConfigFile);
         using var screen = new WindowsGameScreen(gameConfig);
         using var prices = new NinjaPrices(settings);
@@ -569,16 +569,31 @@ public static class Program
         // Without the game's settings file the popup size is taken for the standard; with
         // another size set in the game, tooltips and the rumour panel would not be recognised.
         // Looked at again with every save and with the prices drawn, like the text size below.
+        // Along with it the client's language: one the program does not read (English and
+        // German it does) means nothing is recognised, neither the tooltips nor the stash search
+        // text match the game's words, and a window in Russian must not suggest otherwise. A red
+        // line in the window as long as it lasts (no "✕": it is a fault, not a hint), once in
+        // the log and the tray when the value changes — the game writes its file when the
+        // language is switched.
         bool toldNotFound = false;
+        string toldLanguage = GameLanguage.English;
         void CheckGameConfig()
         {
+            // One reading of the file for all of it: the game may rewrite it between two.
+            string client = gameConfig.ClientLanguage;
+            string language = GameLanguage.Known(client);
             // The search texts in the words of the client (it may have been switched since).
-            model.Waystones.GameLanguage = model.Tablets.GameLanguage = GameLanguage.Known(gameConfig.Language);
+            model.Waystones.GameLanguage = model.Tablets.GameLanguage = language;
             bool missing = !gameConfig.Found;
             if (missing && !toldNotFound)
                 Warn(new("GameSettingsNotFound", gameConfig.File));
             toldNotFound = missing;
             model.Warn("gameconfig", missing ? new("GameSettingsNotFound", gameConfig.File) : null);
+            bool supported = language == client;
+            if (!supported && client != toldLanguage)
+                Warn(new("GameLanguageNotRead", client));
+            toldLanguage = client;
+            model.Warn("gamelanguage", supported ? null : new("GameLanguageNotRead", client));
         }
         CheckGameConfig();
         model.Settings.Saved += _ => CheckGameConfig();
@@ -586,25 +601,6 @@ public static class Program
         engine.Draw += _ => app.Dispatcher.BeginInvoke(CheckGameConfig);
         if (gameConfig.Found)
             FileLog.Write($"Game settings: {gameConfig.File}, language {gameConfig.ClientLanguage}{(gameConfig.LanguageSupported ? "" : " (not read, English assumed)")}, UI Text Size {gameConfig.TextSize}, Popup Size {gameConfig.PopupSize.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)}");
-        // A client language the program does not read (English and German it does): nothing is
-        // recognised then, neither the tooltips nor the stash search text match the game's
-        // words, and a window in Russian must not suggest otherwise. A red line in the window
-        // as long as it lasts (no "✕": it is a fault, not a hint), once in the log and the tray
-        // when the value changes — the game writes its file when the language is switched.
-        string toldLanguage = GameLanguage.English;
-        void CheckGameLanguage()
-        {
-            // One reading of the file for both: the game may rewrite it between two.
-            string now = gameConfig.ClientLanguage;
-            bool supported = GameLanguage.Known(now) == now;
-            if (!supported && now != toldLanguage)
-                Warn(new("GameLanguageNotRead", now));
-            toldLanguage = now;
-            model.Warn("gamelanguage", supported ? null : new("GameLanguageNotRead", now));
-        }
-        CheckGameLanguage();
-        model.Settings.Saved += _ => CheckGameLanguage();
-        engine.Draw += _ => app.Dispatcher.BeginInvoke(CheckGameLanguage);
         // A larger UI Text Size is not supported: said at the start, and whenever another
         // value is found later — the game writes its settings file while it runs, so a size
         // changed in the game's options after the start shows up with the next prices drawn.

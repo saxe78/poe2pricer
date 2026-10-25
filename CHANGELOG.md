@@ -3,6 +3,17 @@
 All notable changes to poe2pricer, newest first. The release notes on GitHub say the same
 with more words: https://github.com/saxe78/poe2pricer/releases
 
+## Unreleased
+
+### Fixed
+- Prices that blinked every second on Windows 10 ([#6](https://github.com/saxe78/poe2pricer/issues/6)):
+  the labels were drawn by a transparent WPF window, which Windows 10 leaves in screen
+  captures although the program asked to keep it out (changed in Windows 11 24H2), so the
+  program read its own labels from the screen and took the items under them for covered. The
+  labels are now drawn by a window of their own outside WPF (DirectComposition), which Windows
+  10 and 11 both leave out of captures; it stays transparent and lets clicks through as before.
+  Where that window cannot be built the WPF window is used, with a line in the log.
+
 ## 1.3.1 — 2026-10-24
 
 ### Added

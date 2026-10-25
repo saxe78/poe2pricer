@@ -10,6 +10,8 @@
          notification area. -->
     <ApplicationIcon>../../assets/poe2pricer.ico</ApplicationIcon>
     <AssemblyName>poe2pricer</AssemblyName>
+    <!-- CompositionOverlay calls Direct3D and DirectComposition through their vtables (function pointers). -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Using Remove="System.Windows.Forms" />
