@@ -124,6 +124,20 @@ public sealed class GameConfig
         }
     }
 
+    // Found and the client's language from one look (Program.CheckGameConfig: the game may
+    // rewrite the file between two).
+    public (bool Found, string ClientLanguage) FoundAndClientLanguage
+    {
+        get
+        {
+            lock (gate)
+            {
+                Look();
+                return (stamp is not null, clientLanguage);
+            }
+        }
+    }
+
     // The program reads the game in this language (GameLanguage: English and German). In any
     // other, nothing is recognised: the tooltips are not read and the stash search text is in
     // the wrong words — said in the window, not swallowed (23.10.2026, a Russian client).

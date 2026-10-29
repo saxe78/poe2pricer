@@ -1,6 +1,7 @@
 using OpenCvSharp;
 using Poe2Pricer.Core.Market;
 using static System.FormattableString;
+using Tune = Poe2Pricer.Core.Tuning.Stash;
 
 namespace Poe2Pricer.Core;
 
@@ -58,8 +59,16 @@ public sealed class StashGameWindow(Pipeline pipeline) : IGameWindow
             .ContinueWith(t => t.Exception, TaskContinuationOptions.OnlyOnFaulted); // observed; items count as tried
     }
 
+    // Whether the last glance saw only the tab's bare ground; shared by the window's instances.
+    private sealed class Blank
+    {
+        public bool Seen;
+    }
+
     private sealed record Open(StashGameWindow Kind, StashTabWindow Tab, StashSlot[] Slots) : IOpenWindow
     {
+        private readonly Blank blank = new();
+
         public IGameWindow Window => Kind;
 
         public Box? GlanceArea => Kind.Pipeline.Stash.LookArea(Tab);
@@ -67,13 +76,35 @@ public sealed class StashGameWindow(Pipeline pipeline) : IGameWindow
         // A tooltip over the tab lowers the score, so a lower bar than for the first look. Another
         // tab counts at once: otherwise every glance found "another tab" again and cancelled the
         // read running for it, and nothing was ever read.
+        // No tab, but the tab's bare ground: the game is changing to another tab — for a frame
+        // it draws the ground alone (glance picture 25.10.2026: Orbs tab found at .96, 80 ms
+        // later only the ground, tooltips in the stash 5 s later; 37 of 102 tab changes in the
+        // log were lost this way, the rest were caught with the next tab already drawn). The
+        // labels go now, the window stays, and the next glance reads the tab that comes; the
+        // same tab again (a hiccup) gets its labels back at once. The ground stays as long as
+        // the tab's content takes to load: usually a frame, about a second on a slow
+        // connection (26.10.2026, 20:21, two changes of 0.95 s; a limit of five glances
+        // gave the window up after 200 ms and lost the labels). The ground is drawn only while
+        // the stash is open, so there is no limit: the window closes when neither a tab nor
+        // the ground is in view.
         public Glance Glance(Mat frame, PriceBook? ready, LookContext context)
         {
             var now = Kind.Pipeline.Stash.Locate(frame, StashTabReader.MinimumScore);
             if (now is null)
-                return new Glance.Gone("stash tab no longer detected");
+            {
+                if (!Kind.Pipeline.Stash.IsBlank(frame))
+                    return new Glance.Gone("stash tab no longer detected");
+                if (blank.Seen)
+                    return Core.Glance.Unchanged;
+                blank.Seen = true;
+                context.Log("stash tab bare (changing), labels cleared");
+                context.Keep?.Invoke("glance-blank-stash", frame);
+                return new Glance.Reread(this with { Slots = [] }, ClearNow: true);
+            }
+            bool wasBlank = blank.Seen;
+            blank.Seen = false;
             if (now.Kind == Tab.Kind && now.Mode == Tab.Mode && now.OffsetY == Tab.OffsetY)
-                return Core.Glance.Unchanged;
+                return wasBlank ? new Glance.Reread(this, ClearNow: false) : Core.Glance.Unchanged;
             context.Log($"different stash tab ({now.Kind}), rescanning");
             return new Glance.Reread(this with { Tab = now, Slots = [] }, ClearNow: true);
         }
@@ -85,9 +116,19 @@ public sealed class StashGameWindow(Pipeline pipeline) : IGameWindow
             var tab = Kind.Pipeline.Stash.Locate(frame.Image, StashTabReader.MinimumScore);
             if (tab is null)
             {
+                // The bare ground between two tabs (Glance): kept without labels.
+                if (Kind.Pipeline.Stash.IsBlank(frame.Image))
+                {
+                    blank.Seen = true;
+                    context.Log("stash tab bare, kept");
+                    return Task.FromResult<IOpenWindow?>(this with { Slots = [] });
+                }
                 context.Log("hidden: stash tab no longer detected");
                 return Task.FromResult<IOpenWindow?>(null);
             }
+            // Seen is reset by the glance that finds a tab, not here: a follow that read the
+            // tab before the ground came may finish after the glance saw the ground, and would
+            // have the next glance log and keep the ground again.
             var slots = Kind.Read(frame.Image, tab, frame.Popup);
             context.Log(Invariant($"Time: stash tab {watch.ElapsedMilliseconds} ms, {tab.Kind} {tab.AnchorScore:0.00}, {slots.Count(s => s.Present)} occupied, {slots.Count(s => s.Covered)} covered"));
             return Task.FromResult<IOpenWindow?>(this with { Tab = tab, Slots = slots });
@@ -110,7 +151,7 @@ public sealed class StashGameWindow(Pipeline pipeline) : IGameWindow
                 labels.All(l => l.Text is null) && present > 0 && settings.FloorValue > 0
                     ? Texts.Count("StashAllBelowThreshold", present, settings.FloorValue, settings.FloorUnit, Tab.Kind)
                     : Texts.Get("StashStatus", Tab.Kind, Texts.Count("Items", present), Texts.Count("Prices", labels.Count(l => l.Text is not null)), book.League),
-                $"{Tab.Kind} tab ({Tab.Mode}), {present} occupied, {labels.Length} labels",
+                Slots.Length == 0 && blank.Seen ? $"{Tab.Kind} tab ({Tab.Mode}), bare (changing)" : $"{Tab.Kind} tab ({Tab.Mode}), {present} occupied, {labels.Length} labels",
                 new { Window = "stash", Tab, Slots = named, Labels = labels }
             );
         }

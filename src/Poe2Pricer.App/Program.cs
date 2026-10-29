@@ -389,14 +389,25 @@ public static class Program
             if (!app.Dispatcher.Invoke(() => model.Waystones.Quitting() && model.Tablets.Quitting()))
                 return;
             installing = true;
-            Told(new StatusMessage(Texts.Get("UpdateDownloading", version)));
+            // The status line counts the download in percent (a full package is some 170 MB).
+            // Velopack reports on its own thread, often with the same value twice; only a
+            // change reaches the window, through the dispatcher.
+            int shown = -1;
+            void Progress(int percent)
+            {
+                if (percent == shown)
+                    return;
+                shown = percent;
+                app.Dispatcher.BeginInvoke(() => Told(new StatusMessage(Texts.Get("UpdateDownloading", version, percent))));
+            }
+            Progress(0);
             _ = Task.Run(async () =>
             {
                 try
                 {
                     // The tray icon goes before the process ends, else Windows shows it until the
                     // mouse passes over it.
-                    await updates.InstallAsync(FileLog.Write, () => app.Dispatcher.Invoke(tray.Dispose));
+                    await updates.InstallAsync(FileLog.Write, Progress, () => app.Dispatcher.Invoke(tray.Dispose));
                 }
                 catch (Exception e)
                 {
@@ -580,11 +591,11 @@ public static class Program
         void CheckGameConfig()
         {
             // One reading of the file for all of it: the game may rewrite it between two.
-            string client = gameConfig.ClientLanguage;
+            var (found, client) = gameConfig.FoundAndClientLanguage;
             string language = GameLanguage.Known(client);
             // The search texts in the words of the client (it may have been switched since).
             model.Waystones.GameLanguage = model.Tablets.GameLanguage = language;
-            bool missing = !gameConfig.Found;
+            bool missing = !found;
             if (missing && !toldNotFound)
                 Warn(new("GameSettingsNotFound", gameConfig.File));
             toldNotFound = missing;

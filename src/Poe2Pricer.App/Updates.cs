@@ -52,14 +52,17 @@ public sealed class Updates
     }
 
     // The click: downloads the offered version, then installs it and starts the program again
-    // (the process ends in here; beforeRestart runs first). What the download or the install
-    // throws is the caller's to show.
-    public async Task InstallAsync(Action<string> log, Action beforeRestart)
+    // (the process ends in here; beforeRestart runs first). progress gets the download in
+    // percent, 0 to 100, on a thread of Velopack's: a full package is some 170 MB, which takes
+    // minutes on a slow line, and a status line that only said "downloading" looked like
+    // nothing happened (25.10.2026, three tries ended before the download was through).
+    // What the download or the install throws is the caller's to show.
+    public async Task InstallAsync(Action<string> log, Action<int> progress, Action beforeRestart)
     {
         if (offered is null)
             return;
-        log($"Update {offered.TargetFullRelease.Version}: downloading");
-        await manager.DownloadUpdatesAsync(offered);
+        log($"Update {offered.TargetFullRelease.Version}: downloading {offered.TargetFullRelease.Size / (1024 * 1024)} MB");
+        await manager.DownloadUpdatesAsync(offered, progress);
         log("Update downloaded, installing and restarting");
         beforeRestart();
         manager.ApplyUpdatesAndRestart(offered);

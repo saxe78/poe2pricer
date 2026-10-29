@@ -10,13 +10,6 @@ public static class Overlays
 {
     public static IOverlay Create(ImageSource? divine, ImageSource? exalted, ImageSource? chaos)
     {
-        // A/B comparison against the WPF window in the same session, for the development of
-        // 1.4.0 only; goes before the release.
-        if (Environment.GetEnvironmentVariable("POE2PRICER_OVERLAY") == "wpf")
-        {
-            FileLog.Write("Overlay: WPF window (POE2PRICER_OVERLAY=wpf)");
-            return new OverlayWindow(divine, exalted, chaos);
-        }
         try
         {
             var composition = new CompositionOverlay(divine, exalted, chaos);

@@ -156,7 +156,7 @@
     <value>poe2pricer {0} ist verfügbar. Klicken lädt sie herunter und installiert sie.</value>
   </data>
   <data name="UpdateDownloading" xml:space="preserve">
-    <value>Version {0} wird heruntergeladen …</value>
+    <value>Version {0} wird heruntergeladen … {1} %</value>
   </data>
   <data name="UpdateFailed" xml:space="preserve">
     <value>Version {0} konnte nicht heruntergeladen werden: {1}. Der nächste Start nennt sie wieder.</value>

@@ -148,7 +148,7 @@
     <value>Доступна poe2pricer {0}. Нажмите, чтобы скачать и установить её.</value>
   </data>
   <data name="UpdateDownloading" xml:space="preserve">
-    <value>Загрузка версии {0}…</value>
+    <value>Загрузка версии {0}… {1} %</value>
   </data>
   <data name="UpdateFailed" xml:space="preserve">
     <value>Не удалось скачать версию {0}: {1}. При следующем запуске уведомление появится снова.</value>

@@ -173,28 +173,7 @@ public sealed unsafe class CompositionOverlay : IOverlay, IDisposable
             visible = true;
         }
         SetWindowPos(hwnd, -1 /* HWND_TOPMOST */, screen.X, screen.Y, screen.Width, screen.Height, 0x10 /* SWP_NOACTIVATE */);
-        long began = System.Diagnostics.Stopwatch.GetTimestamp();
         Present(screen.Width, screen.Height, draw: true);
-        Measured(System.Diagnostics.Stopwatch.GetElapsedTime(began).TotalMilliseconds, screen, labels.Length);
-    }
-
-    // Time per picture, for the development of 1.4.0 only (goes before the release with the
-    // POE2PRICER_OVERLAY switch): every 100 pictures a line with average and maximum, and every
-    // picture that took more than 50 ms on its own.
-    private int measured;
-    private double measuredSum, measuredMax;
-    private void Measured(double ms, Box screen, int labels)
-    {
-        measured++;
-        measuredSum += ms;
-        measuredMax = Math.Max(measuredMax, ms);
-        if (ms > 50)
-            FileLog.Write($"Overlay: picture {screen.Width}x{screen.Height}, {labels} labels: {ms:F0} ms");
-        if (measured % 100 == 0)
-        {
-            FileLog.Write($"Overlay: {measured} pictures, last 100 at {screen.Width}x{screen.Height}: avg {measuredSum / 100:F1} ms, max {measuredMax:F0} ms");
-            measuredSum = measuredMax = 0;
-        }
     }
 
     // The window stays and shows a fully transparent picture (as the WPF window keeps drawing
@@ -209,27 +188,35 @@ public sealed unsafe class CompositionOverlay : IOverlay, IDisposable
 
     // A lost device (driver update, GPU reset: DXGI_ERROR_DEVICE_REMOVED and the like) is built
     // anew once for this picture; when that fails as well the exception reaches the caller,
-    // which falls back to the WPF window (Overlays).
+    // which falls back to the WPF window (Overlays). Any other failure (the swap chain cannot
+    // be made on this machine, say) gets the same one rebuild, named as what it is: the log is
+    // what a report brings, and "lost its device" would point at a GPU reset that never was.
     private void Present(int w, int h, bool draw)
     {
         if (w <= 0 || h <= 0)
             return;
-        int hr = TryPresent(w, h, draw);
+        int hr = TryPresent(w, h, draw, out string step);
         if (hr >= 0)
             return;
-        FileLog.Write($"Overlay: composition window lost its device (HRESULT 0x{hr:X8}), built anew");
+        string what = DeviceLost(hr) ? "lost its device" : $"failed at {step}";
+        FileLog.Write($"Overlay: composition window {what} (HRESULT 0x{hr:X8}), built anew");
         Teardown();
         Build();
-        hr = TryPresent(w, h, draw);
+        hr = TryPresent(w, h, draw, out step);
         if (hr < 0)
-            throw new InvalidOperationException($"composition window lost its device again, HRESULT 0x{hr:X8}");
+            throw new InvalidOperationException($"composition window {(DeviceLost(hr) ? "lost its device" : "failed at " + step)} again, HRESULT 0x{hr:X8}");
     }
 
-    private int TryPresent(int w, int h, bool draw)
+    // DXGI_ERROR_DEVICE_REMOVED, DEVICE_HUNG, DEVICE_RESET, DRIVER_INTERNAL_ERROR.
+    private static bool DeviceLost(int hr) => hr is unchecked((int)0x887A0005) or unchecked((int)0x887A0006) or unchecked((int)0x887A0007) or unchecked((int)0x887A0020);
+
+    private int TryPresent(int w, int h, bool draw, out string step)
     {
+        step = "swap chain";
         int hr = Fit(w, h);
         if (hr < 0)
             return hr;
+        step = "back buffer";
         Render(w, h, draw);
         var iidTexture = IID_ID3D11Texture2D;
         var getBuffer = (delegate* unmanaged[Stdcall]<nint, uint, Guid*, nint*, int>)Slot(swapChain, 9);
@@ -247,7 +234,13 @@ public sealed unsafe class CompositionOverlay : IOverlay, IDisposable
         {
             Marshal.Release(back);
         }
+        step = "present";
         var present = (delegate* unmanaged[Stdcall]<nint, uint, uint, int>)Slot(swapChain, 8);
+        // Sync interval 1: the call waits for the next vertical blank on the UI thread, up to
+        // 17 ms at 60 Hz, most of the 16–22 ms measured per picture at 3840×2160 (25.10.2026).
+        // Interval 0 would return at once (the compositor shows the picture with its own
+        // vertical sync); kept for after 1.4.0, the path as it is was confirmed on the
+        // reporter's Windows 10 (OFFEN Z11).
         return present(swapChain, 1, 0);
     }
 

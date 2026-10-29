@@ -44,6 +44,8 @@ public sealed class StashTabReader
 
     private readonly Layout layout;
     private readonly Tab[] tabs;
+    // The tab's bare ground of each UI: wooden boards (controller), dark cloth (keyboard).
+    private readonly Tile[][] blank;
     private readonly int width, height;
 
     // Keyboard UI: the tab hangs on the picture's left edge, whatever its width. Controller UI:
@@ -104,28 +106,72 @@ public sealed class StashTabReader
                 var template = HighPass(full);
                 using var mask = new Mat();
                 Cv2.Resize(fullMask, mask, new Size(width, height), 0, 0, InterpolationFlags.Nearest);
-                Tile[] TilesOf(Func<int, int, bool> use)
-                {
-                    var tiles = new List<Tile>();
-                    for (int ty = 0; ty < TilesAcross; ty++)
-                    for (int tx = 0; tx < TilesAcross; tx++)
-                    {
-                        var pixels = new List<int>();
-                        for (int y = ty * height / TilesAcross; y < (ty + 1) * height / TilesAcross; y++)
-                        for (int x = tx * width / TilesAcross; x < (tx + 1) * width / TilesAcross; x++)
-                            if (use(x, y))
-                                pixels.Add(y * width + x);
-                        if (pixels.Count < Tune.MinimumTilePixels)
-                            continue;
-                        var values = pixels.Select(i => template[i]).ToArray();
-                        Normalise(values);
-                        tiles.Add(new(pixels.ToArray(), values));
-                    }
-                    return tiles.ToArray();
-                }
-                return new Tab(spec, TilesOf((x, y) => mask.At<byte>(y, x) != 0), TilesOf((_, _) => true));
+                return new Tab(spec, Tiles(template, (x, y) => mask.At<byte>(y, x) != 0), Tiles(template, (_, _) => true));
             })
             .ToArray();
+        // The tab's bare ground (the frames between two tabs, IsBlank), one per UI: the
+        // controller UI draws wooden boards (cut from a glance picture at the controller
+        // placement, 25.10.2026), the keyboard UI a dark cloth (cut from a glance picture at
+        // the keyboard placement, 26.10.2026, 2560×1440).
+        blank = new[] { "stash-blank.png", "stash-blank-keyboard.png" }
+            .Select(file =>
+            {
+                using var ground = Cv2.ImRead(Path.Combine(uiDirectory, file), ImreadModes.Grayscale);
+                if (ground.Empty())
+                    throw Texts.Failure(m => new InvalidDataException(m), "MissingFile", file);
+                // Tiles indexes the picture by the template area's size.
+                if (ground.Width != a.Width || ground.Height != a.Height)
+                    throw new InvalidDataException($"{file}: {ground.Width}×{ground.Height}, the template area is {a.Width}×{a.Height}");
+                return Tiles(HighPass(ground), (_, _) => true);
+            })
+            .ToArray();
+    }
+
+    private Tile[] Tiles(float[] template, Func<int, int, bool> use)
+    {
+        var tiles = new List<Tile>();
+        for (int ty = 0; ty < TilesAcross; ty++)
+        for (int tx = 0; tx < TilesAcross; tx++)
+        {
+            var pixels = new List<int>();
+            for (int y = ty * height / TilesAcross; y < (ty + 1) * height / TilesAcross; y++)
+            for (int x = tx * width / TilesAcross; x < (tx + 1) * width / TilesAcross; x++)
+                if (use(x, y))
+                    pixels.Add(y * width + x);
+            if (pixels.Count < Tune.MinimumTilePixels)
+                continue;
+            var values = pixels.Select(i => template[i]).ToArray();
+            Normalise(values);
+            tiles.Add(new(pixels.ToArray(), values));
+        }
+        return tiles.ToArray();
+    }
+
+    // Whether the tab's area shows nothing but the tab's ground, at any placement and in
+    // either UI: the frame the game draws while it changes from one tab to another — the
+    // content goes before the next tab is drawn (StashGameWindow.Open.Glance). The score:
+    // the better ground, against Tuning.Stash.BlankScore.
+    public bool IsBlank(Mat bgr) => BlankScore(bgr) >= Tune.BlankScore;
+
+    public double BlankScore(Mat bgr)
+    {
+        if (Math.Abs(bgr.Height - Tuning.Screen.ReferenceHeight) > Tuning.Screen.HeightTolerance)
+            return 0;
+        var a = layout.TemplateArea;
+        double best = 0;
+        foreach (var (_, dx, dy) in Placements(bgr.Width))
+        {
+            var area = new Rect(a.X + dx, a.Y + dy, a.Width, a.Height);
+            if (area.Right > bgr.Width || area.Bottom > bgr.Height)
+                continue;
+            using var roi = new Mat(bgr, area);
+            using var gray = new Mat();
+            Cv2.CvtColor(roi, gray, ColorConversionCodes.BGR2GRAY);
+            var image = HighPass(gray);
+            foreach (var ground in blank)
+                best = Math.Max(best, Score(image, ground, share: 1));
+        }
+        return best;
     }
 
     // The part of the picture that tells whether a tab is still open and which one: the
@@ -188,8 +234,9 @@ public sealed class StashTabReader
         return best;
     }
 
-    // Mean of the best tile correlations (Tune.BestTiles).
-    private static double Score(float[] image, Tile[] tiles)
+    // Mean of the best share of the tile correlations (Tune.BestTiles; all of them for the
+    // bare ground).
+    private static double Score(float[] image, Tile[] tiles, double share = Tune.BestTiles)
     {
         var scores = new double[tiles.Length];
         for (int i = 0; i < tiles.Length; i++)
@@ -209,7 +256,7 @@ public sealed class StashTabReader
             scores[i] = norm > 0 ? dot / Math.Sqrt(norm) : 0;
         }
         Array.Sort(scores);
-        return scores.Skip(scores.Length - (int)Math.Ceiling(scores.Length * Tune.BestTiles)).Average();
+        return scores.Skip(scores.Length - (int)Math.Ceiling(scores.Length * share)).Average();
     }
 
     private static void Normalise(float[] v)

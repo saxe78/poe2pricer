@@ -19,17 +19,32 @@ public sealed record RemnantEntry(int Count, string Text, RowPicture? Picture = 
 // rows at a time, and the best reward may lie in a part that is scrolled out of view (the top
 // price is to hold for the whole list, and scrolling back must not forget the better one
 // below). Two views of one list overlap; where the rows of a view fit the rows
-// known so far, it is laid onto them. First, Shown: the rows in view now. Immutable.
-public sealed record RemnantList(IReadOnlyList<RemnantEntry> Rows, int First, int Shown)
+// known so far, it is laid onto them. First, Shown: the rows in view now. Confirmed: the rows
+// out of view are known to belong to this list, see Reopened. Immutable.
+public sealed record RemnantList(IReadOnlyList<RemnantEntry> Rows, int First, int Shown, bool Confirmed = true)
 {
     public static RemnantList Of(IReadOnlyList<RemnantRow> view) => new(view.Select(RemnantEntry.Of).ToArray(), 0, view.Count);
 
-    // The list after scrolling to this view; null when the view does not belong to it.
+    // The list after scrolling to this view; null when the view does not belong to it. A view
+    // that fits after scrolling confirms a list opened again — when a row outside the view
+    // before matches a known row, not when the same rows are merely read again (the cursor
+    // moving over the list changes its look and has the rows read anew at the same place).
     public RemnantList? Scrolled(IReadOnlyList<RemnantRow> view) => Laid(view, inside: false);
 
-    // The list when it is opened again showing this view: every row of the view must be known
-    // (another remnant may share a few rows); null otherwise.
+    // The list when it is opened again showing this view: every row of the view must be known;
+    // null otherwise. Not confirmed: rows are told apart by their picture, and another remnant
+    // may show the same rows ("1x Exalted Orb", "1x Chaos Orb", "1x Regal Orb" look the same
+    // in every remnant), so a short remnant of such rows fits onto a long list seen before and
+    // would inherit its arrow (OFFEN G12, seen 26.10.2026: six currency rows laid on rows 15–20
+    // of the remnant before). The rows out of view count only once a scroll fits as well; a
+    // remnant that cannot scroll never confirms. (The game opens a list at its top on the
+    // controller UI and at the place it was closed on the keyboard UI, so the place of the
+    // view tells nothing.)
     public RemnantList? Reopened(IReadOnlyList<RemnantRow> view) => Laid(view, inside: true);
+
+    // The list as far as the labels may trust it: the whole list once confirmed, else only the
+    // rows in view.
+    public RemnantList? Trusted => Confirmed ? this : null;
 
     public bool InView(int row) => row >= First && row < First + Shown;
 
@@ -56,6 +71,12 @@ public sealed record RemnantList(IReadOnlyList<RemnantEntry> Rows, int First, in
         }
         if (best is not { } fit)
             return null;
+        // Rows of the view that lie outside the view before and match: new evidence that the
+        // list is the one known (Confirmed).
+        int fresh = 0;
+        for (int i = 0; i < seen.Length; i++)
+            if (fit.At + i >= 0 && fit.At + i < Rows.Count && !InView(fit.At + i) && Alike(i, fit.At + i))
+                fresh++;
         int start = Math.Min(0, fit.At),
             end = Math.Max(Rows.Count, fit.At + seen.Length);
         var rows = new RemnantEntry[end - start];
@@ -69,6 +90,6 @@ public sealed record RemnantList(IReadOnlyList<RemnantEntry> Rows, int First, in
             bool edge = i == 0 || i == seen.Length - 1;
             rows[k - start] = !known || viewed && !edge ? seen[i] : Rows[k];
         }
-        return new(rows, fit.At - start, seen.Length);
+        return new(rows, fit.At - start, seen.Length, Confirmed: !inside && (Confirmed || fresh > 0));
     }
 }

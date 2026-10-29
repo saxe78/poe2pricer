@@ -153,7 +153,7 @@
     <value>poe2pricer {0} is available. Click to download and install it.</value>
   </data>
   <data name="UpdateDownloading" xml:space="preserve">
-    <value>Downloading version {0} …</value>
+    <value>Downloading version {0} … {1} %</value>
   </data>
   <data name="UpdateFailed" xml:space="preserve">
     <value>Version {0} could not be downloaded: {1}. The next start names it again.</value>

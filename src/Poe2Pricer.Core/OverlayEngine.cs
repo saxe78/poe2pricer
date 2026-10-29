@@ -297,6 +297,12 @@ public sealed class OverlayEngine : IDisposable
     private void Release()
     {
         busy = false;
+        if (lookAgainWaiting)
+        {
+            lookAgainWaiting = false;
+            if (open is null)
+                LookAgainSoon();
+        }
         if (rebindWaiting)
         {
             rebindWaiting = false;
@@ -504,6 +510,7 @@ public sealed class OverlayEngine : IDisposable
         {
             frame.Dispose();
             Hide();
+            LookAgainSoon();
             return;
         }
         open = next;
@@ -576,6 +583,7 @@ public sealed class OverlayEngine : IDisposable
                     log($"Time: quick check capture {capture} ms, check {check} ms");
                     log("hidden (quick check): " + gone.Why);
                     Hide();
+                    LookAgainSoon();
                     break;
                 case Glance.Reread reread:
                     frame.Dispose();
@@ -712,30 +720,65 @@ public sealed class OverlayEngine : IDisposable
         // Not faster than a glance takes, not slower than the follow, which hides as well.
         glanceEvery = TimeSpan.FromSeconds(Math.Clamp(settings.GlanceIntervalSeconds, GameWindows.GlanceEvery.TotalSeconds, profile.Follow.TotalSeconds));
         glancePace = glanceEvery;
-        captureSmoothed = 0;
+        glanceCaptures.Clear();
         glance.Change(glanceEvery, glanceEvery);
     }
 
     // The glance's pace: its own interval, or slower when its capture takes long — it may
     // keep at most GlanceLoad of the time (measured 19.10.2026 at 3840×2160: the capture of a
     // part takes 47 ms, median, against 20 ms at 2560×1440; at every 50 ms the glance was
-    // busy without a pause). The capture time is smoothed over the last glances (single
-    // captures swing between 40 and 120 ms) and the pace moves in steps of GlancePaceStep
+    // busy without a pause). The capture time is the median of the last glances (single
+    // captures swing between 40 and 120 ms; a mean let the slow ones set the pace, see
+    // Tuning.Control.GlanceCaptureWindow) and the pace moves in steps of GlancePaceStep
     // (Paced), so that it settles instead of following every swing (first run 19.10.: 250
     // changes in ten minutes).
     private TimeSpan glanceEvery = GameWindows.GlanceEvery,
         glancePace = GameWindows.GlanceEvery;
-    private double captureSmoothed;
+    private readonly CaptureTimes glanceCaptures = new(Tuning.Control.GlanceCaptureWindow);
 
     private void PaceGlance(long captureMs, IOpenWindow window)
     {
-        captureSmoothed = captureSmoothed == 0 ? captureMs : captureSmoothed + Tuning.Control.CaptureSmoothing * (captureMs - captureSmoothed);
-        var wanted = Paced(glancePace, captureSmoothed / Tuning.Control.GlanceLoad, glanceEvery, Tuning.Control.GlancePaceStep, window.Window.Profile.Follow);
+        glanceCaptures.Add(captureMs);
+        double usual = glanceCaptures.Median;
+        var wanted = Paced(glancePace, usual / Tuning.Control.GlanceLoad, glanceEvery, Tuning.Control.GlancePaceStep, window.Window.Profile.Follow);
         if (wanted == glancePace)
             return;
         glancePace = wanted;
         glance.Change(wanted, wanted);
-        log($"glance every {wanted.TotalMilliseconds:0} ms: its capture takes {captureSmoothed:0} ms");
+        log($"glance every {wanted.TotalMilliseconds:0} ms: its capture takes {usual:0} ms (median of {glanceCaptures.Count})");
+    }
+
+    // The last few capture times and their median: a single slow capture among usual ones
+    // does not count, a run of them does. Only touched on the control's thread.
+    public sealed class CaptureTimes(int window)
+    {
+        private readonly double[] times = new double[window];
+        private int next;
+
+        public int Count { get; private set; }
+
+        public void Add(double ms)
+        {
+            times[next] = ms;
+            next = (next + 1) % times.Length;
+            Count = Math.Min(Count + 1, times.Length);
+        }
+
+        public void Clear() => (next, Count) = (0, 0);
+
+        // Of an even count the lower middle: the pace goes up on a slow capture one short of
+        // half, not on half.
+        public double Median
+        {
+            get
+            {
+                if (Count == 0)
+                    return 0;
+                var sorted = times[..Count];
+                Array.Sort(sorted);
+                return sorted[(Count - 1) / 2];
+            }
+        }
     }
 
     // The pace a check needs for a capture time: from the pace it has, up to the next step
@@ -784,6 +827,25 @@ public sealed class OverlayEngine : IDisposable
         visible = true;
         Draw?.Invoke(scene);
     }
+
+    // A window the glance or the follow lost: the automatic scan comes Tuning.Control.
+    // RescanAfterLoss from now, then at its pace again — not at its next turn, which can be
+    // the whole interval away (5 s at the setting of the reporter of issue #6, 26.10.2026):
+    // the tooltip of the next item, the tab the stash changed to. Only with the automatic
+    // scan on at all; the key alone shows nothing by itself.
+    private void LookAgainSoon()
+    {
+        if (!settings.AutoAny)
+            return;
+        // A look or follow still running would make the auto turn give up (AutoAsync, busy):
+        // the quick turn is set once that is over (Release).
+        if (busy)
+            lookAgainWaiting = true;
+        else
+            auto.Change(Tuning.Control.RescanAfterLoss, autoPace);
+    }
+
+    private bool lookAgainWaiting;
 
     private void HideOverlay()
     {

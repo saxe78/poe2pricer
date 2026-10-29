@@ -571,6 +571,21 @@ public static class Tuning
         public const int MinimumBright = 130;
         public const int BrightPercentileShare = 20; // top 1/20 = 95th percentile
 
+        // StashTabReader.IsBlank: the tab's area shows nothing but the tab's bare ground —
+        // the frame the game draws while it changes from one tab to the next: wooden boards
+        // on the controller UI (glance picture of 25.10.2026), a dark cloth on the keyboard UI
+        // (glance picture of 26.10.2026). Mean of all 5×5 tile correlations against
+        // data/ui/stash-blank.png and stash-blank-keyboard.png, every tile counts: a normal
+        // tab shows that ground below its grid, and its best tiles alone would pass. Measured
+        // (26.10.2026, 98 stash pictures: tabs, folder, normal tabs, tooltips): the boards
+        // 1.00 (.92 on three further glance pictures), every other stash picture at most .36
+        // (the folder overview, 3×3 tiles on the same ground), Favours at most .03, remnant
+        // lists .04. The cloth .98 on the picture it was cut from and .98 on a second glance
+        // picture, every other picture at most .02, the boards against the cloth .01. Other
+        // machines and heights are not measured.
+        public const double BlankScore = .6;
+        // No limit on how long the ground may stay: it is drawn only while the stash is open,
+        // for as long as the next tab takes to load (StashGameWindow.Open.Glance).
     }
 
     // StashIdentifier: naming stash slots against the poe.ninja item art.
@@ -935,10 +950,18 @@ public static class Tuning
         public const double AutoMinimumSeconds = .2;
 
         // The glance may keep at most this share of the time with its capture (OverlayEngine.
-        // PaceGlance); the rest is the game's. The capture time is smoothed with weight
-        // CaptureSmoothing per glance (about the last five), the pace moves in GlancePaceStep.
-        // Chosen.
+        // PaceGlance); the rest is the game's. The pace moves in GlancePaceStep. Chosen.
+        // The glance's capture time is the median of its last GlanceCaptureWindow captures:
+        // the glance decides how fast prices go after the window closed, and a mean (the
+        // smoothing until 26.10.2026, weight .2) let single slow captures set the pace —
+        // the log at 3840×2160: the smoothed time read 44–77 ms and held the glance at
+        // 150–200 ms, while the captures at the moments of loss took 19 ms on average, 97 at
+        // most. Nine: one to two seconds of glances, enough for a run of slow ones to count
+        // and one of them not to. The automatic scan keeps the mean with weight
+        // CaptureSmoothing (about the last five): its pace decides only how soon prices come
+        // while nothing is shown.
         public const double GlanceLoad = .5;
+        public const int GlanceCaptureWindow = 9;
         public const double CaptureSmoothing = .2;
         public static readonly TimeSpan GlancePaceStep = TimeSpan.FromMilliseconds(50);
         public static readonly TimeSpan ScanPaceStep = TimeSpan.FromMilliseconds(100);
@@ -947,6 +970,12 @@ public static class Tuning
         // newest this many stay in the diagnostics folder. Chosen: enough to look at a case,
         // bounded on the user's disk (a picture is three to four megabytes).
         public const int EvidenceKept = 3;
+
+        // A window the glance or the follow lost is looked for again this soon after, not at
+        // the automatic scan's next turn, which can be the whole interval away (5 s at the
+        // setting of the reporter of issue #6, 26.10.2026): the tooltip of the next item, the
+        // tab the stash changed to. Chosen: past the frame the loss was seen on.
+        public static readonly TimeSpan RescanAfterLoss = TimeSpan.FromMilliseconds(100);
 
         // No sense in a longer pause between two looks, and a timer takes no more than some 49
         // days: a huge value in the settings must not end the program at the start.

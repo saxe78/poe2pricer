@@ -24,7 +24,7 @@ public sealed class RemnantGameWindow(Pipeline pipeline) : IGameWindow
         var rows = await Pipeline.Remnants.ReadAsync(frame.Image, list);
         var whole = remembered?.Reopened(rows);
         if (whole is not null && whole.Rows.Count > rows.Length)
-            context.Log($"Remnant list recognized: {whole.Rows.Count} rows known");
+            context.Log($"Remnant list recognized: {whole.Rows.Count} rows known (arrow once scrolled)");
         remembered = whole ??= RemnantList.Of(rows);
         return new Open(this, list, rows, RemnantReader.Signature(frame.Image, list), Pipeline.RemnantTooltips(frame.Image, list, frame.Popup), frame.Image.Height, whole, frame.Popup);
     }
@@ -88,7 +88,7 @@ public sealed class RemnantGameWindow(Pipeline pipeline) : IGameWindow
         {
             var book = await prices;
             var settings = context.Settings;
-            var labels = Labels.ForRows(Rows, List, book, Labels.FloorInDivine(settings.FloorValue, settings.FloorUnit, book), Tooltips, Whole, frame.Language, settings.PriceUnit);
+            var labels = Labels.ForRows(Rows, List, book, Labels.FloorInDivine(settings.FloorValue, settings.FloorUnit, book), Tooltips, Whole.Trusted, frame.Language, settings.PriceUnit);
             return new Picture(
                 this,
                 labels,
@@ -102,6 +102,7 @@ public sealed class RemnantGameWindow(Pipeline pipeline) : IGameWindow
                     Rows = Rows.Select(r => new { r.Count, r.Text, r.CenterY, Match = book.Match(r.Text, frame.Language)?.Name }),
                     Known = Whole.Rows.Count,
                     Whole.First,
+                    Whole.Confirmed,
                     Tooltips,
                     Labels = labels,
                 }

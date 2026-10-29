@@ -3,16 +3,32 @@
 All notable changes to poe2pricer, newest first. The release notes on GitHub say the same
 with more words: https://github.com/saxe78/poe2pricer/releases
 
-## Unreleased
+## 1.4.0 — 2026-10-29
 
 ### Fixed
-- Prices that blinked every second on Windows 10 ([#6](https://github.com/saxe78/poe2pricer/issues/6)):
-  the labels were drawn by a transparent WPF window, which Windows 10 leaves in screen
-  captures although the program asked to keep it out (changed in Windows 11 24H2), so the
-  program read its own labels from the screen and took the items under them for covered. The
-  labels are now drawn by a window of their own outside WPF (DirectComposition), which Windows
-  10 and 11 both leave out of captures; it stays transparent and lets clicks through as before.
-  Where that window cannot be built the WPF window is used, with a line in the log.
+- Prices that blinked every second on Windows 10 ([#6](https://github.com/saxe78/poe2pricer/issues/6)).
+  The labels are now drawn by a window of their own that Windows 10 and 11 both keep out of
+  screen captures, so the program no longer reads its own labels back from the screen. The
+  window stays transparent and lets clicks through as before; where it cannot be built, the
+  previous one is used and the log says so.
+- Stash prices that vanished when changing tabs and came back only with the next automatic
+  scan. The frame the game draws while the next tab loads (wooden boards on the controller UI,
+  dark cloth with keyboard and mouse) no longer counts as a closed stash: the prices go at
+  once, and the next tab is read as soon as it is drawn.
+- A remnant list opened right after another one could carry the arrow and top price of the one
+  before, when its rows (common currency rows) also stood in that list. After a list is opened
+  again, the arrow to a better reward out of view appears only once scrolling confirms that it
+  is the same list; the prices beside the visible rows are not affected.
+
+### Changed
+- After a stash tab, the Ritual window, the remnant list or a tooltip is lost, the program
+  looks again right away instead of waiting for the next automatic scan, which could be the
+  whole scan interval away.
+- The quick check that hides the prices once a window closes paces itself by its typical
+  capture time instead of a running mean; at 3840×2160 single slow captures had held it back,
+  and the prices stood longer after the window closed.
+- The status line counts the download of an update in percent. Before it said only
+  "downloading", which with a package of some 170 MB looked as if nothing happened.
 
 ## 1.3.1 — 2026-10-24
 
