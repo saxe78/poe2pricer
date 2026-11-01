@@ -16,7 +16,7 @@ public sealed record LookContext(RumourBook Rumours, Settings Settings, Action<s
 // A window's profile: its name, the checkbox that lets the automatic scan look for it, and how
 // often an open window is followed (changed?). How often it is glanced at (still there?) is
 // the user's setting, the same for every window (Settings.GlanceIntervalSeconds).
-public sealed record WindowProfile(string Name, AutoSwitch Auto, TimeSpan Follow);
+public sealed record WindowProfile(string Name, AutoSwitch Auto);
 
 // A checkbox of the automatic scan in the settings window; windows may share one (remnant list
 // and rumour panel: Expedition). A new window that needs its own adds a Settings field and an
@@ -57,7 +57,14 @@ public interface IOpenWindow
     // which is what lets the glance run this often (GameCapture.Capture).
     Box? GlanceArea => null;
 
-    // Every Profile.Follow (1 s): null when the window is gone (the reason is logged); read
+    // The part of the picture the follow and the labelling read; null: all of it. Everything
+    // FollowAsync and LabelAsync look at must lie inside (the frame is black outside): the
+    // window, its anchor, and wherever a popup, hint or dialog over it is searched. The rumour
+    // panel reads the chart all over the map and keeps the whole; a tooltip's body may reach
+    // below any band its title is searched in, so it keeps the whole too.
+    Box? FollowArea => null;
+
+    // Every GameWindows.FollowEvery (1 s): null when the window is gone (the reason is logged); read
     // again when it changed, else kept.
     Task<IOpenWindow?> FollowAsync(GameCapture.Frame frame, LookContext context);
 

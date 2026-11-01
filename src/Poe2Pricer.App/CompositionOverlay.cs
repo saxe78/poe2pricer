@@ -36,9 +36,14 @@ public sealed unsafe class CompositionOverlay : IOverlay, IDisposable
     private int width, height;
     private RenderTargetBitmap? bitmap;
     private byte[] pixels = [];
+    private readonly Func<bool> timed;
 
-    public CompositionOverlay(ImageSource? divine, ImageSource? exalted, ImageSource? chaos)
+    // timed: whether extended diagnostics are on (Settings.ExtendedDiagnostics, as last saved);
+    // then one log line per Tuning.Control.DiagnosticsEvery pictures with the time a picture
+    // takes (Measured).
+    public CompositionOverlay(ImageSource? divine, ImageSource? exalted, ImageSource? chaos, Func<bool> timed)
     {
+        this.timed = timed;
         layer.Divine = divine;
         layer.Exalted = exalted;
         layer.Chaos = chaos;
@@ -173,7 +178,37 @@ public sealed unsafe class CompositionOverlay : IOverlay, IDisposable
             visible = true;
         }
         SetWindowPos(hwnd, -1 /* HWND_TOPMOST */, screen.X, screen.Y, screen.Width, screen.Height, 0x10 /* SWP_NOACTIVATE */);
+        long began = System.Diagnostics.Stopwatch.GetTimestamp();
         Present(screen.Width, screen.Height, draw: true);
+        Measured(System.Diagnostics.Stopwatch.GetElapsedTime(began).TotalMilliseconds, screen);
+    }
+
+    // With extended diagnostics on, one log line per DiagnosticsEvery pictures: the mean and
+    // the slowest among them (drawing the labels into the bitmap, the copy into the back
+    // buffer and Present, which returns at once since sync interval 0 — the compositor's own
+    // wait for the vertical blank is not in the figure). The 16–22 ms per picture at
+    // 3840×2160 of 25./26.10.2026 included that wait (interval 1 then); the baseline of
+    // 31.10.2026 with this line read 19 ms, after interval 0 about 15 ms. Behind the switch, so
+    // that a user's log carries the figures too. Switched off, nothing is counted.
+    private int measured;
+    private double measuredSum, measuredMax;
+
+    private void Measured(double ms, Box screen)
+    {
+        if (!timed())
+        {
+            measured = 0;
+            measuredSum = measuredMax = 0;
+            return;
+        }
+        measured++;
+        measuredSum += ms;
+        measuredMax = Math.Max(measuredMax, ms);
+        if (measured < Tuning.Control.DiagnosticsEvery)
+            return;
+        FileLog.Write($"Overlay: {measured} pictures at {screen.Width}x{screen.Height}: avg {measuredSum / measured:F1} ms, max {measuredMax:F0} ms");
+        measured = 0;
+        measuredSum = measuredMax = 0;
     }
 
     // The window stays and shows a fully transparent picture (as the WPF window keeps drawing
@@ -236,12 +271,11 @@ public sealed unsafe class CompositionOverlay : IOverlay, IDisposable
         }
         step = "present";
         var present = (delegate* unmanaged[Stdcall]<nint, uint, uint, int>)Slot(swapChain, 8);
-        // Sync interval 1: the call waits for the next vertical blank on the UI thread, up to
-        // 17 ms at 60 Hz, most of the 16–22 ms measured per picture at 3840×2160 (25.10.2026).
-        // Interval 0 would return at once (the compositor shows the picture with its own
-        // vertical sync); kept for after 1.4.0, the path as it is was confirmed on the
-        // reporter's Windows 10 (OFFEN Z11).
-        return present(swapChain, 1, 0);
+        // Sync interval 0: the call returns at once; DirectComposition shows the picture with
+        // its own vertical sync. Interval 1 (until 1.4.0) waited for the next vertical blank on
+        // the UI thread, up to 17 ms at 60 Hz — most of the 16–22 ms measured per picture at
+        // 3840×2160 (25.10.2026; 19 ms on average in the baseline of 31.10.2026, OFFEN Z11).
+        return present(swapChain, 0, 0);
     }
 
     // The swap chain in this size: created with the first picture (and hung into the visual

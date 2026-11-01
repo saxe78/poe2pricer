@@ -9,7 +9,7 @@ public sealed class RumourGameWindow(Pipeline pipeline) : IGameWindow
 {
     internal Pipeline Pipeline { get; } = pipeline;
 
-    public WindowProfile Profile { get; } = new("Rumours", AutoSwitch.Expedition, GameWindows.FollowEvery);
+    public WindowProfile Profile { get; } = new("Rumours", AutoSwitch.Expedition);
 
     public bool IsThere(GameCapture.Frame frame) => Pipeline.Rumours.Locate(frame.Image, popup: frame.Popup) is not null;
 

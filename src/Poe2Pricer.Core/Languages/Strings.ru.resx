@@ -270,6 +270,9 @@
   <data name="DiagnosticsNeedForeground" xml:space="preserve">
     <value>Для диагностики окно Path of Exile 2 должно быть активным</value>
   </data>
+  <data name="DiagnosticsNoPictureScreen" xml:space="preserve">
+    <value>Снимок не сохранён: захват экрана мог бы показать другие окна</value>
+  </data>
   <data name="DiagnosticsSaved" xml:space="preserve">
     <value>Диагностика сохранена: {0}</value>
   </data>

@@ -54,7 +54,7 @@ public static class Program
             // read the run from the log, and when it ended.
             // The log's lines carry the time only; the date here tells which day they belong to.
             // The Windows build in the first line: what a capture or a key can do depends on it
-            // (WDA_EXCLUDEFROMCAPTURE from 10.0.19041, the borderless window capture from 22621),
+            // (WDA_EXCLUDEFROMCAPTURE from 10.0.19041, the borderless window capture from 20348),
             // and an issue rarely says it.
             FileLog.Write($"Started: {AppInfo.NameAndVersion}, {DateTime.Now:yyyy-MM-dd}, {System.Runtime.InteropServices.RuntimeInformation.OSDescription}, {Environment.ProcessPath}, PID {Environment.ProcessId}");
         }
@@ -178,16 +178,17 @@ public static class Program
 
         var app = new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown };
         var iconPath = Path.Combine(AppContext.BaseDirectory, "poe2pricer.ico");
-        var overlay = Overlays.Create(Orb("Divine_Orb"), Orb("Exalted_Orb"), Orb("Chaos_Orb"));
+        // The settings as they were last saved, for what asks them at the moment (the overlay's
+        // timing, which listings count at the trade site).
+        var savedSettings = settings;
+        var overlay = Overlays.Create(Orb("Divine_Orb"), Orb("Exalted_Orb"), Orb("Chaos_Orb"), () => savedSettings.ExtendedDiagnostics);
         var gameConfig = new GameConfig(settings.GameConfigFile);
         using var screen = new WindowsGameScreen(gameConfig);
         using var prices = new NinjaPrices(settings);
         var rumourBook = RumourBook.LoadCached();
         // The trade site, asked for waystone prices with poe.ninja's rates for the currencies.
         using var trade = new TradeClient(() => prices.Ready, FileLog.Write);
-        // Which listings count follows the settings as they were last saved.
-        var tradeSettings = settings;
-        trade.InPerson = () => tradeSettings.TradeInPerson;
+        trade.InPerson = () => savedSettings.TradeInPerson;
         using var engine = new OverlayEngine(GameWindows.Standard(pipeline, trade), screen, prices, () => rumourBook, settings, TimeProvider.System, FileLog.Write);
         // A rumour panel read before the lines were drawn has lines without a name, and on a
         // client that is not English nothing else names them: they are looked at again once
@@ -608,7 +609,7 @@ public static class Program
         }
         CheckGameConfig();
         model.Settings.Saved += _ => CheckGameConfig();
-        model.Settings.Saved += s => tradeSettings = s;
+        model.Settings.Saved += s => savedSettings = s;
         engine.Draw += _ => app.Dispatcher.BeginInvoke(CheckGameConfig);
         if (gameConfig.Found)
             FileLog.Write($"Game settings: {gameConfig.File}, language {gameConfig.ClientLanguage}{(gameConfig.LanguageSupported ? "" : " (not read, English assumed)")}, UI Text Size {gameConfig.TextSize}, Popup Size {gameConfig.PopupSize.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)}");

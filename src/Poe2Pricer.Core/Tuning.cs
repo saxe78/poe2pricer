@@ -943,9 +943,9 @@ public static class Tuning
         public static readonly TimeSpan GlanceEvery = TimeSpan.FromMilliseconds(50);
         public static readonly TimeSpan FollowEvery = TimeSpan.FromSeconds(1);
 
-        // Automatic scan at most this often, whatever the settings say. A search with no window
-        // open takes about 45 ms for the picture and 65 ms for the four windows, so this is
-        // roughly half of one processor core while the game is in front — the price of prices
+        // Automatic scan at most this often, whatever the settings say: the floor of the pace,
+        // which PaceScan slows down from here when the capture of the whole picture takes long
+        // (at 3840×2160 93–280 ms, 31.10.2026, five windows looked for). The price of prices
         // that appear as soon as a window opens.
         public const double AutoMinimumSeconds = .2;
 
@@ -963,6 +963,18 @@ public static class Tuning
         public const double GlanceLoad = .5;
         public const int GlanceCaptureWindow = 9;
         public const double CaptureSmoothing = .2;
+        // With extended diagnostics on, the log gets one line per this many glances (median and
+        // slowest capture, the pace), one per as many follows (their capture, OverlayEngine.
+        // ReportFollow) and the overlay one per as many pictures (CompositionOverlay):
+        // the figures behind OFFEN Z11, from a user's log as from ours. A hundred is a line
+        // every half minute to minute at the usual pace. Chosen.
+        public const int DiagnosticsEvery = 100;
+        // OverlayEngine.Show draws an unchanged scene anew after this long all the same: the
+        // picture of the composition window can be lost without an error (a monitor switched
+        // off and on, a driver reset, the desktop composer restarted), and only a Present brings
+        // it back. Until 31.10.2026 every follow drew, so the picture was back within a second;
+        // five seconds keeps the blank short and costs one picture (15–20 ms) in that time. Chosen.
+        public static readonly TimeSpan RedrawEvery = TimeSpan.FromSeconds(5);
         public static readonly TimeSpan GlancePaceStep = TimeSpan.FromMilliseconds(50);
         public static readonly TimeSpan ScanPaceStep = TimeSpan.FromMilliseconds(100);
 
@@ -1069,11 +1081,6 @@ public static class Tuning
 
         // How far the title bar may move between glances and still be the same tooltip.
         public const int GlanceSlack = 3;
-
-        // The band the glance searches for the title bar's left end: from GlanceSlack left of
-        // it to this far right of it — wider than the end piece (OccluderDetector finds nothing
-        // in a band narrower than its template; review 20.10.).
-        public const int GlanceBand = 120;
 
         // The price plate ends this far left of the bar's right end.
         public const int PriceInset = 56;

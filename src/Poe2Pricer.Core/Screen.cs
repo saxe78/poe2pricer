@@ -6,20 +6,33 @@ namespace Poe2Pricer.Core;
 // Adapters: WindowsGameScreen (the real game) and, in tests, a sequence of PNG files.
 public interface IGameScreen
 {
-    // Cheap (two system calls), any thread. Our own windows count as the game: showing the
-    // overlay must not make the next check hide it again.
+    // The game owns the foreground window. Cheap (two system calls), any thread. Our own windows
+    // do not count: with the settings window in front the prices go, and come back with the next
+    // click into the game. (Until 31.10.2026 our windows counted as the game, and with a browser's
+    // full-screen video over the game, Alt+Tab to the settings drew the covered game's prices over
+    // the video — OFFEN F11. The overlay windows themselves are never activated, so showing them
+    // cannot take the foreground.)
     bool InFront { get; }
 
-    // The game window itself is in front, not one of ours. Only then may a picture be saved
-    // (the diagnosis): the capture is the game's place on the screen, and with our settings
-    // window in front that place shows whatever else lies there.
-    bool GameInFront => InFront;
+    // The pictures come from the game's window itself (window capture), not from the screen.
+    // From the screen, whatever lies over the game is in the picture too — another window, a
+    // video — so then no picture is written to disk: the diagnosis keeps its JSON only, and
+    // the evidence pictures of the extended diagnostics stay off (31.10.2026).
+    bool PicturesFromWindow => true;
 
     // Off the UI thread. null: game not found or capture failed. The caller disposes the frame.
     // The picture comes at reference size (GameView). area: only this part of it is needed;
     // the frame keeps its size and is black outside of it (the glance: a part is taken in a
     // third of the time).
     GameCapture.Frame? Capture(Box? area = null);
+
+    // The follow's capture (OverlayEngine.FollowOnceAsync): the same picture, taken for a
+    // reading of the window rather than a glance at it. Its area is the window's FollowArea —
+    // the whole picture until 31.10.2026; at 3840×2160 that was 33 MB read back from the GPU
+    // and resized every second and after every glance that saw the cursor move, with every
+    // glance waiting behind it (OFFEN Z11). Its own method, so that a test double can tell a
+    // reading from a glance by more than the area.
+    GameCapture.Frame? Read(Box? area = null) => Capture(area);
 
     // The game's window as it is on the screen, for the diagnosis. The caller disposes it.
     GameCapture.Shot? Snapshot();
@@ -90,17 +103,17 @@ public sealed class WindowsGameScreen : IGameScreen, IDisposable
         gameProcess = window == 0 ? 0 : (int)id;
     }
 
-    public bool InFront => Front(ours: true);
+    public bool InFront => Front();
 
-    public bool GameInFront => Front(ours: false);
+    public bool PicturesFromWindow => FromWindow;
 
-    private bool Front(bool ours)
+    private bool Front()
     {
         int game = gameProcess;
         if (game == 0)
             return false;
         GetWindowThreadProcessId(GetForegroundWindow(), out var id);
-        return id == game || ours && id == Environment.ProcessId;
+        return id == game;
     }
 
     // The window gave nothing or a black picture while the screen shows the game: for the first
@@ -130,7 +143,7 @@ public sealed class WindowsGameScreen : IGameScreen, IDisposable
             troubleSince = -1;
             return frame;
         }
-        if (!GameInFront)
+        if (!InFront)
             return frame;
         var screen = GameCapture.Capture(gameWindow, area, config.PopupSize, config.Language, config.TextSize, gameWindow: false, out _);
         if (screen is null || GameCapture.IsBlack(screen.Image))

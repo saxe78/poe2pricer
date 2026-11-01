@@ -162,7 +162,8 @@ All three keys can be changed in the settings window.
 - Aspect ratios narrower than 16:10 are not supported.
 - In the Standard league poe.ninja lists no prices for most uniques; they show "?".
 - Recognition relies on the game's current art and layout. A game update that changes a window
-  may break it until the templates are updated.
+  may break it until the templates are updated. Each release names the game version it was
+  built and tested against (CHANGELOG); this one: Path of Exile 2 **0.5.5e**.
 - Island Rumours: the island is recognised by the sea chart around it. Dragging or zooming the
   Atlas between two openings of the panel, or switching between keyboard and controller (another
   zoom, another view), can leave too little of the chart in common: the Atlas is drawn in
@@ -264,7 +265,11 @@ here, about 20,000 lines of C#; the files that talk to the network are
   written unless you press the diagnostics key. A diagnosis is a picture of the game window and
   a JSON with your settings (without the file paths in them, which carry your Windows user
   name) and what was read. "Extended diagnostics" (off by default) adds a few pictures of
-  windows the program had trouble with.
+  windows the program had trouble with, and a line in the log every hundred glances, every
+  hundred follows and every hundred drawn pictures with the time they took. Pictures are
+  written only while they come from the game window itself ("Capture the game window only");
+  read from the screen, a picture could show other windows over the game, so then the
+  diagnosis keeps its JSON only and no evidence pictures are kept.
 
 ## Third-party tools and GGG
 
@@ -364,12 +369,13 @@ its vtables, no interop package), screen capture by GDI.
 
 ## Data from the game
 
-`data/catalog` (item pictures and names), `data/ui` (pieces of the game's interface used as
+`data/catalog` (item names, slot sizes and pictures; `tools/catalog_update.py` builds it from
+poe.ninja, the trade site's item list, the game's image service and poe2db.tw), `data/ui` (pieces of the game's interface used as
 templates; `data/ui/glyphs` holds the digits, brackets and per cent sign of its tooltip
 lettering, cut from screenshots, for a number the text recognition leaves out), `data/names`
 (German item names), `data/waystones` and `data/tablets` (the mod lines
 in English and German, with the trade site's ids; `tools/waystone_mods.py`,
-`tools/tablet_mods.py`) and the rumour texts are material of Grinding Gear Games, taken from the game files or from poe2db.tw and web.poecdn.com. The pictures above are
+`tools/tablet_mods.py`) and the rumour texts are material of Grinding Gear Games, taken from the game files, from poe.ninja and the trade site (names and slot sizes) and from web.poecdn.com and poe2db.tw (pictures). The pictures above are
 cut-outs of the game with the overlay drawn on. See `THIRD_PARTY_NOTICES.md` for this and for
 the licences of the libraries and fonts used.
 

@@ -26,7 +26,7 @@ public sealed class TooltipGameWindow(Pipeline pipeline, ITradePrices? prices = 
     private readonly Dictionary<(int X, int Y, int Width), double> rejected = [];
     private readonly Lock rejecting = new();
 
-    public WindowProfile Profile { get; } = new("Waystone", AutoSwitch.Stash, GameWindows.FollowEvery);
+    public WindowProfile Profile { get; } = new("Waystone", AutoSwitch.Stash);
 
     // Only whether a tooltip title bar stands on the frame: whether it is a waystone's or a
     // tablet's takes the OCR, which a look does and a check does not.

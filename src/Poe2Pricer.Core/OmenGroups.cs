@@ -16,7 +16,7 @@ public sealed partial class OmenGroups
     public OmenGroups(Catalog catalog)
     {
         groupOf = catalog
-            .Items.Select(i => (i.Id, Art: ArtName().Match(i.ImageSource)))
+            .Items.Select(i => (i.Id, Art: ArtName().Match(i.Art)))
             .Where(i => i.Art.Success)
             .GroupBy(i => i.Art.Groups[1].Value)
             .Where(g => g.Count() > 1)
@@ -24,7 +24,7 @@ public sealed partial class OmenGroups
             .ToDictionary(i => i.Id, i => i.Members);
     }
 
-    [GeneratedRegex(@"/(VoodooOmens\d+)[A-Za-z]*\.webp$")]
+    [GeneratedRegex(@"/(VoodooOmens\d+)[A-Za-z]*$")]
     private static partial Regex ArtName();
 
     public string[]? GroupOf(string? id) => id is not null && groupOf.TryGetValue(id, out var g) ? g : null;

@@ -158,8 +158,7 @@ public sealed record Settings
         try
         {
             var text = File.ReadAllText(file);
-            var settings = JsonSerializer.Deserialize<Settings>(text, JsonFiles.Options) ?? new Settings();
-            return MainSwitchOff(text) ? settings with { AutoRitual = false, AutoExpedition = false, AutoStash = false } : settings;
+            return JsonSerializer.Deserialize<Settings>(text, JsonFiles.Options) ?? new Settings();
         }
         catch (JsonException)
         {
@@ -181,15 +180,6 @@ public sealed record Settings
             return new Settings();
         }
     }
-
-    // A file from an earlier version with the automatic scan switched off by its main switch
-    // ("autoScan": false): nothing was shown by itself, so none of the three windows is ticked
-    // now. The next save writes the file without the old entry, and what is ticked from then
-    // on counts.
-    private static bool MainSwitchOff(string json) =>
-        System.Text.Json.Nodes.JsonNode.Parse(json) is System.Text.Json.Nodes.JsonObject node
-        && node.FirstOrDefault(p => p.Key.Equals("autoScan", StringComparison.OrdinalIgnoreCase)).Value is { } old
-        && old.GetValueKind() == JsonValueKind.False;
 
     public void Save() => Save(FilePath);
 

@@ -7,7 +7,32 @@ namespace Poe2Pricer.Core;
 
 // What the overlay draws now. Screen: the game's part of the screen. Labels and Rumours are in
 // the coordinates of the reference picture (GameView); Scale: screen pixels per pixel of it.
-public sealed record Scene(Box Screen, Label[] Labels, (Box Panel, RumourLine[] Lines, IslandSummary? Island)? Rumours, double Scale = 1);
+public sealed record Scene(Box Screen, Label[] Labels, (Box Panel, RumourLine[] Lines, IslandSummary? Island)? Rumours, double Scale = 1)
+{
+    // The same picture: every label, line and island entry alike (the record's own equality
+    // compares the arrays by reference). OverlayEngine.Show draws only a scene that differs
+    // from the one drawn last: at 3840×2160 the Ritual window was drawn 2.5 times a second
+    // while nothing changed (every glance that saw the cursor move brought a follow; log
+    // 31.10.2026), each picture 19 ms on the UI thread.
+    public bool SameAs(Scene other) =>
+        Screen == other.Screen && Scale == other.Scale && Labels.AsSpan().SequenceEqual(other.Labels) && SameRumours(Rumours, other.Rumours);
+
+    private static bool SameRumours((Box Panel, RumourLine[] Lines, IslandSummary? Island)? a, (Box Panel, RumourLine[] Lines, IslandSummary? Island)? b)
+    {
+        if (a is null || b is null)
+            return a is null && b is null;
+        var (x, y) = (a.Value, b.Value);
+        return x.Panel == y.Panel && x.Lines.AsSpan().SequenceEqual(y.Lines) && SameIsland(x.Island, y.Island);
+    }
+
+    private static bool SameIsland(IslandSummary? a, IslandSummary? b)
+    {
+        if (a is null || b is null)
+            return a is null && b is null;
+        return a.Tier == b.Tier && a.Rolls == b.Rolls && a.Rumours == b.Rumours && a.Complete == b.Complete && a.ProbablyComplete == b.ProbablyComplete
+            && a.Rotated.AsSpan().SequenceEqual(b.Rotated) && a.New.AsSpan().SequenceEqual(b.New);
+    }
+}
 
 // The overlay's control for every window: key, automatic scan, glance (still there?) every
 // 50 ms, follow (changed?) every second, foreground changes, diagnosis. Inputs are queued and
@@ -176,7 +201,7 @@ public sealed class OverlayEngine : IDisposable
     // only with Settings.ExtendedDiagnostics on — a user's program writes nothing by itself
     // (19.10.2026); the switch is judged here, from the settings the engine holds.
     public string? EvidenceFolder { get; set; }
-    private bool KeepsEvidence => EvidenceFolder is not null && settings.ExtendedDiagnostics;
+    private bool KeepsEvidence => EvidenceFolder is not null && settings.ExtendedDiagnostics && screen.PicturesFromWindow;
 
     // Called from the thread that reads the picture: copied there, written beside it. A
     // picture that cannot be written is logged and nothing else. Of each kind only the newest
@@ -451,7 +476,7 @@ public sealed class OverlayEngine : IDisposable
         Status?.Invoke(new(picture.Status));
     }
 
-    // Every Profile.Follow: still there, changed (read again) or kept; labels drawn anew.
+    // Every GameWindows.FollowEvery: still there, changed (read again) or kept; labels drawn anew.
     private async Task FollowAsync()
     {
         if (busy || open is null)
@@ -482,12 +507,14 @@ public sealed class OverlayEngine : IDisposable
     {
         var window = open!;
         var context = Context();
-        var (frame, next) = await Task.Run(async () =>
+        var (frame, next, captureMs) = await Task.Run(async () =>
         {
-            var captured = screen.Capture();
+            var watch = Stopwatch.StartNew();
+            var captured = screen.Read(window.FollowArea);
+            long took = watch.ElapsedMilliseconds;
             try
             {
-                return captured is null ? (captured, (IOpenWindow?)null) : (captured, await window.FollowAsync(captured, context));
+                return captured is null ? (captured, (IOpenWindow?)null, took) : (captured, await window.FollowAsync(captured, context), took);
             }
             catch
             {
@@ -495,6 +522,7 @@ public sealed class OverlayEngine : IDisposable
                 throw;
             }
         });
+        ReportFollow(captureMs, window);
         if (started != generation)
         {
             frame?.Dispose();
@@ -577,8 +605,11 @@ public sealed class OverlayEngine : IDisposable
                     // are lost within a second of being shown and found again a moment later
                     // (log of 22./23.10.2026: 41 stash losses within 0.2 s of a show), while
                     // every stored picture glances as it looks; what the live picture holds at
-                    // that moment is not known.
-                    Keep("glance-gone-" + Slug(window.Window.Profile.Name), frame.Image);
+                    // that moment is not known. Not for the remnant list: closing it is the
+                    // normal way it goes (73 times in one session of 01.11.2026, each picture
+                    // showed it closed), and the losses the picture was kept for are explained.
+                    if (window.Window is not RemnantGameWindow)
+                        Keep("glance-gone-" + Slug(window.Window.Profile.Name), frame.Image);
                     frame.Dispose();
                     log($"Time: quick check capture {capture} ms, check {check} ms");
                     log("hidden (quick check): " + gone.Why);
@@ -670,7 +701,7 @@ public sealed class OverlayEngine : IDisposable
     // with the game itself in front: this is the one picture that is saved.
     private async Task DiagnoseAsync(string folder)
     {
-        if (!screen.GameInFront)
+        if (!screen.InFront)
         {
             log("diagnostics not saved: game not in foreground");
             Status?.Invoke(new(Texts.Get("DiagnosticsNeedForeground")));
@@ -691,7 +722,13 @@ public sealed class OverlayEngine : IDisposable
             using var frame = GameCapture.Stored(shot.Picture, shot.Pointer, null, shot.Popup, shot.Language);
             Directory.CreateDirectory(folder);
             var name = Path.Combine(folder, DateTime.Now.ToString("yyyy-MM-dd_HHmmss"));
-            Cv2.ImWrite(name + ".png", shot.Picture);
+            // From the screen, the picture could hold other windows over the game (a video, a
+            // chat): then only the JSON is kept, and the status says so (IGameScreen.PicturesFromWindow).
+            bool picture = screen.PicturesFromWindow;
+            if (picture)
+                Cv2.ImWrite(name + ".png", shot.Picture);
+            else
+                log("diagnostics: picture not saved (read from the screen, could show other windows)");
             var fresh = new List<object>();
             foreach (var window in windows.All)
             {
@@ -710,15 +747,16 @@ public sealed class OverlayEngine : IDisposable
             JsonFiles.Write(name + ".json", new { Settings = told, Pointer = shot.Pointer is { } p ? new[] { p.X, p.Y } : null, frame.Scale, frame.Popup, GameLanguage = shot.Language, shot.TextSize, Shown = shown?.Description, ShownLabels = labels, Fresh = fresh });
             return name;
         });
+        if (file is not null && !screen.PicturesFromWindow)
+            Status?.Invoke(new(Texts.Get("DiagnosticsNoPictureScreen")));
         Diagnosed?.Invoke(file);
     }
 
     private void StartChecks()
     {
-        var profile = open!.Window.Profile;
-        follow.Change(profile.Follow, profile.Follow);
+        follow.Change(GameWindows.FollowEvery, GameWindows.FollowEvery);
         // Not faster than a glance takes, not slower than the follow, which hides as well.
-        glanceEvery = TimeSpan.FromSeconds(Math.Clamp(settings.GlanceIntervalSeconds, GameWindows.GlanceEvery.TotalSeconds, profile.Follow.TotalSeconds));
+        glanceEvery = TimeSpan.FromSeconds(Math.Clamp(settings.GlanceIntervalSeconds, GameWindows.GlanceEvery.TotalSeconds, GameWindows.FollowEvery.TotalSeconds));
         glancePace = glanceEvery;
         glanceCaptures.Clear();
         glance.Change(glanceEvery, glanceEvery);
@@ -735,18 +773,51 @@ public sealed class OverlayEngine : IDisposable
     private TimeSpan glanceEvery = GameWindows.GlanceEvery,
         glancePace = GameWindows.GlanceEvery;
     private readonly CaptureTimes glanceCaptures = new(Tuning.Control.GlanceCaptureWindow);
+    // The last DiagnosticsEvery captures for the line with extended diagnostics (Report).
+    private readonly CaptureTimes glanceReport = new(Tuning.Control.DiagnosticsEvery);
 
     private void PaceGlance(long captureMs, IOpenWindow window)
     {
         glanceCaptures.Add(captureMs);
+        Report(captureMs);
         double usual = glanceCaptures.Median;
-        var wanted = Paced(glancePace, usual / Tuning.Control.GlanceLoad, glanceEvery, Tuning.Control.GlancePaceStep, window.Window.Profile.Follow);
+        var wanted = Paced(glancePace, usual / Tuning.Control.GlanceLoad, glanceEvery, Tuning.Control.GlancePaceStep, GameWindows.FollowEvery);
         if (wanted == glancePace)
             return;
         glancePace = wanted;
         glance.Change(wanted, wanted);
         log($"glance every {wanted.TotalMilliseconds:0} ms: its capture takes {usual:0} ms (median of {glanceCaptures.Count})");
     }
+
+    // One line per DiagnosticsEvery follows with extended diagnostics on: the median and the
+    // slowest capture (IGameScreen.Read of the window's FollowArea) and the last window with
+    // its area — against the whole picture's time in the "Time: capture" lines of the key and
+    // the automatic scan (OFFEN Z11: 174–280 ms at 3840×2160 on 31.10.2026).
+    private readonly CaptureTimes followReport = new(Tuning.Control.DiagnosticsEvery);
+
+    private void ReportFollow(long captureMs, IOpenWindow window) =>
+        Sample(followReport, captureMs, () => $"follow: {followReport.Count} captures, median {followReport.Median:0} ms, max {followReport.Max:0} ms, last {window.Window.Profile.Name} {(window.FollowArea is { } a ? $"{a.Width}x{a.Height}" : "whole")}");
+
+    // The capture times of the follows and the glances, counted whatever the switch and written
+    // every DiagnosticsEvery only with it (the overlay's line, CompositionOverlay.Measured, counts
+    // only with the switch: it has no engine to count for).
+    private void Sample(CaptureTimes into, long ms, Func<string> line)
+    {
+        into.Add(ms);
+        if (into.Count < Tuning.Control.DiagnosticsEvery)
+            return;
+        if (settings.ExtendedDiagnostics)
+            log(line());
+        into.Clear();
+    }
+
+    // One line per DiagnosticsEvery glances with extended diagnostics on: the median and the
+    // slowest capture among them and the pace they set. The pace line above comes only when
+    // the pace changes, which it does not while the captures stay slow — the time the glance
+    // takes beside the overlay's drawing and the readers (OFFEN Z11) is otherwise not in the
+    // log. Counted whatever the switch, written only with it.
+    private void Report(long captureMs) =>
+        Sample(glanceReport, captureMs, () => $"glance: {glanceReport.Count} captures, median {glanceReport.Median:0} ms, max {glanceReport.Max:0} ms, pace {glancePace.TotalMilliseconds:0} ms");
 
     // The last few capture times and their median: a single slow capture among usual ones
     // does not count, a run of them does. Only touched on the control's thread.
@@ -765,6 +836,8 @@ public sealed class OverlayEngine : IDisposable
         }
 
         public void Clear() => (next, Count) = (0, 0);
+
+        public double Max => Count == 0 ? 0 : times[..Count].Max();
 
         // Of an even count the lower middle: the pace goes up on a slow capture one short of
         // half, not on half.
@@ -822,9 +895,20 @@ public sealed class OverlayEngine : IDisposable
         lastPicture = null;
     }
 
+    // The scene as drawn last and when, null while nothing is drawn: a follow or glance that
+    // ends in the same picture draws nothing (Scene.SameAs) — except once every
+    // Tuning.Control.RedrawEvery, in case the window's picture was lost (review 31.10.2026).
+    private Scene? drawn;
+    private DateTimeOffset drawnAt;
+
     private void Show(Scene scene)
     {
         visible = true;
+        var now = time.GetUtcNow();
+        if (drawn is not null && drawn.SameAs(scene) && now - drawnAt < Tuning.Control.RedrawEvery)
+            return;
+        drawn = scene;
+        drawnAt = now;
         Draw?.Invoke(scene);
     }
 
@@ -850,6 +934,7 @@ public sealed class OverlayEngine : IDisposable
     private void HideOverlay()
     {
         visible = false;
+        drawn = null;
         Draw?.Invoke(null);
     }
 

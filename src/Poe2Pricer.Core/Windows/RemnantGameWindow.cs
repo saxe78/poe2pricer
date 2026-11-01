@@ -13,7 +13,7 @@ public sealed class RemnantGameWindow(Pipeline pipeline) : IGameWindow
     // list is shown. In memory only.
     private volatile RemnantList? remembered;
 
-    public WindowProfile Profile { get; } = new("Remnant", AutoSwitch.Expedition, GameWindows.FollowEvery);
+    public WindowProfile Profile { get; } = new("Remnant", AutoSwitch.Expedition);
 
     public bool IsThere(GameCapture.Frame frame) => Pipeline.Remnants.Locate(frame.Image) is not null;
 
@@ -38,6 +38,9 @@ public sealed class RemnantGameWindow(Pipeline pipeline) : IGameWindow
         public IGameWindow Window => Kind;
 
         public Box? GlanceArea => Kind.Pipeline.Remnants.LookArea(List, Height, Popup);
+
+        // The list, its anchor and the tooltip band beside it: all the follow reads.
+        public Box? FollowArea => GlanceArea;
 
         // Title gone → closed; list moved → read again at once; else only the tooltip band
         // beside the window.

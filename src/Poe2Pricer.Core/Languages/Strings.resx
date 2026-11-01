@@ -272,6 +272,9 @@
   <data name="DiagnosticsNeedForeground" xml:space="preserve">
     <value>Diagnostics require Path of Exile 2 in the foreground</value>
   </data>
+  <data name="DiagnosticsNoPictureScreen" xml:space="preserve">
+    <value>Picture not saved: read from the screen, it could show other windows</value>
+  </data>
   <data name="DiagnosticsSaved" xml:space="preserve">
     <value>Diagnostics saved: {0}</value>
   </data>

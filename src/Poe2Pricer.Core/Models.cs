@@ -32,7 +32,10 @@ public record Box(int X, int Y, int Width, int Height)
         && Math.Min(Bottom, other.Bottom) - Math.Max(Y, other.Y) >= margin;
 }
 
-// Same shape as data/catalog.json of Dev-Jahn/poe2-ritual-checker.
+// An entry of data/catalog/catalog.json as tools/catalog_update.py writes it (the shape of
+// Dev-Jahn/poe2-ritual-checker's catalogue, plus Art). Width and Height: the slot in cells.
+// ImageSource: the picture's URL at GGG's image service; Art: the game's art path it encodes
+// ("2DItems/Currency/Omens/VoodooOmens1Blue"), by which omens of one shape are grouped.
 public record CatalogItem(
     string Id,
     string NameEn,
@@ -43,7 +46,10 @@ public record CatalogItem(
     int Height,
     string Source,
     string ImageSource,
-    int? MaxStackSize
+    int? MaxStackSize,
+    // The game's art path, for the omen groups (OmenGroups); "" in a catalogue written before
+    // 30.10.2026, which then has no groups instead of failing to load (review 31.10.2026).
+    string Art = ""
 );
 
 public record Catalog(string Version, DateTimeOffset RetrievedAt, CatalogItem[] Items);

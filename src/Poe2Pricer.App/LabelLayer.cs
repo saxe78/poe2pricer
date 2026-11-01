@@ -268,9 +268,12 @@ public sealed class LabelLayer : FrameworkElement
                 dc.DrawText(tag, new Point(px + 20 - tag.Width / 2, y + 11 - tag.Height / 2));
             }
             string shown = e is null ? "?" : e.Shown + (e.Own.Length > 0 ? "*" : "");
-            var pillBrush = e is null ? DimPill : dimmed ? DimPill : Poe2Pricer.Ui.RatingColours.Of(e.Shown);
+            // The pill keeps the rating's colour in a dimmed row too: it is the one place the
+            // rating sits, and grey hid an S+ among the rotated rumours (reported 31.10.2026);
+            // the faint title alone tells the row apart from the panel's lines.
+            var pillBrush = e is null ? DimPill : Poe2Pricer.Ui.RatingColours.Of(e.Shown);
             dc.DrawRoundedRectangle(pillBrush, null, new Rect(x + width - pad - pillWidth, y + 1, pillWidth, pillHeight), 11, 11);
-            var pill = T(shown, SemiBold, 13, dimmed || e is null ? DimPillInk : PillInk);
+            var pill = T(shown, SemiBold, 13, e is null ? DimPillInk : PillInk);
             dc.DrawText(pill, new Point(x + width - pad - pillWidth / 2 - pill.Width / 2, y + 1 + pillHeight / 2 - pill.Height / 2));
             if (e is null)
                 return;

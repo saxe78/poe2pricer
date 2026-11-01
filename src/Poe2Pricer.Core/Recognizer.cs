@@ -31,10 +31,6 @@ public sealed class Recognizer
 
     private sealed record Proposal(int X, int Y, int W, int H, Candidate[] Candidates, double Score);
 
-    private sealed record OfficialArt(string CatalogId, string Image);
-
-    private sealed record OfficialManifest(OfficialArt[] Items);
-
     private sealed record AppearancePrototype(
         string CatalogId,
         int Columns,
@@ -48,19 +44,15 @@ public sealed class Recognizer
 
     public Catalog Catalog => catalog;
 
-    // dataDirectory uses the Dev-Jahn data layout: catalog.json, images/, official-images/,
-    // official-references.json and optionally recognition-model.json.
+    // dataDirectory: catalog.json and images/ as tools/catalog_update.py writes them, and
+    // optionally recognition-model.json.
     public Recognizer(string dataDirectory, bool useLearnedReferences = true)
     {
         Cv2.SetNumThreads(Math.Min(4, Environment.ProcessorCount));
         catalog = JsonFiles.Read<Catalog>(Path.Combine(dataDirectory, "catalog.json"));
         byId = catalog.Items.ToDictionary(i => i.Id);
-        var officialPath = Path.Combine(dataDirectory, "official-references.json");
-        var official = File.Exists(officialPath)
-            ? JsonFiles.Read<OfficialManifest>(officialPath).Items.ToDictionary(i => i.CatalogId, i => i.Image)
-            : new Dictionary<string, string>();
         foreach (var item in catalog.Items)
-            AddOfficialReferences(dataDirectory, item, official);
+            AddReferences(dataDirectory, item);
         var modelPath = Path.Combine(dataDirectory, "recognition-model.json");
         if (useLearnedReferences && File.Exists(modelPath))
             AddLearnedReferences(JsonFiles.Read<AppearanceModel>(modelPath));
@@ -68,16 +60,14 @@ public sealed class Recognizer
             throw Texts.Failure(m => new InvalidDataException(m), "NoReferenceImages");
     }
 
-    private void AddOfficialReferences(string dataDirectory, CatalogItem item, Dictionary<string, string> official)
+    private void AddReferences(string dataDirectory, CatalogItem item)
     {
-        using var rgba = Cv2.ImRead(
-            Path.Combine(dataDirectory, official.GetValueOrDefault(item.Id, item.Image)),
-            ImreadModes.Unchanged
-        );
-        if (rgba.Empty() || rgba.Channels() != 4 || item.Width > 2 || item.Height > 4)
+        using var loaded = Cv2.ImRead(Path.Combine(dataDirectory, item.Image), ImreadModes.Unchanged);
+        if (loaded.Empty() || loaded.Channels() != 4 || item.Width > 2 || item.Height > 4)
             return;
+        using var rgba = FitToSlot(loaded, item);
         var variants =
-            item.Id.StartsWith("Omen_") && official.ContainsKey(item.Id)
+            item.Id.StartsWith("Omen_")
                 ? Tune.OmenVariants
             : item.Kind == "currency" && item.Width == 1 && item.Height == 1
                 ? Tune.CurrencyVariants
@@ -98,32 +88,26 @@ public sealed class Recognizer
             {
                 var (gray, edge) = Describe(bgr);
                 references.Add(new(item, gray, edge, AlphaMask(alpha, item), ColorPixels(bgr)));
-                // Foci are drawn one cell taller in the Ritual grid.
-                if (item.Kind == "unique" && item.Width == 2 && item.Height == 2 && item.ImageSource.Contains("/Foci/"))
-                    AddPadded(bgr, alpha, item with { Height = 3 }, 0, bgr.Height / 4, bgr.Width, bgr.Height * 3 / 2);
-                // Some one-cell-wide weapons occupy a two-cell-wide slot.
-                if (item.Kind == "unique" && item.Width == 1 && item.Height >= 3 && item.ImageSource.Contains("/Weapons/"))
-                    AddPadded(bgr, alpha, item with { Width = 2 }, bgr.Width / 2, 0, bgr.Width * 2, bgr.Height);
             }
         }
     }
 
-    private void AddPadded(Mat bgr, Mat alpha, CatalogItem item, int dx, int dy, int width, int height)
+    // GGG's image service draws the art at its own size, the catalogue entry names the slot:
+    // a focus is 2x2 art in a 2x3 slot, a narrow weapon 1x4 art in a 2x4 slot. The game centres
+    // the art in the slot; so does the reference. Art that fits the slot (within a tenth) stays.
+    private static Mat FitToSlot(Mat rgba, CatalogItem item)
     {
-        using var padded = new Mat(new Size(width, height), bgr.Type(), Scalar.All(0));
-        using (var target = new Mat(padded, new Rect(dx, dy, bgr.Width, bgr.Height)))
-            bgr.CopyTo(target);
-        using var paddedAlpha = new Mat(padded.Size(), MatType.CV_8UC1, Scalar.All(0));
-        using (var target = new Mat(paddedAlpha, new Rect(dx, dy, bgr.Width, bgr.Height)))
-            alpha.CopyTo(target);
-        using var small = new Mat();
-        Cv2.Resize(paddedAlpha, small, new Size(24, 48));
-        var mask = new float[1152];
-        for (int y = 2; y < 46; y++)
-        for (int x = 2; x < 22; x++)
-            mask[y * 24 + x] = small.At<byte>(y, x) > Tune.AlphaVisible ? small.At<byte>(y, x) / 255f : 0;
-        var (g, e) = Describe(padded);
-        references.Add(new(item, g, e, mask, ColorPixels(padded)));
+        double slot = (double)item.Width / item.Height;
+        double art = (double)rgba.Width / rgba.Height;
+        int width = rgba.Width, height = rgba.Height;
+        if (art < slot * 0.9)
+            width = (int)Math.Round(rgba.Height * slot);
+        else if (art > slot * 1.1)
+            height = (int)Math.Round(rgba.Width / slot);
+        var canvas = new Mat(new Size(width, height), rgba.Type(), Scalar.All(0));
+        using (var target = new Mat(canvas, new Rect((width - rgba.Width) / 2, (height - rgba.Height) / 2, rgba.Width, rgba.Height)))
+            rgba.CopyTo(target);
+        return canvas;
     }
 
     private void AddLearnedReferences(AppearanceModel model)

@@ -275,6 +275,9 @@
   <data name="DiagnosticsNeedForeground" xml:space="preserve">
     <value>Diagnose nur, wenn Path of Exile 2 im Vordergrund ist</value>
   </data>
+  <data name="DiagnosticsNoPictureScreen" xml:space="preserve">
+    <value>Kein Bild gespeichert: vom Bildschirm gelesen, es könnte andere Fenster zeigen</value>
+  </data>
   <data name="DiagnosticsSaved" xml:space="preserve">
     <value>Diagnose gespeichert: {0}</value>
   </data>

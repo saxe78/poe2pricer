@@ -19,13 +19,11 @@ Source: https://github.com/Dev-Jahn/poe2-ritual-checker, commit 7c16291. Taken o
 Not taken over: grid search, tooltip/OCR evaluation, Korean interface, controller cursor mask,
 trade queries, screen recording.
 
-The game pictures in Dev-Jahn's data folder (`images/`, `official-images/`) are material of
-Grinding Gear Games (via poe2db.tw and web.poecdn.com) and are **not** covered by the MIT licence.
-poe2pricer ships the part of that folder the recognition reads (`data/catalog`: `catalog.json`,
-`recognition-model.json`, `official-references.json`, 884 catalogue pictures in `images/`, 439
-official reference pictures in `official-images/`; 49 MB in all, as of commit 7c16291). The
-pictures and names in it are material of Grinding Gear Games; the JSON files come from
-Dev-Jahn's project (MIT).
+`data/catalog/recognition-model.json` comes from Dev-Jahn's project (MIT): the appearance of
+the items learned from his game pictures, stamped with the version of the catalogue it is
+shipped with. The catalogue itself (`catalog.json`, `images/`) was taken from his data folder
+up to version 1.4.0; since then poe2pricer builds it from the sources named under "Item
+catalogue" below. The shape of `catalog.json` and the item ids are still his.
 
 ```
 MIT License
@@ -189,6 +187,20 @@ I cannot be held liable for any damage arising out of the use of this font.
 
 dafont.com lists the font as "100% Free" with the author's note: "free for anyone to use
 anywhere at any time in any way they like, no strings attached".
+
+## Item catalogue (`data/catalog`, game material)
+
+`catalog.json` names every item the Ritual grid can show, with the slot it takes in cells and
+its picture; `images/` holds the pictures. `tools/catalog_update.py` builds both. The names,
+slot sizes and art paths come from Grinding Gear Games: the item lists of poe.ninja (unofficial
+use of its API; everything it prices) and the static item list of the trade site
+(https://www.pathofexile.com/api/trade2/data/static; the currency-like items, priced or not).
+The pictures of currency-like items come from the game's image service at
+https://web.poecdn.com (64 px a cell); the pictures of uniques from https://cdn.poe2db.tw, by
+the art path the image service names (108 px a cell: the image service renders uniques at
+47 px a cell, too coarse for a one-cell unique — a charm read at .88 dropped to .40). The names
+and pictures are material of Grinding Gear Games and are **not** covered by the MIT licence of
+this program; 1219 entries and 1086 pictures, 42 MB, as of 2026-10-30.
 
 ## Game interface pieces (`data/ui`, game material)
 

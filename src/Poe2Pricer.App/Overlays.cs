@@ -8,11 +8,12 @@ namespace Poe2Pricer.App;
 // the WPF window (OverlayWindow) where that cannot be built or loses its device for good.
 public static class Overlays
 {
-    public static IOverlay Create(ImageSource? divine, ImageSource? exalted, ImageSource? chaos)
+    // timed: see CompositionOverlay (the WPF window is not timed).
+    public static IOverlay Create(ImageSource? divine, ImageSource? exalted, ImageSource? chaos, Func<bool> timed)
     {
         try
         {
-            var composition = new CompositionOverlay(divine, exalted, chaos);
+            var composition = new CompositionOverlay(divine, exalted, chaos, timed);
             FileLog.Write("Overlay: composition window");
             return new Guarded(composition, () => new OverlayWindow(divine, exalted, chaos));
         }

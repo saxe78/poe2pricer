@@ -11,7 +11,7 @@ public sealed class StashGameWindow(Pipeline pipeline) : IGameWindow
 {
     internal Pipeline Pipeline { get; } = pipeline;
 
-    public WindowProfile Profile { get; } = new("Stash", AutoSwitch.Stash, GameWindows.FollowEvery);
+    public WindowProfile Profile { get; } = new("Stash", AutoSwitch.Stash);
 
     private PriceBook? iconsFor;
 
@@ -72,6 +72,9 @@ public sealed class StashGameWindow(Pipeline pipeline) : IGameWindow
         public IGameWindow Window => Kind;
 
         public Box? GlanceArea => Kind.Pipeline.Stash.LookArea(Tab);
+
+        // The tab with its subtab buttons: the slots, the blank check and the key hints lie in it.
+        public Box? FollowArea => GlanceArea;
 
         // A tooltip over the tab lowers the score, so a lower bar than for the first look. Another
         // tab counts at once: otherwise every glance found "another tab" again and cancelled the

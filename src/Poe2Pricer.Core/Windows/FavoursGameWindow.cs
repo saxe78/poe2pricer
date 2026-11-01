@@ -21,7 +21,7 @@ public sealed class FavoursGameWindow(Pipeline pipeline) : IGameWindow
     private const int Columns = CellMemory.Columns,
         Rows = CellMemory.Rows;
 
-    public WindowProfile Profile { get; } = new("Favours", AutoSwitch.Ritual, GameWindows.FollowEvery);
+    public WindowProfile Profile { get; } = new("Favours", AutoSwitch.Ritual);
 
     public bool IsThere(GameCapture.Frame frame) => pipeline.Locator.Locate(frame.Image) is not null;
 
@@ -336,6 +336,13 @@ public sealed class FavoursGameWindow(Pipeline pipeline) : IGameWindow
         // The grid, the anchor and the reroll button: the glance looks at the number too.
         public Box? GlanceArea => Pipeline.Locator.LookArea(Scan.Grid!).Union(RerollCount.Button(Scan.Grid!));
 
+        // The whole width down to the anchor under the grid (GlanceArea reaches it: the anchor
+        // sits a few pixels below the grid's bottom edge, Locate needs it): the popups are
+        // searched across the width above the grid and beside it to the right edge
+        // (OccluderDetector.Detect), the tooltip that names an omen stands beside the grid, the
+        // dialog and the hints lie over it. Only the band below is left out — a fifth of the picture.
+        public Box? FollowArea => new(0, 0, (int)Math.Ceiling(Tuning.Screen.ReferenceHeight * Tuning.Screen.WidestAspect), GlanceArea!.Bottom);
+
         // The window is open as long as its button or the grid that was read is on the frame:
         // in defer mode the button reads "Defer Item", and whatever else the game may write
         // there, the grid stays. Something moved in the grid — mouse, cursor, tooltip, a
@@ -505,9 +512,15 @@ public sealed class FavoursGameWindow(Pipeline pipeline) : IGameWindow
             // A label goes when its place is covered: darkened like under a tooltip, replaced
             // like under its title bar, under the hint beside the mouse, or under the dialog. A
             // dimmed window (dialog) darkens every place; then only the dialog itself counts.
+            // The item under the controller cursor does not count as replaced: the cursor's
+            // frame and its tip lie in the label's spot, and what the stored picture has left
+            // there is the item's own art — at 3840×2160 the structure read .23 on an Omen of
+            // Bartering, .72–.76 on two others, and below ReplacedBelow on an Omen of Chaotic
+            // Effectiveness, whose price went while the cursor stood on it (OFFEN F10,
+            // 31.10.2026). Darkened it still goes: a tooltip over it hides the label as before.
             bool Covered(ItemMatch item) =>
                 popups.Any(p => (p.Kind == "hint" || dimmed && p.Kind == "dialog") && p.Bounds.Overlaps(item.Bounds, Tuning.Occluders.HideOverlap))
-                || !dimmed && Memory.Look(picture, Spot(item)) is { } spot && (spot.Covered || spot.Replaced);
+                || !dimmed && Memory.Look(picture, Spot(item)) is { } spot && (spot.Covered || spot.Replaced && item != selected);
             var shown = new Recognition(grid, Scan.Items.Where(i => !Covered(i)).ToArray(), Scan.UnassignedCells, 0, popups, Scan.Items.Where(Covered).Concat(Unseen).ToArray());
             if (shown.Items.Any(Unnamed))
             {
