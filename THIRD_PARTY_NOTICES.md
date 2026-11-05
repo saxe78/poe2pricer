@@ -202,6 +202,29 @@ the art path the image service names (108 px a cell: the image service renders u
 and pictures are material of Grinding Gear Games and are **not** covered by the MIT licence of
 this program; 1219 entries and 1086 pictures, 42 MB, as of 2026-10-30.
 
+## gazevans-pixel/poe2pricer-ge (fork of this program)
+
+Source: https://github.com/gazevans-pixel/poe2pricer-ge, commits of 2026-10-31 (MIT, the same
+licence as this program). Its "rune chain" measured the rune tiles of the remnant list and the
+crowned tile among them first. Taken over as measurements and method, rewritten here: where the
+tiles of a row stand (28 px from the list's left edge, 54 px apart, 50 px square, 50 px above
+the name in the controller UI) and the crown as the share of gold pixels in the tile's frame
+ring, summed with an integral image (`RuneBook.CrownRing`, after its `CrownedInList`). The
+thresholds, the hue bound and everything else in `RuneBook` were measured and written anew.
+
+## Runes of Expedition remnants (`data/runes`, game material)
+
+`runes.json` names the 33 runes a Runic Remnant can carry, with the name and the effect lines
+the game shows for each ("Monsters gain: Increased Monster Rarity") in English, German and
+Russian, and the program's default class of each rune; `tome/` and `remnant/` hold the picture
+of each rune as the game draws it in the Runeshape list (50 px) and on the bar above a
+remnant (60 px). `tools/rune_data.py` builds all of it from the game's own data files, read
+from a Steam installation with poe-dat (SnosMe/poe-dat-viewer, MIT): the tables
+Expedition2Runes, ArchnemesisMods and Mods and the interface textures under
+`Art/Textures/Interface/2D/2DArt/UIImages/InGame/Expedition`. The names, texts and pictures are
+material of Grinding Gear Games and are **not** covered by the MIT licence of this program;
+as of 2026-11-01 (patch 0.5.5e).
+
 ## Game interface pieces (`data/ui`, game material)
 
 The small pictures in `data/ui` are pieces of the interface of Path of Exile 2, used as

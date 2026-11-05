@@ -82,7 +82,7 @@
 <p class="tagline ru">Рыночные цены с poe.ninja · Ритуал · Останки · Слухи об островах · Сундук · Путевые камни · Плитки</p>
     <p class="tagline de">Marktpreise von poe.ninja · Gaben · Relikte · Inselgerüchte · Truhen-Tabs · Waystones · Tablets</p>
     <!-- The version is written here by tools/build_release.py. -->
-    <p class="meta"><span id="version-label">Version</span> <span id="version">1.4.1</span> · saxe78 · <a href="https://github.com/saxe78/poe2pricer">github.com/saxe78/poe2pricer</a> · MIT</p>
+    <p class="meta"><span id="version-label">Version</span> <span id="version">1.5.0</span> · saxe78 · <a href="https://github.com/saxe78/poe2pricer">github.com/saxe78/poe2pricer</a> · MIT</p>
   </div>
   <div class="switch" role="group" aria-label="Language">
     <button type="button" data-set="en">English</button>
@@ -180,7 +180,7 @@ Hardcore-Liga. In Standard führt poe.ninja für die meisten Uniques keine Preis
 
 <h2 id="prices"><span class="en">See prices</span>
 <span class="ru">Отображение цен</span><span class="de">Preise sehen</span></h2>
-<h3><span class="en">What the numbers and marks mean</span>
+<h3 id="marks"><span class="en">What the numbers and marks mean</span>
 <span class="ru">Числа, цвета и обозначения</span><span class="de">Was Zahlen und Zeichen bedeuten</span></h3>
 <p class="en">Prices are in Exalted Orbs (or Chaos, see Settings); from one Divine on they are shown in Divine Orbs
 with the Divine icon. The colour is the price band, so it follows the exchange rate: grey under 0.02 div,
@@ -198,8 +198,11 @@ gelb unter 1 div, orange ab 1 div. Der wertvollste Gegenstand eines Fensters ist
   <tr><td><code>!</code> (red)</td><td>A greyed-out omen whose kind cannot be told from its symbol alone. Put the mouse or the controller cursor on it: the program reads its tooltip, and the price follows.</td></tr>
   <tr><td><code>▲</code> <code>▼</code></td><td>In the remnant list: the best reward is scrolled out of view in that direction.</td></tr>
   <tr><td><code>…</code> <code>–</code> <code>⏳</code></td><td>At a waystone's or tablet's tooltip: the price is being asked, no listing, the trade site busy (see <a href="#waystones">Waystones</a>).</td></tr>
+  <tr><td>dot under a rune</td><td>In the remnant list: the rune the row passes on, in the colour of its class. Gold: good for the loot (more rarity or more rares). Green: more monsters. Red: harder monsters. White: neither. The classes are yours to set in the Runes tab.</td></tr>
+  <tr><td>red <code>✗</code> on a rune</td><td>In the remnant list: the rune chain carries this rune already, choosing the row carries nothing new. Hollow while the link is provisional.</td></tr>
+  <tr><td>framed tiles at the top</td><td>The rune chain of this map: one tile per rune in the order chosen, framed in the class colour, the count in the title. A thin frame is a provisional link (neither Esc nor the gamepad could be read). The mouse on a tile shows its name and effect.</td></tr>
 </table>
-<table class="ru"><tr><th>Знак</th><th>Значение</th></tr><tr><td><code>?</code></td><td>Предмет распознан, но у poe.ninja нет цены.</td></tr><tr><td><code>&lt;</code></td><td>Цена ниже заданного порога.</td></tr><tr><td><code>!</code> (красный)</td><td>Затемнённое знамение, тип которого нельзя определить по одному значку. Наведите мышь или курсор контроллера: программа прочитает подсказку и покажет цену.</td></tr><tr><td><code>▲</code> <code>▼</code></td><td>В списке останков: самая дорогая награда находится за пределами видимой части в указанном направлении.</td></tr><tr><td><code>…</code> <code>–</code> <code>⏳</code></td><td>У подсказки путевого камня или плитки: идёт запрос цены; предложений нет; торговая площадка занята или недоступна (см. <a href="#waystones">«Путевые камни»</a>).</td></tr></table>
+<table class="ru"><tr><th>Знак</th><th>Значение</th></tr><tr><td><code>?</code></td><td>Предмет распознан, но у poe.ninja нет цены.</td></tr><tr><td><code>&lt;</code></td><td>Цена ниже заданного порога.</td></tr><tr><td><code>!</code> (красный)</td><td>Затемнённое знамение, тип которого нельзя определить по одному значку. Наведите мышь или курсор контроллера: программа прочитает подсказку и покажет цену.</td></tr><tr><td><code>▲</code> <code>▼</code></td><td>В списке останков: самая дорогая награда находится за пределами видимой части в указанном направлении.</td></tr><tr><td><code>…</code> <code>–</code> <code>⏳</code></td><td>У подсказки путевого камня или плитки: идёт запрос цены; предложений нет; торговая площадка занята или недоступна (см. <a href="#waystones">«Путевые камни»</a>).</td></tr><tr><td>точка под руной</td><td>В списке останков: руна, которую строка передаёт дальше, цветом своего класса. Золотая: полезна для добычи (больше редкости или редких монстров). Зелёная: больше монстров. Красная: монстры сильнее. Белая: ни то ни другое. Классы задаются на вкладке «Руны».</td></tr><tr><td>красный <code>✗</code> на руне</td><td>В списке останков: цепь рун уже несёт эту руну, выбор строки ничего нового не даёт. Пустой знак — пока звено предположительное.</td></tr><tr><td>плитки в рамках вверху экрана</td><td>Цепь рун этой карты: по плитке на руну в порядке выбора, в рамке цвета класса, в заголовке — их число. Тонкая рамка — предположительное звено (ни Esc, ни геймпад прочитать не удалось). Мышь на плитке показывает её название и эффект.</td></tr></table>
 <table class="de">
   <tr><th>Zeichen</th><th>Bedeutung</th></tr>
   <tr><td><code>?</code></td><td>Erkannt, aber poe.ninja führt keinen Preis dafür.</td></tr>
@@ -207,6 +210,9 @@ gelb unter 1 div, orange ab 1 div. Der wertvollste Gegenstand eines Fensters ist
   <tr><td><code>!</code> (rot)</td><td>Ein ausgegrautes Omen, dessen Art sich am Symbol allein nicht erkennen lässt. Maus oder Controller-Cursor darauf: das Programm liest den Tooltip, und der Preis folgt.</td></tr>
   <tr><td><code>▲</code> <code>▼</code></td><td>In der Relikt-Liste: die beste Belohnung liegt in dieser Richtung außerhalb des Sichtbereichs.</td></tr>
   <tr><td><code>…</code> <code>–</code> <code>⏳</code></td><td>Am Tooltip eines Waystones oder Tablets: der Preis wird gefragt, kein Angebot, die Trade-Seite ausgelastet (siehe <a href="#waystones">Waystones</a>).</td></tr>
+  <tr><td>Punkt unter einer Rune</td><td>In der Relikt-Liste: die Rune, die die Zeile weitergibt, in der Farbe ihrer Klasse. Gold: nützt der Beute (mehr Seltenheit oder mehr seltene Monster). Grün: mehr Monster. Rot: härtere Monster. Weiß: keines von beidem. Die Klassen stellst du im Reiter Runen ein.</td></tr>
+  <tr><td>rotes <code>✗</code> auf einer Rune</td><td>In der Relikt-Liste: die Runenkette trägt diese Rune schon, die Wahl der Zeile bringt nichts Neues. Hohl, solange das Glied vorläufig ist.</td></tr>
+  <tr><td>gerahmte Kacheln oben</td><td>Die Runenkette dieser Map: eine Kachel je Rune in der Reihenfolge der Wahl, gerahmt in der Klassenfarbe, die Zahl im Titel. Ein dünner Rahmen ist ein vorläufiges Glied (weder Esc noch das Gamepad war lesbar). Die Maus auf einer Kachel zeigt Name und Wirkung.</td></tr>
 </table>
 
 <h3><span class="en">Ritual window (Favours)</span>
@@ -231,8 +237,51 @@ nothing.</p>
 beste Belohnung aus dem Sichtbereich gescrollt, zeigt ein Pfeil am Rand der Liste dorthin.
 Skill-Zeilen („Skill Level 20: …“) haben keinen Markt und bekommen keinen Preis. Zeilen unter der
 Schwelle zeigen nichts.</p>
-<figure><img src="remnants.png" width="700" height="877" alt="Remnant list: a price at every reward row; the arrow at the lower edge points to the best reward, scrolled out of view" data-alt-en="Remnant list: a price at every reward row; the arrow at the lower edge points to the best reward, scrolled out of view" data-alt-ru="Список останков: цены наград и стрелка к самой дорогой награде за пределами экрана."><figcaption class="en">Remnant list: a price at every reward row, the arrow to the best reward out of view.</figcaption>
-<figcaption class="ru">Список останков: цены строк наград и стрелка к самой дорогой награде за пределами видимой части.</figcaption><figcaption class="de">Relikt-Liste: ein Preis an jeder Belohnungszeile, der Pfeil zur besten Belohnung außer Sicht.</figcaption></figure>
+<p class="en">In an Expedition, the highlighted rune of a row is passed on to every later pack of the
+explosive chain. That rune gets a dot in the colour of its class, and a ✗ when the <strong>rune
+chain</strong> carries it already (see <a href="#marks">What the numbers and marks mean</a>). With
+the mouse on a row, the rune's name and effect stand above the list in the game's own words; with a
+controller, for the row its cursor is on. Which rune counts as what is yours to set in the
+<strong>Runes</strong> tab.</p>
+<p class="ru">В Экспедиции выделенная руна строки передаётся всем последующим группам цепи взрывов. Под
+ней появляется точка цветом её класса, а если <strong>цепь рун</strong> уже несёт эту руну — знак ✗
+(см. <a href="#marks">«Числа, цвета и обозначения»</a>). При наведении мыши на строку над списком
+показываются название и эффект руны словами самой игры; с контроллером — для строки под его
+курсором. Какая руна к какому классу относится, настраивается на вкладке <strong>Руны</strong>.</p>
+<p class="de">In einer Expedition wird die hervorgehobene Rune einer Zeile an alle späteren Gruppen der
+Sprengkette weitergegeben. Diese Rune bekommt einen Punkt in der Farbe ihrer Klasse und ein ✗, wenn die
+<strong>Runenkette</strong> sie schon trägt (siehe <a href="#marks">Was Zahlen und Zeichen bedeuten</a>).
+Mit der Maus auf einer Zeile stehen Name und Wirkung der Rune über der Liste, in den Worten des Spiels;
+mit dem Controller für die Zeile, auf der sein Cursor steht. Welche Rune als was zählt, stellst du im
+Reiter <strong>Runen</strong> ein.</p>
+<p class="en">The rune chain, the runes your chosen remnants pass on in this map, stands at the top of the
+screen, one tile per rune in the order chosen; the mouse on a tile shows its name and effect. The link
+is the row you click, or with a controller the row the cursor's arrow points at when you press the
+confirm button; Esc or the cancel button closes the list without one. Where neither Esc nor the gamepad
+can be read, the link stays provisional. The chain starts anew with the next map and survives a trip to
+the hideout (where it is not shown); <strong>Reset rune chain</strong> in the Runes tab empties it by
+hand. For the map change the program reads the area lines of the game's logs\Client.txt; nothing else
+of that file.</p>
+<p class="ru">Цепь рун — руны, которые передают выбранные вами останки на этой карте, — показывается вверху
+экрана, по плитке на руну в порядке выбора; мышь на плитке показывает её название и эффект. Звено — это
+строка, по которой вы щёлкнули, а с контроллером — строка под стрелкой курсора в момент нажатия кнопки
+подтверждения; Esc или кнопка отмены закрывает список без выбора. Там, где ни Esc, ни геймпад прочитать
+нельзя, звено остаётся предположительным. Цепь начинается заново со следующей картой и переживает визит
+в убежище (там она не показывается); <strong>Сбросить цепь рун</strong> на вкладке «Руны» очищает её
+вручную. Смену карты программа узнаёт из строк об области в logs\Client.txt игры; больше ничего из этого
+файла не читается.</p>
+<p class="de">Die Runenkette, die Runen, die deine gewählten Relikte in dieser Map weitergeben, steht oben am
+Bildschirm, eine Kachel je Rune in der Reihenfolge der Wahl; die Maus auf einer Kachel zeigt Name und
+Wirkung. Das Glied ist die Zeile, die du anklickst, am Controller die Zeile, auf die der Pfeil des Cursors
+zeigt, wenn du die Bestätigen-Taste drückst; Esc oder die Abbruchtaste schließt die Liste ohne Glied. Wo
+weder Esc noch das Gamepad lesbar ist, bleibt das Glied vorläufig. Die Kette beginnt mit der nächsten Map
+neu und übersteht den Gang ins Versteck (dort wird sie nicht gezeigt); <strong>Runenkette
+zurücksetzen</strong> im Reiter Runen leert sie von Hand. Den Map-Wechsel liest das Programm aus den
+Gebietszeilen der logs\Client.txt des Spiels; sonst nichts aus dieser Datei.</p>
+<figure><img src="window-runes.png" width="780" height="776" alt="The Runes tab: each rune with its effect and the class it is given." data-alt-en="The Runes tab: each rune with its effect and the class it is given." data-alt-ru="Вкладка «Руны»: каждая руна с её эффектом и классом." data-src-en="window-runes.png" data-src-ru="window-runes-ru.png"><figcaption class="en">The Runes tab: picture, name and effect of every rune, and its class.</figcaption>
+<figcaption class="ru">Вкладка «Руны»: изображение, название и эффект каждой руны и её класс.</figcaption><figcaption class="de">Der Reiter Runen: Bild, Name und Wirkung jeder Rune und ihre Klasse.</figcaption></figure>
+<figure><img src="remnant-runes.png" width="740" height="840" alt="Remnant list: a coloured dot under the highlighted rune of each row, a ✗ badge where the chain carries that rune already, the price at the right." data-alt-en="Remnant list: a coloured dot under the highlighted rune of each row, a ✗ badge where the chain carries that rune already, the price at the right." data-alt-ru="Список останков: цветная точка под выделенной руной каждой строки, значок ✗ там, где цепь уже несёт эту руну, цена справа."><figcaption class="en">Remnant list: a coloured dot under the highlighted rune of each row, a ✗ badge where the chain carries that rune already, the price at the right.</figcaption><figcaption class="ru">Список останков: цветная точка под выделенной руной каждой строки, значок ✗ там, где цепь уже несёт эту руну, цена справа.</figcaption><figcaption class="de">Relikt-Liste: ein farbiger Punkt unter der hervorgehobenen Rune jeder Zeile, ein ✗ dort, wo die Kette die Rune schon trägt, der Preis rechts.</figcaption></figure>
+<figure><img src="rune-chain.png" width="640" height="140" alt="The rune chain at the top of the screen: three tiles framed red, gold and green (thin: provisional); the mouse on the gold one shows its name and effect." data-alt-en="The rune chain at the top of the screen: three tiles framed red, gold and green (thin: provisional); the mouse on the gold one shows its name and effect." data-alt-ru="Цепь рун вверху экрана: три плитки в красной, золотой и зелёной рамке (тонкая — предположительное звено); мышь на золотой показывает её название и эффект."><figcaption class="en">The rune chain at the top of the screen: three tiles framed red, gold and green (thin: provisional); the mouse on the gold one shows its name and effect.</figcaption><figcaption class="ru">Цепь рун вверху экрана: три плитки в красной, золотой и зелёной рамке (тонкая — предположительное звено); мышь на золотой показывает её название и эффект.</figcaption><figcaption class="de">Die Runenkette oben am Bildschirm: drei Kacheln rot, gold und grün gerahmt (dünn: vorläufig); die Maus auf der goldenen zeigt Name und Wirkung.</figcaption></figure>
 <h3><span class="en">Special stash tabs</span>
 <span class="ru">Специальные вкладки сундука</span><span class="de">Besondere Truhen-Tabs</span></h3>
 <p class="en">Orbs, essences, breach, delirium, expedition, ritual, abyss, tablets and socketables: every
@@ -575,7 +624,7 @@ Stufen für das Expeditionstier (anfangs S+ 6 … F 1). Alles gilt nach <strong>
   <tr><td>incl. premium stash (online)</td><td>Which trade listings count for every waystone and tablet price: by default only Instant Buyout; ticked, also items in premium stash tabs whose seller is online. Offline sellers never count.</td></tr>
   <tr><td>Hotkeys</td><td>"Toggle overlay", "Save diagnostics" and "Force live price". Click a field, then press the key or combination. The keys work only while the game is in the foreground. A "Force live price" key that is already one of the other two is switched off, with a note.</td></tr>
   <tr><td>Extended diagnostics</td><td>Off by default. On, the program also keeps pictures of moments it decided on its own (today: a reroll it detected in the Ritual window, and a first reading of the Ritual window that a later one corrected), a few of each kind, in the diagnostics folder — for a bug report. Off, only the diagnostics key writes there. Nothing is sent anywhere either way.</td></tr>
-  <tr><td>Auto-scan</td><td>Which windows show prices by themselves while they are open: Ritual, Expedition (rumours and remnants), stash (also the waystone and tablet tooltips). The hotkey always shows all of them.</td></tr>
+  <tr><td>Auto-scan</td><td>Which windows show prices by themselves while they are open: Ritual, Expedition (Rumours), Expedition (Remnant: prices and runes), stash (also the waystone and tablet tooltips). The hotkey always shows all of them.</td></tr>
   <tr><td>Scan intervals</td><td>How often the program looks at the game while no window is shown and while one is. If the game stutters, raise both.</td></tr>
   <tr><td>Start with Windows</td><td>Starts poe2pricer in the tray when you sign in. Applied or removed on save.</td></tr>
   <tr><td>Check for updates</td><td>Asks github.com once at every start whether a newer version is out. Installed with the setup: the message names it; a click downloads and installs it and starts poe2pricer again, nothing happens without the click. Unpacked from a zip: the message leads to the download page.</td></tr>

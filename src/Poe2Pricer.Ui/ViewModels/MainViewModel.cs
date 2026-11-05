@@ -29,7 +29,8 @@ public sealed class MainViewModel : ObservableObject
     // same way.
     // storeWaystones: writes the Waystones tab's own save; the program writes it into
     // settings.json without touching what else stands there.
-    public MainViewModel(Settings settings, IEnumerable<string> leagues, RumourBook rumours, Action<Settings>? store = null, Action<string>? storeLanguage = null, TimeProvider? clock = null, Action<Core.Waystones.WaystoneSettings>? storeWaystones = null, Action<Core.Tablets.TabletSettings>? storeTablets = null, Action<string>? storeHiddenHint = null)
+    // runes: the runes of the remnant list for the Runes tab; null: the tab stays empty.
+    public MainViewModel(Settings settings, IEnumerable<string> leagues, RumourBook rumours, Action<Settings>? store = null, Action<string>? storeLanguage = null, TimeProvider? clock = null, Action<Core.Waystones.WaystoneSettings>? storeWaystones = null, Action<Core.Tablets.TabletSettings>? storeTablets = null, Action<string>? storeHiddenHint = null, Core.Runes.RuneBook? runes = null)
     {
         this.storeLanguage = storeLanguage ?? (code => (Core.Settings.Load() with { Language = code }).Save());
         this.storeHiddenHint = storeHiddenHint ?? (hint => (Core.Settings.LoadForSave() with { HiddenHint = hint }).Save());
@@ -37,6 +38,7 @@ public sealed class MainViewModel : ObservableObject
         CloseHintCommand = new RelayCommand<string>(CloseHint);
         language = Languages.FirstOrDefault(l => l.Code == Texts.Language) ?? Languages[0];
         Rumours = new RumoursViewModel(rumours);
+        Runes = new RunesViewModel(runes);
         Settings = new SettingsViewModel(
             settings,
             leagues,
@@ -48,11 +50,12 @@ public sealed class MainViewModel : ObservableObject
                 Waystones?.Accept(next.Waystones);
                 Tablets?.Accept(next.Tablets);
                 var notSaved = Rumours.Save();
+                var runesNotSaved = Runes.Save();
                 // Written anew: what could not be read at the start is no longer the matter.
                 Warn(SettingsCause, null);
                 if (notSaved is null)
                     Warn(RatingsCause, null);
-                return notSaved;
+                return notSaved ?? runesNotSaved;
             },
             Report
         );
@@ -150,6 +153,7 @@ public sealed class MainViewModel : ObservableObject
 
     public SettingsViewModel Settings { get; }
     public RumoursViewModel Rumours { get; }
+    public RunesViewModel Runes { get; }
     public WaystonesViewModel Waystones { get; }
     public TabletsViewModel Tablets { get; }
     public IRelayCommand QuitCommand { get; }

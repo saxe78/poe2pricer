@@ -29,6 +29,8 @@
   <ItemGroup>
     <None Include="../../data/ui/**" LinkBase="data/ui" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../data/rumours/**" LinkBase="data/rumours" CopyToOutputDirectory="PreserveNewest" />
+    <!-- The runes of Expedition remnants: names, effects and pictures (RuneBook). -->
+    <None Include="../../data/runes/**" LinkBase="data/runes" CopyToOutputDirectory="PreserveNewest" />
     <!-- The guide "Help" opens, with its pictures. -->
     <None Include="../../data/guide/**" LinkBase="data/guide" CopyToOutputDirectory="PreserveNewest" />
     <!-- Recognition data (catalog, item pictures, recognition model), read from data/catalog

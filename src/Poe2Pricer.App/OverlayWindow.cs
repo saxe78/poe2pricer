@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using Poe2Pricer.Core;
+using Poe2Pricer.Core.Runes;
 using Poe2Pricer.Core.Market;
 
 namespace Poe2Pricer.App;
@@ -66,9 +67,10 @@ public sealed class OverlayWindow : Window, IOverlay
             Affinity(exclude);
     }
 
-    public void Show(Box screen, Label[] labels, (Box Panel, RumourLine[] Lines, IslandSummary? Island)? rumours = null, double scale = 1)
+    public void Show(Box screen, Label[] labels, (Box Panel, RumourLine[] Lines, IslandSummary? Island)? rumours = null, double scale = 1, RuneStrip? strip = null)
     {
         layer.Rumours = rumours;
+        layer.Strip = strip;
         if (!IsVisible)
             Show();
         var hwnd = new WindowInteropHelper(this).Handle;
@@ -84,6 +86,7 @@ public sealed class OverlayWindow : Window, IOverlay
     public void Clear()
     {
         layer.Rumours = null;
+        layer.Strip = null;
         layer.Labels = [];
         layer.InvalidateVisual();
     }

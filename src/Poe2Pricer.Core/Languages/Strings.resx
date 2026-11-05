@@ -98,9 +98,6 @@
   <data name="SwitchRitual" xml:space="preserve">
     <value>Ritual (Favours)</value>
   </data>
-  <data name="SwitchExpedition" xml:space="preserve">
-    <value>Expedition (Rumours / Remnants)</value>
-  </data>
   <data name="SwitchStash" xml:space="preserve">
     <value>Stash</value>
   </data>
@@ -857,5 +854,53 @@ What GGG has said about third-party tools, with the sources, and what that means
   </data>
   <data name="GameLanguageNotRead" xml:space="preserve">
     <value>Game language "{0}" is not read: prices need the English or German game client.</value>
+  </data>
+  <data name="SwitchRumours" xml:space="preserve">
+    <value>Expedition (Rumours)</value>
+  </data>
+  <data name="SwitchRemnant" xml:space="preserve">
+    <value>Expedition (Remnant)</value>
+  </data>
+  <data name="TabRunes" xml:space="preserve">
+    <value>Runes</value>
+  </data>
+  <data name="GroupRunes" xml:space="preserve">
+    <value>Runes of the remnant list</value>
+  </data>
+  <data name="ColumnRune" xml:space="preserve">
+    <value>Rune</value>
+  </data>
+  <data name="ColumnEffect" xml:space="preserve">
+    <value>Effect</value>
+  </data>
+  <data name="ColumnClass" xml:space="preserve">
+    <value>Loot class</value>
+  </data>
+  <data name="RuneClassLoot" xml:space="preserve">
+    <value>Loot</value>
+  </data>
+  <data name="RuneClassWeaker" xml:space="preserve">
+    <value>Weaker</value>
+  </data>
+  <data name="RuneClassDanger" xml:space="preserve">
+    <value>Danger</value>
+  </data>
+  <data name="RuneClassNeutral" xml:space="preserve">
+    <value>Neutral</value>
+  </data>
+  <data name="RunesHint" xml:space="preserve">
+    <value>The class of a rune sets the colour of its dot in the remnant list, at the rune a row propagates to the later packs of the explosive chain. Loot: more rarity or more rares. Weaker: more monsters, nothing more for the loot. Danger: harder monsters only. Neutral: white. The defaults are the program's reading of the game's own data; set them as you see fit. Saved with the settings.</value>
+  </data>
+  <data name="ResetRunes" xml:space="preserve">
+    <value>Default classes</value>
+  </data>
+  <data name="OverlayRuneChain" xml:space="preserve">
+    <value>Rune chain · {0}</value>
+  </data>
+  <data name="ResetChain" xml:space="preserve">
+    <value>Reset rune chain</value>
+  </data>
+  <data name="RunesNotSaved" xml:space="preserve">
+    <value>The rune classes could not be written: {0}</value>
   </data>
 </root>

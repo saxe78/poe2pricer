@@ -10,7 +10,7 @@ the newest release from github.com.
 
 | Ritual (Favours) | Expedition remnants |
 |---|---|
-| ![Ritual window with a price at every item](data/guide/ritual.png) | ![Remnant list with a price at every reward row and an arrow to the best reward out of view](data/guide/remnants.png) |
+| ![Ritual window with a price at every item](data/guide/ritual.png) | ![Remnant list with a price at every reward row, a class dot under the rune each row passes on and a ✗ where the rune chain carries it already](data/guide/remnant-runes.png) |
 
 | Stash tabs | Island Rumours |
 |---|---|
@@ -26,7 +26,13 @@ the newest release from github.com.
   under a tooltip or a notification are left alone until it is gone.
 - **Expedition remnant list** (Runeshape Combinations): a price at every reward row, with the
   stack ("3x Exalted Orb" is priced as three), and an arrow to the best reward when it is
-  scrolled out of view. Skill rows ("Skill Level 20: …") have no market and get none.
+  scrolled out of view. Skill rows ("Skill Level 20: …") have no market and get none. The
+  rune a row passes on to the later packs of the explosive chain gets a dot in the colour of
+  its class (gold: good for the loot) and a ✗ when the **rune chain** carries it already; the
+  chain, the runes your chosen remnants pass on in this map, stands at the top of the screen.
+  The link is the row you click or confirm; Esc or the cancel button closes the list without
+  one. With a controller, the name and effect of the row's rune stand above the list; the
+  mouse on a chain tile shows the same. The classes are yours to set in the Runes tab.
 - **Special stash tabs** (orbs, essences, breach, delirium, expedition, ritual, abyss, tablets,
   socketables): a price at every filled slot.
 - **Island Rumours** panel of the Atlas: the community rating of each rumour next to its line,
@@ -55,15 +61,7 @@ the newest release from github.com.
 - **Automatic**: with the automatic scan on, prices appear by themselves when one of these
   windows opens and go when it closes. Or by key: `Alt+F` shows and hides them.
 - **Prices from poe.ninja**, refreshed every few minutes, in Exalted (or Chaos) and from one
-  Divine on in Divine. The colour is the price band and follows the exchange rate: grey under
-  0.02 div, white under 0.2 div, yellow under 1 div, orange from 1 div; the best item of a
-  window is marked green. Marks instead of a price: "?" poe.ninja
-  lists no price for the item; "<" below the price floor you choose; a red "!" a greyed-out
-  omen whose kind the symbol alone does not tell (put the mouse or cursor on it, the program
-  reads its tooltip and the price follows); "▲" or "▼" in the remnant list, the best reward is
-  scrolled out of view in that direction. At a waystone's or tablet's tooltip: "…" the trade
-  site is being asked, "–" it has no listing, "⏳" it is busy or not reachable (the status line
-  says when it is asked again).
+  Divine on in Divine. Colours and marks: see "Numbers and marks" below.
 - **Keyboard and controller UI** of the game, **English and German** game client (waystones
   and tablets too: their tooltips are read in both languages, the search text is written in
   the client's), any window height (measured from 1080 to 2160 pixels), every Popup Size
@@ -77,6 +75,24 @@ the newest release from github.com.
   community-provided rumour data keep their existing language, as do logs and diagnostics.
   **Help** opens the guide in the selected program language, with Russian screenshots of the
   program when Russian is selected; the guide also has its own language switcher.
+
+## Numbers and marks
+
+The colour of a price is its band and follows the exchange rate: grey under 0.02 div, white
+under 0.2 div, yellow under 1 div, orange from 1 div; the best item of a window is green.
+
+| Mark | Meaning |
+|---|---|
+| `?` | Recognised, but poe.ninja lists no price for it. |
+| `<` | Below the price floor you set. |
+| red `!` | A greyed-out omen whose kind the symbol alone does not tell; put the mouse or cursor on it, the program reads its tooltip. |
+| `▲` `▼` | Remnant list: the best reward is scrolled out of view in that direction. |
+| `…` `–` `⏳` | Waystone or tablet tooltip: the trade site is being asked, has no listing, is busy or not reachable. |
+| dot under a rune | Remnant list: the rune the row passes on, in the colour of its class. Gold: good for the loot (more rarity or more rares). Green: more monsters. Red: harder monsters. White: neither. |
+| red `✗` on a rune | Remnant list: the rune chain carries this rune already, choosing the row carries nothing new. Hollow while the link is provisional. |
+| framed tiles at the top | The rune chain of this map: one tile per rune in the order chosen, framed in the class colour. A thin frame is a provisional link (neither Esc nor the gamepad could be read). The mouse on a tile shows its name and effect. |
+
+![The rune chain at the top of the screen, the mouse on a tile](data/guide/rune-chain.png)
 
 ## Download and install
 
@@ -124,12 +140,13 @@ resets the program.
 - `Alt+D` ("Force live price") at a waystone's or tablet's tooltip asks its price exactly as the
   item is, every value and every mod, past the profiles; also while the live price is switched
   off.
-- The settings window has four tabs: **Settings** (league, keys, automatic scan and its
+- The settings window has five tabs: **Settings** (league, keys, automatic scan and its
   windows, price floor, the unit prices are written in — Exalted or Chaos, Divine from one
   Divine on — the live price at waystone and tablet tooltips and which trade listings count,
   start with Windows, language), **Rumours** (the community table of
   island rumours, your own ratings and notes, and the weight of each tier for the expedition
-  tier), **Waystones** (profiles for the stash search and the trade site, and the
+  tier), **Runes** (the runes of the remnant list and the class you give each, which colours
+  the dot at the rune a row passes on), **Waystones** (profiles for the stash search and the trade site, and the
   tolerance of the live price) and **Tablets** (the same per kind of tablet).
 - Waystones and tablets: put the mouse or the cursor on one; with the live price switched on
   in the settings, its price stands at the title bar after a moment (the marks are explained
@@ -160,6 +177,9 @@ All three keys can be changed in the settings window.
   reads the tooltip several times and joins what it found; a tooltip over a calm background
   reads best.
 - Aspect ratios narrower than 16:10 are not supported.
+- The gamepad is read for the rune chain, tested with a DualSense; an Xbox-class pad goes
+  through the same Windows API but has not been confirmed in play yet. Pads of other makes
+  are not read, their links stay provisional.
 - In the Standard league poe.ninja lists no prices for most uniques; they show "?".
 - Recognition relies on the game's current art and layout. A game update that changes a window
   may break it until the templates are updated. Each release names the game version it was
@@ -233,8 +253,11 @@ here, about 20,000 lines of C#; the files that talk to the network are
 
 - It reads the game window (its client area, handed over by the desktop compositor through
   Windows.Graphics.Capture, which sends the game nothing; or, with "Capture the game window
-  only" off or on Windows 10, the same area of the screen by GDI) and draws over it. It presses no keys, clicks nothing and touches no other process. The one game file it reads is
-  the game's own settings file, for the popup size, the text size and the client's language.
+  only" off or on Windows 10, the same area of the screen by GDI) and draws over it. It presses no keys, clicks nothing and touches no other process. It reads two game files: the
+  game's own settings file, for the popup size, the text size and the client's language, and
+  the game's `logs\Client.txt`, only for the lines that name the area you enter (the rune chain
+  starts anew with each map; without that file the chain stays off); nothing else of that file
+  is read, kept or sent.
 - It sends nothing about you. Its requests go to a fixed set of hosts, all HTTPS: poe.ninja (prices), web.poecdn.com (item art, only paths below that host whatever the
   price answer names), poe.gnejs.app and docs.google.com (rumour ratings; the sheet download is
   redirected to googleusercontent.com), api.github.com and github.com (the update check and the
@@ -245,9 +268,13 @@ here, about 20,000 lines of C#; the files that talk to the network are
   Waystones or Tablets tab, within the limits the site states in its answers, and after a
   failure only after a pause; without an account or session). An answer
   is read up to 32 MB, except the update package, which Velopack downloads.
-- It has a low-level keyboard hook; that is how Alt+F can work while the game has the focus.
-  The hook sees every key press, compares it with the three bound keys and passes everything else
-  on unchanged. Nothing is stored or sent.
+- It reads two inputs beside the picture, both only to tell a choice from a cancel in the
+  remnant list: Esc through a low-level keyboard hook (the hook is also how Alt+F works while
+  the game has the focus; it compares every key with the three bound ones and passes
+  everything else on unchanged, Esc included) and the gamepad's confirm and cancel buttons
+  through Windows.Gaming.Input, the way Windows presents controllers to any program (A and B,
+  or Cross and Circle on a PlayStation pad; pads of other makes are not read). Presses count
+  only while a remnant list is open; nothing is sent to the game or the pad, nothing is stored.
 - The updater is Velopack fetching the releases of this repository; the binaries are not
   signed. The trust is the same as when you download the exe from the releases page yourself:
   whoever controls this GitHub account. "Check for updates" can be switched off; with it on,
@@ -295,14 +322,8 @@ Where poe2pricer stands to that, so you can judge for yourself:
 - It sends no input to the game: no key, no click, nothing on a timer. The "one action per
   key press" rule is about inputs, and this tool makes none, whether a scan runs by itself or
   on `Alt+F`.
-- It reads the game's picture through the desktop compositor (Windows.Graphics.Capture) or
-  from the screen (GDI). Neither sends the game a message, opens its process or reads its
-  memory.
-- It never connects to the game servers. Its requests go to poe.ninja, the trade website
-  (within the limits the site states in every answer, "5 requests in 10 seconds" at the time
-  of writing, and after a refusal only after the pause it names; under a User-Agent that names
-  the program, its version and this repository), poecdn, the
-  rumour sources and GitHub, see "Trust".
+- It reads the game's picture and never connects to the game servers; what it reads, which
+  sites it asks and within which limits stands under "Trust".
 - It shows prices from outside the game, as every price checker does. That is the
   "information that isn't normally visible" part, and it applies to all of them alike.
 
@@ -375,7 +396,8 @@ templates; `data/ui/glyphs` holds the digits, brackets and per cent sign of its 
 lettering, cut from screenshots, for a number the text recognition leaves out), `data/names`
 (German item names), `data/waystones` and `data/tablets` (the mod lines
 in English and German, with the trade site's ids; `tools/waystone_mods.py`,
-`tools/tablet_mods.py`) and the rumour texts are material of Grinding Gear Games, taken from the game files, from poe.ninja and the trade site (names and slot sizes) and from web.poecdn.com and poe2db.tw (pictures). The pictures above are
+`tools/tablet_mods.py`), `data/runes` (the 33 runes of Expedition remnants with their names,
+effects and pictures; `tools/rune_data.py` builds it from the game files) and the rumour texts are material of Grinding Gear Games, taken from the game files, from poe.ninja and the trade site (names and slot sizes) and from web.poecdn.com and poe2db.tw (pictures). The pictures above are
 cut-outs of the game with the overlay drawn on. See `THIRD_PARTY_NOTICES.md` for this and for
 the licences of the libraries and fonts used.
 

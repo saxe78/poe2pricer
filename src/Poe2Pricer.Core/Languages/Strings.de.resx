@@ -101,9 +101,6 @@
   <data name="SwitchRitual" xml:space="preserve">
     <value>Ritual (Gaben)</value>
   </data>
-  <data name="SwitchExpedition" xml:space="preserve">
-    <value>Expedition (Gerüchte / Relikte)</value>
-  </data>
   <data name="SwitchStash" xml:space="preserve">
     <value>Truhe</value>
   </data>
@@ -860,5 +857,53 @@ Was GGG zu Drittprogrammen gesagt hat, mit Quellen, und was das für dieses Prog
   </data>
   <data name="GameLanguageNotRead" xml:space="preserve">
     <value>Spielsprache „{0}“ wird nicht gelesen: Preise brauchen den englischen oder deutschen Spielclient.</value>
+  </data>
+  <data name="SwitchRumours" xml:space="preserve">
+    <value>Expedition (Gerüchte)</value>
+  </data>
+  <data name="SwitchRemnant" xml:space="preserve">
+    <value>Expedition (Relikt)</value>
+  </data>
+  <data name="TabRunes" xml:space="preserve">
+    <value>Runen</value>
+  </data>
+  <data name="GroupRunes" xml:space="preserve">
+    <value>Runen der Relikt-Liste</value>
+  </data>
+  <data name="ColumnRune" xml:space="preserve">
+    <value>Rune</value>
+  </data>
+  <data name="ColumnEffect" xml:space="preserve">
+    <value>Wirkung</value>
+  </data>
+  <data name="ColumnClass" xml:space="preserve">
+    <value>Beute-Klasse</value>
+  </data>
+  <data name="RuneClassLoot" xml:space="preserve">
+    <value>Beute</value>
+  </data>
+  <data name="RuneClassWeaker" xml:space="preserve">
+    <value>Schwächer</value>
+  </data>
+  <data name="RuneClassDanger" xml:space="preserve">
+    <value>Gefahr</value>
+  </data>
+  <data name="RuneClassNeutral" xml:space="preserve">
+    <value>Neutral</value>
+  </data>
+  <data name="RunesHint" xml:space="preserve">
+    <value>Die Klasse einer Rune bestimmt die Farbe ihres Punkts in der Relikt-Liste, an der Rune, die eine Zeile an die späteren Gruppen der Sprengkette weitergibt. Beute: mehr Seltenheit oder mehr seltene Monster. Schwächer: mehr Monster, sonst nichts für die Beute. Gefahr: nur härtere Monster. Neutral: weiß. Die Vorgaben sind die Lesart des Programms aus den Spieldaten; stelle sie ein, wie du willst. Gespeichert mit den Einstellungen.</value>
+  </data>
+  <data name="ResetRunes" xml:space="preserve">
+    <value>Standard-Klassen</value>
+  </data>
+  <data name="OverlayRuneChain" xml:space="preserve">
+    <value>Runenkette · {0}</value>
+  </data>
+  <data name="ResetChain" xml:space="preserve">
+    <value>Runenkette zurücksetzen</value>
+  </data>
+  <data name="RunesNotSaved" xml:space="preserve">
+    <value>Die Runen-Klassen konnten nicht geschrieben werden: {0}</value>
   </data>
 </root>

@@ -206,19 +206,31 @@ public sealed class RumourBook
     }
 
     // Where the community table names an island that is not the one the game's own text
-    // points at (RumourTexts, from the game files): the game's island, whatever the source.
-    // Confirmed in the game on 19.10.2026 for the chart column; whether mods and rating are
-    // swapped as well is open (OFFEN F8) and reported to Gnejs.
+    // points at (RumourTexts, from the game files): the rumour's name, as the game gives it to
+    // that island. The sheet has the two names swapped, not the islands: mods, rating and note
+    // of a row belong to the island it names. Seen in the game on 19.10.2026 (the chart column)
+    // and on 02.11.2026 at Barren Atoll (seen in play: strongboxes all over the ground, the map mods
+    // 616 % strongboxes, no gold line — the sheet's "Bleak and Awful" row, Strongbox, rating D;
+    // until then the program moved the island to the name and showed "Something Fishy: Gold B+"
+    // there). Not reported to the sheet's author: the site that carries the sheet has no
+    // contact, and the ratings come from a streamer's sheet (02.11.).
     // Looked up by Key, as the book keys names everywhere else: a spelling variant in the
-    // sheet ("Something Fishy...") must not leave the island uncorrected (review 19.10.).
+    // sheet ("Something Fishy...") must not leave the row uncorrected (review 19.10.).
     public static readonly IReadOnlyDictionary<string, string> IslandCorrections = new Dictionary<string, string>
     {
-        [Key("Something Fishy")] = "Barren Atoll",
-        [Key("Bleak and Awful")] = "Bleached Shoals",
+        ["Something Fishy"] = "Barren Atoll",
+        ["Bleak and Awful"] = "Bleached Shoals",
     };
 
+    // A row whose name the game gives to another island takes the game's name for its own
+    // island; where no name is known for that island, the island moves to the name as before.
     public static List<Rumour> Corrected(IEnumerable<Rumour> list) =>
-        list.Select(r => IslandCorrections.TryGetValue(Key(r.Name), out var island) && r.Map != island ? r with { Map = island } : r).ToList();
+        list.Select(r =>
+        {
+            if (IslandCorrections.FirstOrDefault(c => Key(c.Key) == Key(r.Name)) is not { Key.Length: > 0 } correction || r.Map == correction.Value)
+                return r;
+            return IslandCorrections.FirstOrDefault(c => c.Value == r.Map) is { Key.Length: > 0 } named ? r with { Name = named.Key } : r with { Map = correction.Value };
+        }).ToList();
 
     private void SetSheet(List<Rumour> list, string source)
     {

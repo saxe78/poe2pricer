@@ -53,6 +53,27 @@ public static class GameCapture
         return 0;
     }
 
+    // The folder the game runs from (its logs/Client.txt lies beside it); null when the game
+    // is not running or its path cannot be read (another user's process).
+    public static string? GameFolder()
+    {
+        foreach (var p in Process.GetProcesses())
+        {
+            try
+            {
+                if (p.ProcessName.StartsWith("PathOfExile", StringComparison.OrdinalIgnoreCase) && p.MainModule?.FileName is { } file)
+                    return Path.GetDirectoryName(file);
+            }
+            catch (InvalidOperationException) { }
+            catch (System.ComponentModel.Win32Exception) { }
+            finally
+            {
+                p.Dispose();
+            }
+        }
+        return null;
+    }
+
     // area: only this part of the reference picture is wanted; the rest of the frame stays
     // black. Taking a part is what makes the glance cheap enough to run many times a second
     // (measured at 2560×1440: the whole picture 22 ms, a part 8 ms).

@@ -39,12 +39,15 @@ public sealed record Settings
     // Which windows the automatic scan shows by itself; the key always shows all of them.
     // All on by default, the user switches off.
     public bool AutoRitual { get; init; } = true;
-    public bool AutoExpedition { get; init; } = true;
+    // Expedition in two: the rumour panel of the Atlas and the remnant list (until 1.4.1 one
+    // switch, AutoExpedition; a file with that entry sets both, Load).
+    public bool AutoRumours { get; init; } = true;
+    public bool AutoRemnant { get; init; } = true;
     public bool AutoStash { get; init; } = true;
 
     // The automatic scan runs: at least one window is ticked.
     [System.Text.Json.Serialization.JsonIgnore]
-    public bool AutoAny => AutoRitual || AutoExpedition || AutoStash;
+    public bool AutoAny => AutoRitual || AutoRumours || AutoRemnant || AutoStash;
 
     // Items worth less get no label and do not compete for "most valuable" (default: show all).
     public decimal FloorValue { get; init; }
@@ -158,7 +161,8 @@ public sealed record Settings
         try
         {
             var text = File.ReadAllText(file);
-            return JsonSerializer.Deserialize<Settings>(text, JsonFiles.Options) ?? new Settings();
+            var settings = JsonSerializer.Deserialize<Settings>(text, JsonFiles.Options) ?? new Settings();
+            return OneExpeditionSwitch(text) is { } both ? settings with { AutoRumours = both, AutoRemnant = both } : settings;
         }
         catch (JsonException)
         {
@@ -179,6 +183,19 @@ public sealed record Settings
             problem = new("SettingsUnreadable", e.Message);
             return new Settings();
         }
+    }
+
+    // A file from before 1.4.2 with the one switch "autoExpedition" and neither of the two it
+    // became: its value for both. null: nothing to carry over.
+    private static bool? OneExpeditionSwitch(string json)
+    {
+        if (System.Text.Json.Nodes.JsonNode.Parse(json) is not System.Text.Json.Nodes.JsonObject node)
+            return null;
+        bool Has(string name) => node.Any(p => p.Key.Equals(name, StringComparison.OrdinalIgnoreCase));
+        if (Has("autoRumours") || Has("autoRemnant"))
+            return null;
+        var old = node.FirstOrDefault(p => p.Key.Equals("autoExpedition", StringComparison.OrdinalIgnoreCase)).Value;
+        return old?.GetValueKind() is JsonValueKind.True or JsonValueKind.False ? old.GetValue<bool>() : null;
     }
 
     public void Save() => Save(FilePath);

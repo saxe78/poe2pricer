@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Poe2Pricer.Core;
+using Poe2Pricer.Core.Runes;
 using Poe2Pricer.Core.Market;
 
 namespace Poe2Pricer.App;
@@ -167,9 +168,10 @@ public sealed unsafe class CompositionOverlay : IOverlay, IDisposable
         Affinity(exclude);
     }
 
-    public void Show(Box screen, Label[] labels, (Box Panel, RumourLine[] Lines, IslandSummary? Island)? rumours = null, double scale = 1)
+    public void Show(Box screen, Label[] labels, (Box Panel, RumourLine[] Lines, IslandSummary? Island)? rumours = null, double scale = 1, RuneStrip? strip = null)
     {
         layer.Rumours = rumours;
+        layer.Strip = strip;
         layer.Labels = labels;
         layer.PixelScale = scale;
         if (!visible)
@@ -216,6 +218,7 @@ public sealed unsafe class CompositionOverlay : IOverlay, IDisposable
     public void Clear()
     {
         layer.Rumours = null;
+        layer.Strip = null;
         layer.Labels = [];
         if (swapChain != 0)
             Present(width, height, draw: false);

@@ -1,0 +1,873 @@
+{
+ "source": "Grinding Gear Games, Path of Exile 2: tables Expedition2Runes and ArchnemesisMods, pictures Expedition/Tome and Expedition/Remnant",
+ "builtWith": "tools/rune_data.py",
+ "runes": [
+  {
+   "id": "Fire",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Fire Rune",
+    "de": "Feuerrune",
+    "ru": "Руна огня"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Extra Fire Damage"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Zusätzlicher Feuerschaden"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Дополнительный урон от огня"
+    ]
+   }
+  },
+  {
+   "id": "Cold",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Cold Rune",
+    "de": "Kälterune",
+    "ru": "Руна холода"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Extra Cold Damage"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Zusätzlicher Kälteschaden"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Дополнительный урон от холода"
+    ]
+   }
+  },
+  {
+   "id": "Lightning",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Lightning Rune",
+    "de": "Blitzrune",
+    "ru": "Руна молнии"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Extra Lightning Damage"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Zusätzlicher Blitzschaden"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Дополнительный урон от молнии"
+    ]
+   }
+  },
+  {
+   "id": "Tempest",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Tempest Rune",
+    "de": "Sturmwind-Rune",
+    "ru": "Руна бури"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Cannot be Shocked or Chilled",
+     "All Damage contributes to chance to Shock and Chill Magnitude"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Kann nicht geschockt oder unterkühlt werden",
+     "Sämtlicher Schaden wird auf die Magnitude für Schock und Unterkühlen angerechnet"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Не может быть охлаждён или получить шок",
+     "Весь урон влияет на шанс шока и величину охлаждения"
+    ]
+   }
+  },
+  {
+   "id": "Momentum",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Momentum Rune",
+    "de": "Momentumrune",
+    "ru": "Руна импульса"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Increased Movement Speed",
+     "Movement Speed Cannot be Slowed below base"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Erhöhte Bewegungsgeschwindigkeit",
+     "Bewegungsgeschwindigkeit kann nicht unter die Basisgeschwindigkeit verlangsamt werden"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Повышение скорости передвижения",
+     "Скорость передвижения не может быть ниже базовой"
+    ]
+   }
+  },
+  {
+   "id": "Bloodletting",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Bloodletting Rune",
+    "de": "Aderlassrune",
+    "ru": "Руна кровопускания"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Life Leech",
+     "Cannot have Life Leeched from",
+     "Inflicts Corrupted Blood on Hit"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Lebensraub",
+     "Leben kann nicht geraubt werden",
+     "Verursacht bei Treffer Verderbtes Blut"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Похищение здоровья",
+     "У монстров нельзя похищать здоровье",
+     "Накладывает Осквернённую кровь при нанесении удара"
+    ]
+   }
+  },
+  {
+   "id": "Stone",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Stone Rune",
+    "de": "Steinrune",
+    "ru": "Руна камня"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Armoured",
+     "Increased Stun Threshold",
+     "Earthly Prison"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Gepanzert",
+     "Erhöhte Betäubungsschwelle",
+     "Irdisches Gefängnis"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Бронированный",
+     "Повышенный порог оглушения",
+     "Земляная тюрьма"
+    ]
+   }
+  },
+  {
+   "id": "Adaptive",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Adaptive Rune",
+    "de": "Anpassungsfähige Rune",
+    "ru": "Руна адаптации"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Adaptation"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Anpassung"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Адаптация"
+    ]
+   }
+  },
+  {
+   "id": "Arcane",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Arcane Rune",
+    "de": "Arkanrune",
+    "ru": "Руна колдовства"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Extra Energy Shield",
+     "Trigger a Stunning nova when Energy Shield is depleted"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Extra Energieschild",
+     "Löst eine betäubende Nova aus, wenn der Energieschild aufgebraucht ist"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Дополнительный энергетический щит",
+     "Вызывает срабатывание оглушающего кольца при истощении энергетического щита"
+    ]
+   }
+  },
+  {
+   "id": "Toxic",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Toxic Rune",
+    "de": "Giftige Rune",
+    "ru": "Руна токсинов"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Chance to Poison on Hit",
+     "Chance for Toxic Volatiles on death",
+     "All Damage from Hits Contributes to Poison Magnitude"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Chance, bei Treffer zu vergiften",
+     "Erzeugt Giftige Explosionen bei Tod",
+     "Sämtlicher Schaden trägt zur Magnitude der Chance auf Vergiften bei"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Шанс отравить при нанесении удара",
+     "Шанс создать токсичные нестабильности при смерти",
+     "Весь урон от ударов влияет на величину отравления"
+    ]
+   }
+  },
+  {
+   "id": "Electrocuting",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Electrocuting Rune",
+    "de": "Elektrisierungsrune",
+    "ru": "Руна электризации"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Extra Lightning Damage",
+     "Lightning Damage Electrocutes",
+     "Shocked Ground Trails"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Zusätzlicher Blitzschaden",
+     "Blitzschaden elektrisiert",
+     "Spuren aus schockendem Boden"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Дополнительный урон от молнии",
+     "Урон от молнии электризует",
+     "Следы из заряженной земли"
+    ]
+   }
+  },
+  {
+   "id": "Protective",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Protective Rune",
+    "de": "Schützende Rune",
+    "ru": "Руна защиты"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Periodically gain Verisium Proximity Shields"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Erhaltet regelmäßig Verisium-Annäherungsschilde"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Периодически получает веризиевый защитный купол"
+    ]
+   }
+  },
+  {
+   "id": "Cyclonic",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Cyclonic Rune",
+    "de": "Wirbelsturm-Rune",
+    "ru": "Руна вихря"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Chance to inflict Exposure on Hit",
+     "Armour Break on Hit",
+     "Wither on Hit"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Chance, bei Treffer Anfälligkeit zu verursachen",
+     "Rüstungsbruch bei Treffer",
+     "Verkümmern bei Treffer"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Шанс наложить восприимчивость при нанесении удара",
+     "Разрушение брони при нанесении удара",
+     "Истощение при нанесении удара"
+    ]
+   }
+  },
+  {
+   "id": "Vision",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Vision Rune",
+    "de": "Visionsrune",
+    "ru": "Руна видения"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Reflect Curses",
+     "Chance to Reflect Shock",
+     "Chance to Reflect Chill"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Reflektiert Flüche",
+     "Chance, Schocken zu reflektieren",
+     "Chance, Unterkühlen zu reflektieren"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Отражение проклятий",
+     "Шанс отразить шок",
+     "Шанс отразить охлаждение"
+    ]
+   }
+  },
+  {
+   "id": "Tidal",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Tidal Rune",
+    "de": "Gezeitenrune",
+    "ru": "Руна прилива"
+   },
+   "effect": {
+    "en": [
+     "Remnant gains:",
+     "Conjures Tidal Waves"
+    ],
+    "de": [
+     "Relikt erhält:",
+     "Erzeugt Flutwellen"
+    ],
+    "ru": [
+     "Реликт получает:",
+     "Сотворяет Приливные волны"
+    ]
+   }
+  },
+  {
+   "id": "Rebirth",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Rebirth Rune",
+    "de": "Wiederbelebungsrune",
+    "ru": "Руна перерождения"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Chance to Rebirth on death"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Chance, bei Tod wiedergeboren zu werden"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Шанс возродиться при смерти"
+    ]
+   }
+  },
+  {
+   "id": "Prismatic",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Prismatic Rune",
+    "de": "Prismatische Rune",
+    "ru": "Руна радуги"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "All Damage can Shock",
+     "All Damage can Chill",
+     "All Damage can Ignite",
+     "All Elemental Resistance"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Sämtlicher Schaden kann schocken",
+     "Sämtlicher Schaden kann unterkühlen",
+     "Sämtlicher Schaden kann entzünden",
+     "Erhöhte Elementarwiderstände"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Весь урон может наложить шок",
+     "Весь урон может охладить",
+     "Весь урон может поджечь",
+     "Сопротивление всем стихиям"
+    ]
+   }
+  },
+  {
+   "id": "Gasp",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Volcanic Rune",
+    "de": "Vulkanische Rune",
+    "ru": "Руна вулкана"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Extra Fire Damage",
+     "All Damage can Ignite",
+     "Ignited Ground Trails"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Extra Feuerschaden",
+     "Sämtlicher Schaden kann entzünden",
+     "Spuren aus entzündetem Boden"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Дополнительный урон от огня",
+     "Весь урон может поджечь",
+     "Следы из подожжённой земли"
+    ]
+   }
+  },
+  {
+   "id": "Moon",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Moon Rune",
+    "de": "Mondrune",
+    "ru": "Руна луны"
+   },
+   "effect": {
+    "en": [
+     "Remnant gains:",
+     "Conjures moon beams"
+    ],
+    "de": [
+     "Relikt erhält:",
+     "Erzeugt Mondstrahlen"
+    ],
+    "ru": [
+     "Реликт получает:",
+     "Сотворяет лунные лучи"
+    ]
+   }
+  },
+  {
+   "id": "Celestial",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Celestial Rune",
+    "de": "Himmlische Rune",
+    "ru": "Руна небес"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Chance for a Fire Explosion on Death",
+     "Chance for a Cold Explosion on Death",
+     "Chance for a Lightning Explosion on Death"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Chance einer Feuerexplosion bei Tod",
+     "Chance einer Kälteexplosion bei Tod",
+     "Chance einer Blitzexplosion bei Tod"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Шанс огненного взрыва при смерти",
+     "Шанс ледяного взрыва при смерти",
+     "Шанс грозового взрыва при смерти"
+    ]
+   }
+  },
+  {
+   "id": "Opulent",
+   "rare": false,
+   "class": "loot",
+   "name": {
+    "en": "Opulent Rune",
+    "de": "Prunkrune",
+    "ru": "Руна богатства"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Increased Monster Rarity"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Erhöhte Monsterseltenheit"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Повышенная редкость монстров"
+    ]
+   }
+  },
+  {
+   "id": "Rage",
+   "rare": false,
+   "class": "danger",
+   "name": {
+    "en": "Rage Rune",
+    "de": "Rauschrune",
+    "ru": "Руна ярости"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Periodically Enrage"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Erzürnen regelmäßig"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Периодически впадает в ярость"
+    ]
+   }
+  },
+  {
+   "id": "Wisdom",
+   "rare": false,
+   "class": "neutral",
+   "name": {
+    "en": "Wisdom Rune",
+    "de": "Weisheitsrune",
+    "ru": "Руна мудрости"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Increased Experience"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Erhöhter Erfahrungsgewinn"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Увеличение опыта"
+    ]
+   }
+  },
+  {
+   "id": "Sky",
+   "rare": true,
+   "class": "danger",
+   "name": {
+    "en": "Sky Rune",
+    "de": "Himmelsrune",
+    "ru": "Руна неба"
+   },
+   "effect": {
+    "en": [
+     "Remnant gains:",
+     "Conjures Elemental Tornados"
+    ],
+    "de": [
+     "Relikt erhält:",
+     "Erzeugt Elementartornados"
+    ],
+    "ru": [
+     "Реликт получает:",
+     "Призывает стихийные торнадо"
+    ]
+   }
+  },
+  {
+   "id": "Earth",
+   "rare": true,
+   "class": "danger",
+   "name": {
+    "en": "Earth Rune",
+    "de": "Erdrune",
+    "ru": "Руна земли"
+   },
+   "effect": {
+    "en": [
+     "Remnant gains:",
+     "Conjures Earthly Spires"
+    ],
+    "de": [
+     "Relikt erhält:",
+     "Erzeugt Erdstachel"
+    ],
+    "ru": [
+     "Реликт получает:",
+     "Призывает земные шипы"
+    ]
+   }
+  },
+  {
+   "id": "Life",
+   "rare": true,
+   "class": "danger",
+   "name": {
+    "en": "Life Rune",
+    "de": "Lebensrune",
+    "ru": "Руна жизни"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Shared Life"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Geteiltes Leben"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Общее здоровье"
+    ]
+   }
+  },
+  {
+   "id": "Bond",
+   "rare": true,
+   "class": "loot",
+   "name": {
+    "en": "Bond Rune",
+    "de": "Bandrune",
+    "ru": "Руна связи"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Rare Monsters may transfer a Mod on death",
+     "Remnant gains:",
+     "Increased chance to spawn Rare Monsters",
+     "Rare Monsters have more Monster Modifiers"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Seltene Monster können bei Tod einen Modifikator übertragen",
+     "Relikt erhält:",
+     "Erhöhte Chance, seltene Monster zu beschwören",
+     "Seltene Monster haben mehr Monster-Modifikatoren"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Редкие монстры могут передать свойство при смерти",
+     "Реликт получает:",
+     "Повышенный шанс породить редких монстров",
+     "Редкие монстры имеют больше свойств"
+    ]
+   }
+  },
+  {
+   "id": "Ward",
+   "rare": true,
+   "class": "danger",
+   "name": {
+    "en": "Ward Rune",
+    "de": "Schutzrune",
+    "ru": "Руна барьера"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Protected by Runic Ward"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Durch Runenschutz geschützt"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Защищён руническим барьером"
+    ]
+   }
+  },
+  {
+   "id": "Soul",
+   "rare": true,
+   "class": "danger",
+   "name": {
+    "en": "Soul Rune",
+    "de": "Seelenrune",
+    "ru": "Руна души"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Union of Souls"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Einheit der Seelen"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Единение душ"
+    ]
+   }
+  },
+  {
+   "id": "Death",
+   "rare": true,
+   "class": "weaker",
+   "name": {
+    "en": "Death Rune",
+    "de": "Todesrune",
+    "ru": "Руна смерти"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Slain Monsters may merge into stronger Monsters"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Getötete Monster können zu stärkeren Monstern verschmelzen"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Убитые монстры могут слиться в более сильных монстров"
+    ]
+   }
+  },
+  {
+   "id": "Oath",
+   "rare": true,
+   "class": "weaker",
+   "name": {
+    "en": "Oath Rune",
+    "de": "Schwurrune",
+    "ru": "Руна клятвы"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "A Monster summons Allies"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Ein Monster beschwört Verbündete"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Монстр призывает союзников"
+    ]
+   }
+  },
+  {
+   "id": "Time",
+   "rare": true,
+   "class": "loot",
+   "name": {
+    "en": "Time Rune",
+    "de": "Zeitrune",
+    "ru": "Руна времени"
+   },
+   "effect": {
+    "en": [
+     "Monsters gain:",
+     "Slain Monsters may respawn as a higher Rarity"
+    ],
+    "de": [
+     "Monster erhalten:",
+     "Getötete Monster können mit höherer Seltenheit wieder beschworen werden"
+    ],
+    "ru": [
+     "Монстры получают:",
+     "Убитые монстры могут возродиться с более высокой редкостью"
+    ]
+   }
+  },
+  {
+   "id": "Power",
+   "rare": true,
+   "class": "loot",
+   "name": {
+    "en": "Power Rune",
+    "de": "Machtrune",
+    "ru": "Руна силы"
+   },
+   "effect": {
+    "en": [
+     "Runes gain:",
+     "Empowered"
+    ],
+    "de": [
+     "Runen erhalten:",
+     "Ermächtigt"
+    ],
+    "ru": [
+     "Руны получают:",
+     "Усиление"
+    ]
+   }
+  }
+ ]
+}

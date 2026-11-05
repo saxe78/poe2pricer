@@ -2,20 +2,61 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using OpenCvSharp;
 using Poe2Pricer.Core.Market;
+using Poe2Pricer.Core.Runes;
 
 namespace Poe2Pricer.Core;
 
 // What the overlay draws now. Screen: the game's part of the screen. Labels and Rumours are in
 // the coordinates of the reference picture (GameView); Scale: screen pixels per pixel of it.
-public sealed record Scene(Box Screen, Label[] Labels, (Box Panel, RumourLine[] Lines, IslandSummary? Island)? Rumours, double Scale = 1)
+// Marks: drawn as well, no prices (Picture.Marks); Shown leaves them out. Strip: the rune
+// chain of this map at the top of the screen, with or without a window (OverlayEngine.Standing).
+public sealed record Scene(Box Screen, Label[] Labels, (Box Panel, RumourLine[] Lines, IslandSummary? Island)? Rumours, double Scale = 1, Label[]? Marks = null, RuneStrip? Strip = null)
 {
+    // Everything to draw: the labels, then the marks over them.
+    public Label[] All => Marks is { Length: > 0 } m ? [.. Labels, .. m] : Labels;
+
     // The same picture: every label, line and island entry alike (the record's own equality
     // compares the arrays by reference). OverlayEngine.Show draws only a scene that differs
     // from the one drawn last: at 3840×2160 the Ritual window was drawn 2.5 times a second
     // while nothing changed (every glance that saw the cursor move brought a follow; log
     // 31.10.2026), each picture 19 ms on the UI thread.
     public bool SameAs(Scene other) =>
-        Screen == other.Screen && Scale == other.Scale && Labels.AsSpan().SequenceEqual(other.Labels) && SameRumours(Rumours, other.Rumours);
+        Screen == other.Screen && Scale == other.Scale && Labels.AsSpan().SequenceEqual(other.Labels) && (Marks ?? []).AsSpan().SequenceEqual(other.Marks ?? []) && SameRumours(Rumours, other.Rumours) && (Strip is null ? other.Strip is null : Strip.SameAs(other.Strip));
+
+    // What differs from the other scene, for the log (extended diagnostics): the first part
+    // that does, with both values where they are short. Evidence for a picture drawn anew
+    // while nothing should have changed (02.11.2026: the caption above the controller's
+    // remnant list flickered about once a second, one picture a second in the count).
+    public string Differs(Scene other)
+    {
+        if (Screen != other.Screen)
+            return $"screen {Screen} → {other.Screen}";
+        if (Scale != other.Scale)
+            return $"scale {Scale} → {other.Scale}";
+        if (!Labels.AsSpan().SequenceEqual(other.Labels))
+            return "labels: " + FirstDifference(Labels, other.Labels);
+        if (!(Marks ?? []).AsSpan().SequenceEqual(other.Marks ?? []))
+            return "marks: " + FirstDifference(Marks ?? [], other.Marks ?? []);
+        if (!SameRumours(Rumours, other.Rumours))
+            return "rumours";
+        if (!(Strip is null ? other.Strip is null : Strip.SameAs(other.Strip)))
+            return $"strip {Strip?.Title}/{Strip?.Hover}/{Strip?.Caption} → {other.Strip?.Title}/{other.Strip?.Hover}/{other.Strip?.Caption}";
+        return "nothing";
+    }
+
+    private static string FirstDifference(Label[] a, Label[] b)
+    {
+        if (a.Length != b.Length)
+            return $"{a.Length} → {b.Length}";
+        for (int i = 0; i < a.Length; i++)
+            if (a[i] != b[i])
+                return $"#{i} " + string.Join(", ", LabelFields.Where(f => !Equals(f.GetValue(a[i]), f.GetValue(b[i]))).Select(f => $"{f.Name}: {f.GetValue(a[i]) ?? "null"} → {f.GetValue(b[i]) ?? "null"}"));
+        return "same";
+    }
+
+    // The fields of a label, for the log: only those that differ (a whole label is a line of
+    // its own with its caption; 05.11.2026: 43 such lines of a kilobyte each).
+    private static readonly System.Reflection.PropertyInfo[] LabelFields = typeof(Label).GetProperties();
 
     private static bool SameRumours((Box Panel, RumourLine[] Lines, IslandSummary? Island)? a, (Box Panel, RumourLine[] Lines, IslandSummary? Island)? b)
     {
@@ -57,6 +98,13 @@ public sealed class OverlayEngine : IDisposable
     // Only touched on the control's thread.
     private IOpenWindow? open;
     private Label[] lastLabels = [];
+    private Label[] lastMarks = [];
+    // Where the game was on the screen when it was last captured: the strip alone stands there.
+    private (Box Screen, double Scale)? standingScreen;
+    // The mouse as the last picture saw it, and the game's language: for the tile of the rune
+    // chain under the mouse and its caption.
+    private (int X, int Y)? pointer;
+    private string language = GameLanguage.English;
     private (Box Panel, RumourLine[] Lines, IslandSummary? Island)? lastRumours;
     private Picture? lastPicture;
     private Box? lastScreen;
@@ -78,9 +126,10 @@ public sealed class OverlayEngine : IDisposable
     public event Action<StatusMessage>? Status;
     public event Action<string?>? Diagnosed;
 
-    public OverlayEngine(GameWindows windows, IGameScreen screen, IPrices prices, Func<RumourBook> rumours, Settings settings, TimeProvider time, Action<string> log)
+    public OverlayEngine(GameWindows windows, IGameScreen screen, IPrices prices, Func<RumourBook> rumours, Settings settings, TimeProvider time, Action<string> log, RuneChain? chain = null)
     {
         this.windows = windows;
+        this.chain = chain;
         this.screen = screen;
         this.prices = prices;
         this.rumours = rumours;
@@ -118,6 +167,7 @@ public sealed class OverlayEngine : IDisposable
                 // the checks started below read anew.
                 generation++;
                 lastLabels = [];
+                lastMarks = [];
                 if (visible && lastScreen is { } b)
                     Show(new Scene(b, [], lastRumours, lastScale));
             }
@@ -127,6 +177,72 @@ public sealed class OverlayEngine : IDisposable
         });
 
     public void RumoursChanged() => Enqueue(RebindAsync);
+
+    // The rune classes changed in the settings window: the marks of an open remnant list follow.
+    public void RunesChanged() => Enqueue(RebindAsync);
+
+    // The rune chain changed (a bar read, a new map, the reset button): the strip and the
+    // badges in the list follow.
+    public void ChainChanged() => Enqueue(ChainChangedAsync);
+
+    private readonly RuneChain? chain;
+
+    private async Task ChainChangedAsync()
+    {
+        if (open is not null)
+        {
+            await RebindAsync();
+            return;
+        }
+        if (!busy)
+            Stand();
+    }
+
+    // The strip at the top of the screen: the runes the chain carries, in the order they were
+    // chosen, each in its class colour.
+    // With the mouse on a tile, that rune's name and effect in the game's words. Null while the
+    // chain is empty — then nothing of it is drawn. width: the reference picture's width, for
+    // where the tiles are; null: no mouse looked up.
+    private RuneStrip? Standing(double? width = null)
+    {
+        if (chain is null || chain.InHaven || chain.Links is not { Count: > 0 } links)
+            return null;
+        var runes = links.SelectMany(l => l.Runes.Select(r => (Rune: r, l.Fixed))).ToArray();
+        if (runes.Length == 0)
+            return null;
+        var entries = runes.Select(x => new StripEntry(x.Rune.Id, RuneBook.KeyOf(x.Rune.Class), x.Fixed)).ToArray();
+        var strip = new RuneStrip(Texts.Get("OverlayRuneChain", entries.Length), entries);
+        int hover = width is { } w ? strip.TileAt(pointer, w) : -1;
+        return hover < 0 ? strip : strip with { Hover = hover, Caption = $"{runes[hover].Rune.Name(language)}  ·  {runes[hover].Rune.Effect(language)}" };
+    }
+
+    // The mouse moved: the rune chain's caption may come or go. Draws only when the scene
+    // differs from the one drawn (Show).
+    private void Pointed(GameCapture.Frame frame)
+    {
+        // Every glance ends here: nothing to do while the mouse rests (review 05.11.2026).
+        if (frame.Pointer == pointer && frame.Language == language)
+            return;
+        pointer = frame.Pointer;
+        language = frame.Language;
+        if (Standing() is null)
+            return;
+        if (open is not null && visible && lastScreen is { } b)
+            Show(new Scene(b, lastLabels, lastRumours, lastScale, lastMarks));
+        else if (open is null)
+            Stand();
+    }
+
+    // With no window open: the strip alone when the chain has links and the game is in front,
+    // else nothing. The strip comes and goes with the automatic scan's turns (ShowAsync).
+    private void Stand()
+    {
+        bool standing = Standing() is not null && !hiddenByKey && screen.InFront;
+        if (standing && standingScreen is { } s)
+            Show(new Scene(s.Screen, [], null, s.Scale));
+        else if (!standing && visible && open is null)
+            HideOverlay();
+    }
 
     public void Diagnose(string folder) => Enqueue(() => DiagnoseAsync(folder));
 
@@ -195,7 +311,39 @@ public sealed class OverlayEngine : IDisposable
 
     // Keep only when pictures are kept: a window with a Keep clones its picture for it
     // (FavoursGameWindow, the first look), which is pure cost otherwise (review 19.10.).
-    private LookContext Context() => new(rumours(), settings, log, KeepsEvidence ? Keep : null);
+    private LookContext Context() => new(rumours(), settings, log, KeepsEvidence ? Keep : null, Clock: time, Escaped: LastEscape, Confirmed: LastConfirm, EscapeReadable: EscapeReadable, GamepadReadable: GamepadReadable());
+
+    // The last cancel — Esc through the keyboard hook, the gamepad's cancel button through
+    // GamepadWatch, Windows.Gaming.Input — and the last confirm (the gamepad's confirm button;
+    // a mouse click is not read) seen while the game was in front (UTC ticks; long.MinValue:
+    // none yet). The remnant list closes on a cancel without a choice, on a click or the
+    // confirm button with one (RemnantGameWindow.Closed). Called from the hook's or the
+    // watch's thread; logged only while a remnant list is open — both buttons do other things
+    // in the game (05.11.2026: Circle is the dodge roll, up to fifty presses a minute).
+    // EscapeReadable: the hook works (false when Windows refused it); GamepadReadable: a pad
+    // answered lately.
+    public bool EscapeReadable { get; set; } = true;
+    public Func<bool> GamepadReadable { get; set; } = () => false;
+    private long escaped = long.MinValue;
+    private long confirmed = long.MinValue;
+    public void Escaped(string what = "Esc") => Pressed(ref escaped, what);
+    public void Confirmed(string what = "the confirm button") => Pressed(ref confirmed, what);
+    private void Pressed(ref long last, string what)
+    {
+        Interlocked.Exchange(ref last, time.GetUtcNow().UtcTicks);
+        // The reference alone, from another thread: a stale window costs a log line at most.
+        // The line is written off this thread: Esc comes through the low-level keyboard hook,
+        // whose callback must return at once (Windows drops a slow hook without a word).
+        if (Volatile.Read(ref open)?.Window is RemnantGameWindow)
+            ThreadPool.QueueUserWorkItem(_ => log($"Remnant list: {what} pressed"));
+    }
+    private DateTimeOffset? LastEscape() => Last(ref escaped);
+    private DateTimeOffset? LastConfirm() => Last(ref confirmed);
+    private static DateTimeOffset? Last(ref long field)
+    {
+        long ticks = Interlocked.Read(ref field);
+        return ticks == long.MinValue ? null : new DateTimeOffset(ticks, TimeSpan.Zero);
+    }
 
     // Where the pictures go that a window hands over as evidence (LookContext.Keep). Kept
     // only with Settings.ExtendedDiagnostics on — a user's program writes nothing by itself
@@ -401,8 +549,16 @@ public sealed class OverlayEngine : IDisposable
                 }
             });
             showStarted = total;
+            if (frame is not null)
+            {
+                standingScreen = (frame.ScreenBounds, frame.Scale);
+                pointer = frame.Pointer;
+                language = frame.Language;
+            }
             if (frame is null || found is null)
             {
+                if (quiet && frame is not null && started == generation)
+                    Stand();
                 frame?.Dispose();
                 if (!quiet)
                     Status?.Invoke(new(Texts.Get(frame is null ? "GameNotFound" : "NoWindowDetected")));
@@ -459,6 +615,7 @@ public sealed class OverlayEngine : IDisposable
         open = picture.Next;
         lastPicture = picture;
         lastLabels = picture.Labels;
+        lastMarks = picture.Marks ?? [];
         lastRumours = picture.Rumours;
         lastScreen = frame.ScreenBounds;
         lastScale = frame.Scale;
@@ -466,7 +623,7 @@ public sealed class OverlayEngine : IDisposable
         lastFrame = frame;
         if (!screen.InFront)
             return;
-        Show(new Scene(frame.ScreenBounds, picture.Labels, picture.Rumours, frame.Scale));
+        Show(new Scene(frame.ScreenBounds, picture.Labels, picture.Rumours, frame.Scale, lastMarks));
         if (showStarted is { } t)
         {
             log($"Time: hotkey to overlay {t.ElapsedMilliseconds} ms");
@@ -574,7 +731,7 @@ public sealed class OverlayEngine : IDisposable
                 capture = watch.ElapsedMilliseconds;
                 try
                 {
-                    var glanced = captured is null ? Glance.Unchanged : window.Glance(captured.Image, ready, context);
+                    var glanced = captured is null ? Glance.Unchanged : window.Glance(captured, ready, context);
                     check = watch.ElapsedMilliseconds - capture;
                     return (captured, glanced);
                 }
@@ -623,6 +780,7 @@ public sealed class OverlayEngine : IDisposable
                     {
                         generation++; // a follow still running read the old window
                         lastLabels = [];
+                        lastMarks = [];
                         lastRumours = null;
                         if (lastScreen is { } b)
                             Show(new Scene(b, [], null, lastScale));
@@ -642,13 +800,15 @@ public sealed class OverlayEngine : IDisposable
                         open = picture.Next;
                         lastPicture = picture;
                         lastLabels = picture.Labels;
+                        lastMarks = picture.Marks ?? [];
                         lastRumours = picture.Rumours;
                         lastScreen = frame.ScreenBounds;
                         lastScale = frame.Scale;
-                        Show(new Scene(frame.ScreenBounds, picture.Labels, picture.Rumours, frame.Scale));
+                        Show(new Scene(frame.ScreenBounds, picture.Labels, picture.Rumours, frame.Scale, lastMarks));
                     }
                     break;
                 default:
+                    Pointed(frame);
                     frame.Dispose();
                     break;
             }
@@ -663,7 +823,12 @@ public sealed class OverlayEngine : IDisposable
     private void OnForeground()
     {
         if (open is null)
+        {
+            // The strip alone: it goes with the game; the automatic scan brings it back.
+            if (!screen.InFront && visible)
+                HideOverlay();
             return;
+        }
         if (!screen.InFront)
         {
             if (visible)
@@ -672,12 +837,13 @@ public sealed class OverlayEngine : IDisposable
         }
         else if (!visible && lastScreen is { } b)
         {
-            Show(new Scene(b, lastLabels, lastRumours, lastScale));
+            Show(new Scene(b, lastLabels, lastRumours, lastScale, lastMarks));
             log("shown again: game in foreground");
         }
     }
 
-    // Own ratings changed in the settings window: shown at once.
+    // Own ratings, rune classes or the rune chain changed in the window: the open window is
+    // labelled anew from the frame it was last read on, and shown at once.
     private async Task RebindAsync()
     {
         if (busy)
@@ -692,9 +858,13 @@ public sealed class OverlayEngine : IDisposable
             return;
         open = next;
         var picture = await next.LabelAsync(lastFrame, prices.GetAsync(), Context());
+        open = picture.Next;
+        lastPicture = picture;
+        lastLabels = picture.Labels;
+        lastMarks = picture.Marks ?? [];
         lastRumours = picture.Rumours;
         if (visible && lastScreen is { } b)
-            Show(new Scene(b, lastLabels, lastRumours, lastScale));
+            Show(new Scene(b, lastLabels, lastRumours, lastScale, lastMarks));
     }
 
     // Diagnosis key: the screen, what was shown, and what each window reads on it now. Only
@@ -883,12 +1053,17 @@ public sealed class OverlayEngine : IDisposable
         exactAsked = false;
         follow.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
         glance.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
-        HideOverlay();
+        // The strip stays when the chain has links: the window goes, the chain does not.
+        if (Standing() is not null && !hiddenByKey && screen.InFront && standingScreen is { } s)
+            Show(new Scene(s.Screen, [], null, s.Scale));
+        else
+            HideOverlay();
         open = null;
         // Nothing of this window may come back with a foreground change while the next one is
         // still being labelled (code review).
         lastScreen = null;
         lastLabels = [];
+        lastMarks = [];
         lastRumours = null;
         // A diagnosis after this must not report the window shown last: over a stash tab the
         // program does not know (20.10.), it told "Orbs 1.00" from the tab before.
@@ -903,10 +1078,13 @@ public sealed class OverlayEngine : IDisposable
 
     private void Show(Scene scene)
     {
+        scene = scene with { Strip = Standing(scene.Screen.Width / scene.Scale) };
         visible = true;
         var now = time.GetUtcNow();
         if (drawn is not null && drawn.SameAs(scene) && now - drawnAt < Tuning.Control.RedrawEvery)
             return;
+        if (drawn is not null && settings.ExtendedDiagnostics)
+            log("Overlay: drawn anew, " + (drawn.SameAs(scene) ? "the same picture after RedrawEvery" : drawn.Differs(scene)));
         drawn = scene;
         drawnAt = now;
         Draw?.Invoke(scene);

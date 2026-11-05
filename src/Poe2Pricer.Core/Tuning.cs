@@ -629,15 +629,17 @@ public static class Tuning
         // The anchor: the upper right corner of the book's page (the same artwork in both UI
         // modes), where it lies per mode, the list area and the window's right edge at that
         // place. The controller UI draws rows twice as high and scrolls after about six and a
-        // half rows. Looked for at its height ± SearchRadius over the whole width. Measured:
-        // with the list open at least .94 (every window height, both modes), on any other
-        // picture at most .37. The title's lettering is no anchor: the controller UI sets it
-        // larger at small window heights.
+        // half rows; the keyboard UI shows eleven rows whole (the eleventh's plate ends at 885,
+        // a twelfth begins at 900, measured 01.11.2026 at 1080, 1440 and 2160 — the box ended at
+        // 840 before and left the eleventh row without a price). Looked for at its height ±
+        // SearchRadius over the whole width. Measured: with the list open at least .94 (every
+        // window height, both modes), on any other picture at most .37. The title's lettering
+        // is no anchor: the controller UI sets it larger at small window heights.
         public const string AnchorFile = "runeshape-page.png";
         public static readonly (UiMode Mode, int X, int Y, Box List, int Right)[] Layouts =
         [
             (UiMode.Controller, 560, 280, new Box(70, 345, 670, 745), 772),
-            (UiMode.KeyboardMouse, 563, 128, new Box(70, 190, 670, 650), 776),
+            (UiMode.KeyboardMouse, 563, 128, new Box(70, 190, 670, 705), 776),
         ];
         public const int SearchRadius = 16;
         public const double MinimumAnchorScore = .65;
@@ -672,6 +674,135 @@ public static class Tuning
         public const int SignatureWidth = 16;
         public const int SignatureHeight = 48;
         public const double ChangedAbove = 4;
+
+        // The game's own rune tooltip inside the list box (RemnantReader.RuneTooltips): a dark
+        // plate, gray below RuneTipDarkBelow, found as joined cells of RuneTipCell px with a
+        // dark share of at least RuneTipCellDark, at least RuneTipWidth × RuneTipHeight (at
+        // popup 1) and RuneTipFill dark over its box. Measured 02.11.2026 on the author's
+        // diagnoses: controller at 2160 the plate 220×100 at the list's left edge (Inspect
+        // Runes), keyboard at 1440 530×185 under the mouse, the writing in it leaving rows of
+        // cells at .3–.6; without a tooltip the darkest patch is the scene's corner at the
+        // list's bottom left in the controller UI, 90 px wide and a triangle.
+        public const int RuneTipDarkBelow = 85;
+        public const int RuneTipCell = 10;
+        public const double RuneTipCellDark = .3;
+        public const int RuneTipWidth = 150;
+        public const int RuneTipHeight = 60;
+        public const double RuneTipFill = .55;
+    }
+
+    // Runes of the remnant list (RuneBook): the rune tiles of a row, the crowned one, and the
+    // rune in it. px at 1440. First measured on the diagnoses of 01.11.2026 (1080, 1440, 2160,
+    // both UI modes) and of 26.10.2026 (scrolled keyboard lists); values marked "chosen" are
+    // not measured yet.
+    public static class Runes
+    {
+        public const string File = "runes.json";
+        public const string TomeFolder = "tome";
+        public const string RemnantFolder = "remnant";
+
+        // The tiles of a row stand ListFirstX px right of the list's left edge, ListPitch
+        // apart, each TileSize square; in the keyboard UI on the line of the name, in the
+        // controller UI RiseController px above it (the row is two lines high). Measured on
+        // the six lists of 01.11. 12:42–12:47 (first tile centre 97–98, pitch 54 at 1440).
+        public const int ListFirstX = 28;
+        public const int ListPitch = 54;
+        public const int TileSize = 50;
+        public const int MostTiles = 10;
+        public const int RiseController = 50;
+        // Rows are RowPitchKeyboard / RowPitchController px apart (measured 01.11.: 63–64 and
+        // 108). A row whose name is cut off at the list's bottom edge (the controller UI shows
+        // six rows and a half) still shows its tiles whole: one more row is looked for below
+        // the last one read.
+        public const int RowPitchKeyboard = 63;
+        public const int RowPitchController = 108;
+        public const int TwoLineFrom = 90;
+        // The first row: two lines high when its name's centre stands this far below the list
+        // box's top (measured on the fixtures: one line 38–47, scrolled 66; two lines 88–90).
+        public const int TwoLineFirstFrom = 77;
+        public const int SearchX = 3;
+        public const int SearchY = 6;
+        public const int RowSearchY = 12;
+
+        // A tile is there when its frame (the TileFrame ring) is darker than the parchment
+        // inside by FrameDepthFrom grey levels (RuneBook.FrameDepth; measured at 1440 on
+        // 01.11.: tiles 15–45, empty places -5–5).
+        public const int TileFrame = 4;
+        public const double FrameDepthFrom = 10;
+        // An unread tile between read ones counts only with a frame this deep: the greyed
+        // tile of 01.11. 15:51 measured 76–88, the controller row's parchment beyond the last
+        // tile at 2160 23–35 (and its sketches pass for a rune a column on).
+        public const double UnreadFrameFrom = 50;
+
+        // The crowned tile has a gold frame (its TileFrame ring). Gold: hue GoldHueFrom to 28,
+        // saturation above 110, value above 150 — the plain brown frame has hue 9–11, the gold
+        // one 12–26 (measured 01.11. on 1080/1440/2160). Ring share with that hue: crowned
+        // .20–.60 (median .30), plain at most .14 (median .03).
+        public const int GoldHueFrom = 12;
+        public const double CrownRingFrom = .17;
+        // The ring's sides, measured 02.11.2026 (RuneBook.CrownMeasure, for the report of the
+        // Runen test): crowned tiles .06–.40 left and right over the twelve test lists, but
+        // .04 on the left of a crowned first tile of a controller row in the game the same
+        // evening; the inscription tile left of a crowned one (runen_ctrl_2160_inschrift, row
+        // 7) reaches the ring's .17 from the neighbour's glow on its right (.36) and the
+        // plate's rim below (.26), with .04 on its left (OFFEN F12). Top and bottom say
+        // nothing: the crown's spikes leave the top at .03 on crowned tiles, and at 1080 the
+        // plate's rim puts .50 under plain ones. No side rule, then.
+
+        // The rune in a tile: the game's picture of the rune (data/runes/tome, 50 px, the
+        // strokes alone) drawn at GlyphSizes px inside the tile's frame, compared as strokes
+        // (distance from the parchment) by normalised correlation over the inside plus
+        // GlyphSlack each side. Known from SameRuneFrom and LeadFrom ahead of the next rune.
+        // Sizes: the strokes span about 40 of the 50 px at 1440 (01.11.); thresholds chosen.
+        public static readonly int[] GlyphSizes = [38, 41, 44];
+        public const int GlyphSlack = 3;
+        public const double SaturationWeight = 3;
+        // Measured 01.11. over 150 tiles at 1080/1440/2160: a tile's rune .51–.83 (the pale
+        // cyan Ward .44–.59), the next rune .15–.45 behind; letters of a name in a tile column
+        // up to .50 with the next .01 behind.
+        public const double SameRuneFrom = .40;
+        public const double LeadFrom = .06;
+
+        // A list went by a cancel (Esc, the gamepad's cancel button), without a choice, when a
+        // cancel came since the list was read and before any confirm (the gamepad's confirm
+        // button); else by the click on a row or the confirm button (RemnantGameWindow.Closed).
+        // A list found gone more than CloseStale after it was last seen is not to tell (the
+        // overlay stood still meanwhile: 03.11.2026 20:03, the first list after the start waited
+        // 12.7 s for the prices, the Esc fell into that time).
+        public static readonly TimeSpan CloseStale = TimeSpan.FromSeconds(1.5);
+
+        // The caption of the row under the mouse: a plate above the list, CaptionGap px above
+        // its top edge, CaptionHeight high. Chosen. The mouse is on a row within RowHalfKeyboard
+        // px of its centre (rows 61–62 px apart in the keyboard UI, measured 01.11.).
+        public const int CaptionHeight = 34;
+        public const int CaptionGap = 2;
+        public const int RowHalfKeyboard = 30;
+        public const int RowHalfController = 50;
+        // The controller's cursor row (RemnantGameWindow.CursorRow): a CursorBandWidth px band
+        // CursorBandLeft px left of the list box, from CursorAbove above the row's text centre
+        // to CursorBelow below it; gold = HSV hue CursorHueFrom–CursorHueTo (of 180), saturation
+        // and value at least the two values. The cursor's row from CursorGoldFrom, and at least
+        // CursorLead times the next row's share.
+        // The controller's cursor arrow (RemnantReader.CursorArrow): the game's gold arrow left
+        // of the list box, CursorArrowFile (cut from a diagnosis of 03.11.2026 18:54:28, a
+        // 2160 picture read at 1440), looked for in the CursorArrowLeft px left of the box. It
+        // swings sideways a few px and stays while the row's frame pulses (62 diagnoses of
+        // 03.10.–03.11.2026: .82–1.00 at the cursor's row, elsewhere at most .23, once .57); from
+        // CursorArrowFrom. Its row: the one whose band (CursorAbove above the name's centre to
+        // CursorBelow below) holds the arrow's centre — it stands 10–48 px above the name.
+        public const string CursorArrowFile = "remnant-cursor-arrow.png";
+        public const int CursorArrowLeft = 72;
+        public const double CursorArrowFrom = .7;
+        public const int CursorBandLeft = 12;
+        public const int CursorBandWidth = 8;
+        public const int CursorAbove = 70;
+        public const int CursorBelow = 15;
+        public const int CursorHueFrom = 15;
+        public const int CursorHueTo = 32;
+        public const int CursorSaturationFrom = 60;
+        public const int CursorValueFrom = 160;
+        public const double CursorGoldFrom = .12;
+        public const double CursorLead = 2;
     }
 
     // RumourReader and RumourBook: the island rumour panel. px at 1440.

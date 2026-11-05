@@ -3,57 +3,44 @@
 All notable changes to poe2pricer, newest first. The release notes on GitHub say the same
 with more words: https://github.com/saxe78/poe2pricer/releases
 
-## 1.4.1 — 2026-11-01
+## 1.5.0 — 2026-11-05
 
-Built and tested against Path of Exile 2 0.5.5e (read from the game's log with
-`tools/game_version.py`).
+Built and tested against Path of Exile 2 0.5.5e.
+
+### Added
+- Remnant list: a coloured dot marks the rune each row passes on to the later packs of the
+  explosive chain. Which colour a rune gets is yours to set in the new Runes tab.
+- Rune chain: the runes your chosen remnants pass on stand at the top of the screen while you
+  are in the map, and a rune the chain already carries gets a ✗ in the list. To tell a choice
+  from a cancel, the program notes Esc and, with a controller, the confirm and cancel buttons
+  while a list is open.
+- Settings: "Expedition" is now two switches, Rumours and Remnant.
 
 ### Fixed
-- With a full-screen video over the game and poe2pricer's own window brought to the front
-  with Alt+Tab, the prices of the covered game window were drawn over the video. Prices are now
-  drawn only while the game itself is the foreground window; with the settings window in front
-  they go, and come back with the next click into the game.
-- Ritual window, controller: the price of the item under the controller cursor could vanish
-  while the cursor stood on it. The cursor's frame and tip lie where the price is drawn, and on
-  an omen with little contrast there, too little of the stored picture was left for the "still
-  the same place" test. The item under the cursor is now exempt from that test; under a tooltip
-  its price still goes.
+- Remnant list with keyboard and mouse: the eleventh row never got a price.
+- Remnant list: the game's own rune tooltip inside the list made the prices jump.
+- Rumours: Barren Atoll and Bleached Shoals showed each other's mods and ratings.
+- Settings window: switching the language to Russian cut off some labels.
+
+## 1.4.1 — 2026-11-01
+
+Built and tested against Path of Exile 2 0.5.5e.
+
+### Fixed
+- Prices are drawn only while the game itself is the foreground window. Before, with a video
+  over the game and the settings window brought up with Alt+Tab, prices could appear over the
+  video.
+- Ritual window with a controller: the price of the item under the cursor no longer vanishes
+  while the cursor rests on it.
 
 ### Changed
-- The evidence picture of a remnant list that the quick check lost is no longer kept with
-  "Extended diagnostics": closing the list is the normal way it goes (73 times in one
-  session, each picture showed it closed). The pictures of a lost stash tab or tooltip stay.
-- Diagnosis pictures and the evidence pictures of "Extended diagnostics" are written only
-  while the pictures come from the game window itself. Read from the screen (window capture
-  off or unavailable), a picture could show other windows over the game, so the diagnosis
-  keeps its JSON only and says so.
-- The follow (once a second, and after every glance that saw something move) captures only
-  its window's part of the picture instead of the whole: the remnant list with its tooltip
-  band, the stash tab, the Ritual window down to the grid's bottom edge. At 3840×2160 the
-  whole picture cost 150–220 ms per follow, and every glance waited behind it. The rumour
-  panel keeps the whole picture (it reads the chart all over the map), as does a tooltip.
-- The overlay draws a picture only when something in it changed. Until now every follow and
-  every glance that saw the cursor move drew the labels anew (2.5 pictures a second over a
-  Ritual window at rest at 3840×2160), and each picture waited for the screen's vertical
-  blank on the UI thread (up to 17 ms); the picture is now handed to the compositor without
-  that wait.
-- In the rumour card, the rumours seen at the island that the panel does not show now keep
-  the colour of their rating on the pill; only their title is faint. Grey pills hid an S+.
-- With "Extended diagnostics" on, the log gets one line per hundred glances, per hundred
-  follows and per hundred drawn pictures with the time they took (median and slowest capture,
-  mean and slowest picture). The lines are for the work on the load at 3840×2160 (OFFEN Z11); off, nothing is
-  counted.
-- The item catalogue of the Ritual window is now built by a tool of this project from the
-  item lists of poe.ninja and the trade site, with the pictures from the game's image service
-  and poe2db.tw, instead of being taken over from Dev-Jahn's project, whose copy stood at
-  September. 271 items
-  more, among them the infusers, the orbs of sacrifice, the reliquary keys, the crisis
-  fragments, the fluxes, the idols and three uniques; before, such an item got no price or,
-  for an omen, the price of a similar-looking one. Eight uniques without a price in any league
-  are no longer in it. `tools/catalog_update.py` rebuilds the catalogue after a patch.
-- The slot sizes of the catalogue come from the game's image service; 21 uniques that stood
-  with the size of their art (a focus as 2 × 2, a narrow staff as 1 × 4) now carry their slot
-  (2 × 3, 2 × 4), which the recognition had so far worked around for two kinds of item.
+- The item catalogue is rebuilt from current sources: 271 more items get a price, among them
+  infusers, orbs of sacrifice, reliquary keys, crisis fragments, fluxes and idols.
+- Less work per picture at high resolutions; the overlay redraws only when something changed.
+- Diagnosis pictures are saved only when they come from the game window itself, never from a
+  screen read that could show other windows. The evidence picture of a closed remnant list is
+  no longer kept.
+- Rumour card: rumours the panel does not show keep the colour of their rating.
 
 ## 1.4.0 — 2026-10-29
 

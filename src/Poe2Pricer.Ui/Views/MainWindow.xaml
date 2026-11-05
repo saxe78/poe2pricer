@@ -383,15 +383,18 @@
                (LeftColumn). -->
           <GroupBox Header="{views:Text GroupAutoScan}" Style="{StaticResource Section}">
             <Grid>
-              <!-- The first column of checkboxes is as wide in every language as the longest text
-                   needs (English "Expedition (Rumours / Remnants)"): the window keeps its
-                   width when the language is changed. -->
+              <!-- Both columns of checkboxes are as wide in every language as the longest text
+                   needs (Russian "Экспедиция (останки)" and "Ритуал (награды)", measured on
+                   the rendered window 03.11.2026): the window keeps the width it was measured
+                   at when the language is changed, and a text wider than its column would be
+                   cut at the box. -->
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="{StaticResource LeftColumn}"/>
-                <ColumnDefinition Width="Auto" MinWidth="214"/>
-                <ColumnDefinition Width="Auto" MinWidth="102"/>
+                <ColumnDefinition Width="Auto" MinWidth="230"/>
+                <ColumnDefinition Width="Auto" MinWidth="150"/>
               </Grid.ColumnDefinitions>
               <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
               </Grid.RowDefinitions>
@@ -409,14 +412,22 @@
                 <TextBlock Text="{views:Text Seconds}" Margin="6,0,0,0" Style="{StaticResource RowText}"/>
                 <ContentControl Style="{StaticResource InfoIcon}" ToolTip="{Binding TimesHint}"/>
               </StackPanel>
-              <!-- The three switches of the automatic scan (AutoSwitch.All, in that order): two
-                   below each other, the third beside the first. -->
-              <CheckBox Grid.Row="0" Grid.Column="1" DataContext="{Binding Switches[0]}" Content="{Binding Label}" IsChecked="{Binding On}" Style="{StaticResource Check}"/>
+              <!-- The four switches of the automatic scan (AutoSwitch.All: Ritual, Rumours,
+                   Remnant, Stash). The two long texts, Expedition (Remnant) and Expedition
+                   (Rumours), stand one below the other in the wide first column, which is
+                   measured for the longest of them in every language; Ritual and Stash in the
+                   narrow second. With Remnant in the second column (02.11.2026, the two
+                   Expedition switches side by side) the Russian text ran out of the box after a
+                   change of language: the window keeps the width it was measured at. The
+                   remnant switch covers the prices and the runes of the list. -->
+              <CheckBox Grid.Row="0" Grid.Column="1" DataContext="{Binding Switches[2]}" Content="{Binding Label}" IsChecked="{Binding On}" Style="{StaticResource Check}"/>
               <CheckBox Grid.Row="1" Grid.Column="1" DataContext="{Binding Switches[1]}" Content="{Binding Label}" IsChecked="{Binding On}" Style="{StaticResource Check}"/>
+              <CheckBox Grid.Row="1" Grid.Column="2" Margin="18,0,0,0" DataContext="{Binding Switches[0]}" Content="{Binding Label}" IsChecked="{Binding On}" Style="{StaticResource Check}"/>
               <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="18,0,0,0">
-                <CheckBox DataContext="{Binding Switches[2]}" Content="{Binding Label}" IsChecked="{Binding On}" Style="{StaticResource Check}"/>
+                <CheckBox DataContext="{Binding Switches[3]}" Content="{Binding Label}" IsChecked="{Binding On}" Style="{StaticResource Check}"/>
                 <ContentControl Style="{StaticResource InfoIcon}" ToolTip="{views:Text TipAutoScan}"/>
               </StackPanel>
+
             </Grid>
           </GroupBox>
 
@@ -535,6 +546,66 @@
               </DockPanel>
             </GroupBox>
           </DockPanel>
+        </DockPanel>
+      </TabItem>
+      <!-- Runes: the 33 runes of the remnant list with the class the player gives each
+           (RunesViewModel); the class colours the bar under the propagated rune in the list. -->
+      <TabItem Header="{views:Text TabRunes}" Style="{StaticResource Tab}">
+        <DockPanel x:Name="runes" Margin="0,10,0,10" LastChildFill="True" DataContext="{Binding Runes}">
+          <GroupBox Header="{views:Text GroupRunes}" Style="{StaticResource Box}">
+            <DockPanel LastChildFill="True">
+              <StackPanel DockPanel.Dock="Top">
+                <!-- The right margin is the width of the scroll bar beside the rows. -->
+                <Grid Height="20" Margin="0,0,10,0">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="36"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="120"/>
+                  </Grid.ColumnDefinitions>
+                  <TextBlock Grid.Column="1" Text="{views:Text ColumnRune}" Style="{StaticResource Small}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                  <TextBlock Grid.Column="2" Text="{views:Text ColumnEffect}" Style="{StaticResource Small}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                  <TextBlock Grid.Column="3" Text="{views:Text ColumnClass}" Style="{StaticResource Small}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                </Grid>
+              </StackPanel>
+              <StackPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
+                <TextBlock Style="{StaticResource Small}" TextWrapping="Wrap" Text="{views:Text RunesHint}"/>
+                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                  <Button Content="{views:Text ResetRunes}" Command="{Binding ResetCommand}" Style="{StaticResource PlainButton}" Width="NaN"/>
+                  <Button Content="{views:Text ResetChain}" Command="{Binding ResetChainCommand}" Style="{StaticResource PlainButton}" Width="NaN" Margin="10,0,0,0"/>
+                </StackPanel>
+              </StackPanel>
+              <ScrollViewer x:Name="runeScroll" VerticalScrollBarVisibility="Visible" Margin="0,4,0,0" Focusable="False" FocusVisualStyle="{x:Null}">
+                <ItemsControl ItemsSource="{Binding Rows}" Focusable="False">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:RuneRowViewModel}">
+                      <!-- The row's ground in the class colour, faint; the picture as the list
+                           draws it, name and effect as the game words them. -->
+                      <Border Background="{Binding Ground}" CornerRadius="0" Margin="0,1,0,1" Padding="2,0,2,0">
+                        <Grid Height="30">
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="36"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="5*"/>
+                            <ColumnDefinition Width="120"/>
+                          </Grid.ColumnDefinitions>
+                          <!-- The rune on parchment, as in the game: dark strokes on nothing
+                               would vanish on the window's ground. -->
+                          <Border Grid.Column="0" Width="28" Height="28" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="0" Background="#E1D2AF">
+                            <Image Source="{Binding Icon}" Width="24" Height="24" RenderOptions.BitmapScalingMode="HighQuality"/>
+                          </Border>
+                          <TextBlock Grid.Column="1" Text="{Binding Name}" ToolTip="{Binding Name}" Foreground="{StaticResource Text}" Style="{StaticResource RumourLabel}"/>
+                          <TextBlock Grid.Column="2" Text="{Binding Effect}" ToolTip="{Binding Effect}" Foreground="{StaticResource Muted}" Style="{StaticResource RumourLabel}"/>
+                          <ComboBox Grid.Column="3" Width="110" MinHeight="24" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                    ItemsSource="{Binding Choices}" SelectedItem="{Binding Choice}"/>
+                        </Grid>
+                      </Border>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </ScrollViewer>
+            </DockPanel>
+          </GroupBox>
         </DockPanel>
       </TabItem>
       <!-- Waystones: a profile of summary values, tier, corrupted and

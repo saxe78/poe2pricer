@@ -9,7 +9,8 @@ namespace Poe2Pricer.App;
 // Low-level keyboard hook on a thread of its own: Windows holds every key press until the
 // hook returns, so the callback only compares keys and hands the work to the UI thread
 // (with the hook on the busy UI thread, the whole system lags). Bound keys are
-// swallowed, everything else, Esc included, passes to the game.
+// swallowed, everything else, Esc included, passes to the game. Esc is reported (Escape)
+// on its way: the remnant list closes on it without a choice (OverlayEngine.Escaped).
 public sealed class KeyboardHook : IDisposable
 {
     private readonly Dispatcher ui;
@@ -26,6 +27,8 @@ public sealed class KeyboardHook : IDisposable
 
     // Only while this returns true (game in front) keys are taken. Must be cheap.
     public Func<bool> Active { get; set; } = () => true;
+    // Told of every Esc pressed while Active; cheap, on the hook's thread. Nothing is stored.
+    public Action? Escape { get; set; }
 
     public KeyboardHook(Dispatcher ui)
     {
@@ -66,6 +69,8 @@ public sealed class KeyboardHook : IDisposable
         {
             var key = KeyInterop.KeyFromVirtualKey(Marshal.ReadInt32(lParam));
             bool alt = Down(0x12), ctrl = Down(0x11), shift = Down(0x10);
+            if (key == Key.Escape && Active())
+                Escape?.Invoke();
             foreach (var (b, action) in bindings)
                 if (b.Key == key && b.Alt == alt && b.Ctrl == ctrl && b.Shift == shift && Active())
                 {

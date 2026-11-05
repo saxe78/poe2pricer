@@ -1,4 +1,5 @@
 using Poe2Pricer.Core;
+using Poe2Pricer.Core.Runes;
 using Poe2Pricer.Core.Market;
 
 namespace Poe2Pricer.App;
@@ -16,7 +17,8 @@ public interface IOverlay
 
     // Draw these labels over the game's part of the screen. scale: screen pixels per pixel of
     // the labels' coordinates (the game runs at another height than the readers are measured at).
-    void Show(Box screen, Label[] labels, (Box Panel, RumourLine[] Lines, IslandSummary? Island)? rumours = null, double scale = 1);
+    // strip: the rune chain at the top (Scene.Strip), or none.
+    void Show(Box screen, Label[] labels, (Box Panel, RumourLine[] Lines, IslandSummary? Island)? rumours = null, double scale = 1, RuneStrip? strip = null);
 
     // Nothing to show: the window stays and draws nothing.
     void Clear();
