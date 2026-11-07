@@ -57,9 +57,8 @@ third-party dependencies retain their respective rights and licenses.
 `data/fonts/Caveat-Bold.ttf`, built into `Poe2Pricer.Core` unchanged (303,088 bytes), from
 https://github.com/googlefonts/caveat (`fonts/ttf/Caveat-Bold.ttf`). The German client of Path of
 Exile 2 writes the rumour lines of the panel in this font (it carries the older version 1.500,
-`art/2dart/fonts/caveat-bold.ttf`, which the project no longer publishes; against the game's lines
-both versions measure the same). poe2pricer draws the German rumour lines with it to recognise
-them by their picture (`RumourLineArt.cs`).
+`art/2dart/fonts/caveat-bold.ttf`, which the project no longer publishes). poe2pricer draws the
+German rumour lines with it to recognise them by their picture (`RumourLineArt.cs`).
 
 Licence (`data/fonts/Caveat-OFL.txt`):
 
@@ -196,11 +195,10 @@ slot sizes and art paths come from Grinding Gear Games: the item lists of poe.ni
 use of its API; everything it prices) and the static item list of the trade site
 (https://www.pathofexile.com/api/trade2/data/static; the currency-like items, priced or not).
 The pictures of currency-like items come from the game's image service at
-https://web.poecdn.com (64 px a cell); the pictures of uniques from https://cdn.poe2db.tw, by
-the art path the image service names (108 px a cell: the image service renders uniques at
-47 px a cell, too coarse for a one-cell unique — a charm read at .88 dropped to .40). The names
-and pictures are material of Grinding Gear Games and are **not** covered by the MIT licence of
-this program; 1219 entries and 1086 pictures, 42 MB, as of 2026-10-30.
+https://web.poecdn.com; the pictures of uniques from https://cdn.poe2db.tw, by the art path
+the image service names, because the image service has no unique art at a usable size. The
+names and pictures are material of Grinding Gear Games and are **not** covered by the MIT
+licence of this program; 1219 entries and 1086 pictures, 42 MB, as of 2026-10-30.
 
 ## gazevans-pixel/poe2pricer-ge (fork of this program)
 
